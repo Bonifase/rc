@@ -1,0 +1,37 @@
+# Secrets -- never commit real API keys
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Generated output
+output/*.json
+output/*.jsonl
+output/experiment_e_prep/dev108_output/
+output/experiment_e_prep/dev108_smoke_test/
+output/experiment_e_prep/dev108_targeted_test/
+output/experiment_e_prep/papers/
+
+# Client test manuscripts (never commit manuscript 2 or its results)
+manuscrript 2/
+
+# Client-shared gold standard package -- keep local, not on GitHub
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Local packaging artifacts
+*.zip
+NEW GIT.txt

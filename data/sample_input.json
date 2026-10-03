@@ -1,0 +1,21 @@
+{
+  "reference_list": [
+    {"number": 1, "doi": "10.1371/journal.pone.0317610"},
+    {"number": 2, "doi": "10.1037/example.0001"},
+    {"number": 3, "doi": "10.1145/example.0002"}
+  ],
+  "sentences": [
+    {
+      "id": "s1",
+      "text": "Regular exercise has been shown to reduce symptoms of depression in adults [1]."
+    },
+    {
+      "id": "s2",
+      "text": "This finding has not been consistently replicated across all age groups [2]."
+    },
+    {
+      "id": "s3",
+      "text": "Machine learning models trained on biased data can perpetuate existing societal inequities [3]."
+    }
+  ]
+}

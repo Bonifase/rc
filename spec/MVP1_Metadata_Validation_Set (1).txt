@@ -1,0 +1,168 @@
+MVP1 METADATA — VALIDATION SET
+Extracted from hand-verified reports on 7 documents (Doc3, Doc1+2, Doc5, Doc7, Doc8, Doc9, Doc10).
+Only findings relevant to the 12 active checks. Content-fidelity errors excluded.
+Zablon's code should reproduce these. If it finds them, the check works.
+
+====================================================================
+CHECK 1 — AMBIGUOUS CITATION KEYS
+====================================================================
+Doc8 (Consensus): 3 ambiguous keys, covering 6 references.
+  - "Fuentes et al., 2013" → 2 different papers (GCE 192 + GCE 186)
+  - "Fuentes et al., 2011" → 2 different papers (Endocrinology 153 + AJP 300)
+  - "Vélez et al., 2017" → 2 different papers (Aquaculture 467 + GCE 257)
+  No a/b suffixes anywhere. Document uses author-year format.
+
+Note: This check barely applies to documents with numbered citations + DOI
+(Doc5, Doc7, Doc9, Doc10). Only fires on author-year format like Doc8.
+
+====================================================================
+CHECK 2 — PARTITION COHERENCE
+====================================================================
+Doc7 (Elicit): "Five studies used in vivo [5,6,8-10], four employed in vitro
+  [1-3], and two combined both [4,7]." Range [1-3] = 3 refs, not 4.
+  Sum: 5+4+2 = 11, but only 10 studies. Real partition: 5+3+2 = 10.
+
+Doc8 (Consensus): "50 included" (Methods + flowchart) vs. 37 references listed.
+
+====================================================================
+CHECK 3 — DECLARED COUNT vs. REFERENCES LISTED
+====================================================================
+Doc8 (Consensus): Declares "los 50 más relevantes". Lists 37. Gap of 13.
+
+====================================================================
+CHECK 4 — SAME FIGURE CITED DIFFERENTLY ACROSS SECTIONS
+====================================================================
+Doc7 (Elicit): The value 359±18.5% appears as "of control" in one section
+  and "above control" in another. Same number, incompatible frames.
+  Also 167±17%: "of control levels" in abstract, "increase" in results.
+
+====================================================================
+CHECK 5 — YEAR-VOLUME COHERENCE
+====================================================================
+Doc8 (Consensus): Koganti cited as "(2020)… Animals, 11".
+  Volume 11 of Animals = 2021. Year and volume cannot both be correct.
+
+Doc8 (Consensus): 6 years displaced across references (online-first vs.
+  print year inconsistency, not a single convention).
+
+====================================================================
+CHECK 7 — IDENTIFIER RESOLVES BUT TO WRONG ARTICLE
+====================================================================
+Doc9 (Grok): 4 of 16 DOIs/PMIDs resolve to a completely different paper.
+  - Ref 3: DOI resolves to cardiac arrest paper
+  - Ref 6: DOI resolves to oncology chemistry paper
+  - Ref 10: DOI resolves to weight loss/exercise paper
+  - Ref 16: DOI does not exist at all
+
+Doc3 (Gemini): DOI year in the identifier contradicts declared year in at
+  least 3 references (#6, #9/#15, #27).
+
+Doc1+2 (ChatGPT):
+  - "Pereira, B.F. et al. (2022)" with DOI 10.1038/s41598-021-95408-6
+    → resolves to Naya-Català et al. (2021). Wrong author, year, volume.
+  - "Weng, P.-C. et al. (2022)" with same DOI as Zhong et al. (2022).
+    Wrong author.
+
+====================================================================
+CHECK 8 — DISPLACED AUTHORSHIP (cross-reference, needs all resolved)
+====================================================================
+Doc9 (Grok):
+  - Ref 11 declares "Macedo, A. G." → real first author is Fappi
+  - Ref 14 declares "Fiorenza, M." → real first author is Macedo, A. G.
+  Author from ref 14's real record appears as declared author of ref 11.
+
+Doc1+2 (ChatGPT): "Fernández-Borràs" listed as author of Duran 2022,
+  but is actually an author of Sánchez-Moya (different reference in same list).
+
+Doc3 (Gemini) + Doc1 (ChatGPT): Both independently promoted Lema (last
+  author of Bersin et al. 2023) to first author position.
+
+====================================================================
+CHECK 9 — SYNTHESIZED TITLE
+====================================================================
+Doc10 (Perplexity): 3 titles are invented summaries of the paper's content.
+  - [18] McCormick 2008: title = conclusion sentence of abstract verbatim
+  - [16] Sakamoto 2017: first half literal, second half rewritten
+  - [15] Faught 2021: first half literal, second half rewritten
+  All three: correct journal, volume, year. Only title is fabricated.
+
+====================================================================
+CHECK 10 — JOURNAL SUBSTITUTION
+====================================================================
+Doc10 (Perplexity):
+  - [1] Faught & Vijayan 2018: declared "Communications Biology, 1, 195"
+    → real: Scientific Reports 8, 18081. Entire container invented.
+  - [6] Lu et al. 2022: declared "Reviews in Aquaculture, 14(3), 1352-1362"
+    → real: Frontiers in Endocrinology 13:923475. Entire container invented.
+  - [13] Zuloaga et al. 2024: declared "Aquaculture, 768, 739765"
+    → volume 768 does not exist; article 739765 belongs to a different paper.
+
+Doc5 (Claude): Fascicle error only.
+  - Aedo 2019a: declared 51(12), real 51(11). Pages, DOI, authors correct.
+
+====================================================================
+CHECK 11 — VOLUME WITHIN JOURNAL'S PUBLISHED RANGE
+====================================================================
+Doc10 (Perplexity): "Aquaculture, 768" — journal's volumes reach ~626.
+  Out of range by 140+ volumes. Detectable with a single ISSN query.
+
+====================================================================
+CHECK 13 — ORPHANED MARKERS + NEVER-CITED ENTRIES (both directions)
+====================================================================
+Doc3 (Gemini): Entire APA bibliography (30 entries) is orphaned — no text
+  marker resolves to it. Text markers resolve to "Fuentes citadas" list.
+  Also: markers 31, 35, 37, 38 exceed the 30-entry APA list.
+
+Doc1+2 (ChatGPT):
+  - Orphaned markers in body: 【90】, 【47】, 【75】
+  - Never-cited in body: 【73】 (Duran 2021), 【10】 (Ndandala), 【7】 (Pérez-Sánchez)
+  - Collision: 【57】 assigned to 2 refs, 【84】 assigned to 2 refs
+
+Doc5 (Claude): 2 references never cited in text:
+  - Das & Vijayan (2023) — text cites Das, Thraya & Vijayan (2018), never this.
+  - Faught & Vijayan (2019) — text cites 2018, 2020, 2022, 2025, never 2019.
+
+Doc1+2 (ChatGPT): Duplicate reference — same DOI 10.3390/ijms252413583
+  listed twice with different authors and years.
+
+====================================================================
+CHECK 14 — AUTHORS OMITTED WITHOUT "et al."
+====================================================================
+Doc7 (Elicit): Ref [7] (Codina et al. 2006) lists 4 of 8 authors without
+  "et al." — omits García de la Serrana D., Rallière C., Gabillard J.Ch.,
+  Rescan P.Y.
+
+Doc5 (Claude): Ref Dindia et al. 2012 omits Murray J. and Davis T.L.,
+  adds "Thomas, R." who is not an author. Order altered.
+
+Doc10 (Perplexity): Ref [15] Faught et al. 2021 — only 2 authors
+  (Faught & Vijayan), "et al." is spurious.
+
+====================================================================
+SUMMARY BY DOCUMENT — expected finding counts (metadata only)
+====================================================================
+Doc3  (Gemini):     ~15 findings (orphaned bibliography, author errors,
+                     year-DOI contradictions, collisions)
+Doc1+2 (ChatGPT):  ~12 findings (fabricated authors on real DOIs,
+                     orphans, collisions, duplicates)
+Doc5  (Claude):      5 findings (1 invented author, 1 wrong fascicle,
+                     2 never-cited refs, 1 incomplete author list)
+Doc7  (Elicit):      2 findings (partition error, incomplete author list)
+Doc8  (Consensus):  ~8 findings (3 ambiguous keys, year-volume mismatch,
+                     count mismatch, truncated locators, book chapter format)
+Doc9  (Grok):       ~14 findings (4 wrong-article DOIs, 9 wrong authors,
+                     displaced authorship, no journal/volume/pages)
+Doc10 (Perplexity): ~12 findings (3 synthesized titles, 3 journal
+                     substitutions, volume out of range, no DOIs)
+
+TOTAL: ~68 metadata findings across 7 documents.
+
+====================================================================
+HOW TO USE THIS FILE
+====================================================================
+Run the 12 checks against each original document. Compare findings
+against this list. A check passes validation when it reproduces the
+finding listed here. A finding NOT in this list that the code produces
+is either a new true positive (good) or a false positive (investigate).
+
+Original documents are attached separately.

@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: citation-fidelity-checker-api
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --timeout 600 --chdir webapp/backend app:app"
+    envVars:
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: NCBI_API_KEY
+        sync: false
+      - key: OPENALEX_API_KEY
+        sync: false  # set only in Render environment secrets; never commit the value
+      - key: API_KEY
+        sync: false  # optional -- set to require X-API-Key on /api/analyze*; leave blank to keep the API open
+      - key: ALLOWED_ORIGIN
+        value: "*"  # in the Render dashboard set this to your Vercel frontend URL, e.g. https://fidelity-kappa.vercel.app (no trailing slash)

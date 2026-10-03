@@ -1,0 +1,243 @@
+MVP1 — METADATA MODULE — TECHNICAL SPEC
+
+WHAT THIS IS
+A second, independent axis. What you've built checks whether a claim matches
+its source (content axis, needs an LLM). This checks whether the reference
+itself is correctly cited (reference axis) — mostly no LLM, no per-token
+cost, deterministic checks against Crossref/PubMed records.
+
+A verdict attaches to a claim. A metadata error attaches to a reference.
+One reference can support five sentences — a metadata problem there is
+reported ONCE, not five times. Keep this separated in the data model from
+day one.
+
+A sentence can come back "Supported" with its reference marked "miscited"
+at the same time. That is not a contradiction — it is the central
+architectural decision of the project.
+
+--------------------------------------------------------------------
+NOTE ON NUMBERING — READ THIS FIRST
+--------------------------------------------------------------------
+The project's canonical list runs 1–14. Two are out of scope for this
+build: ID 6 (figure caption vs. figure content — we extract text only,
+not figure images) and ID 12 (duplicate reference list). That leaves
+12 checks. Keep the original IDs; do NOT renumber.
+
+If you open the v1 flow diagram, displaced authorship is labeled there
+as "check 14 of 14". That is its position in the run order — it runs
+last — not its ID. Its ID is 8, which is what this spec uses.
+
+--------------------------------------------------------------------
+BUILD ORDER — three blocks
+--------------------------------------------------------------------
+
+3a — STRUCTURED EXTRACTION (build first, everything depends on it)
+
+Each bibliography entry stops being a raw string with a DOI and becomes a
+record:
+
+{
+  "reference_id": 11,
+  "raw": "Faught, E., & Vijayan, M. M. (2018). The mineralocorticoid ...",
+  "authors": [{"family": "Faught", "given": "E."},
+              {"family": "Vijayan", "given": "M. M."}],
+  "year": 2018,
+  "title": "The mineralocorticoid receptor is essential for ...",
+  "journal": "Communications Biology",
+  "volume": "1",
+  "issue": null,
+  "pages": "195",
+  "doi": "10.1038/s41598-018-36681-w",
+  "issn": null
+}
+
+Fields not found are null, not empty strings — "the author is missing" and
+"the author field is empty" have to stay distinguishable.
+
+Also extract, per sentence, EVERY citation marker (not just the first),
+with ranges expanded: [3–5] is references 3, 4 and 5 — three pairs, not
+one. Formats to support: [3], [3][8], [3,8], [3, 8], [3–5], [3-5].
+
+ALSO CAPTURE: publication-type from the Crossref/PubMed record. It is not
+a check and validates nothing — it is an extraction that feeds later
+routing. Store it on the reference record.
+
+--------------------------------------------------------------------
+3b — THE 12 CHECKS
+--------------------------------------------------------------------
+
+Eleven are fully deterministic. Check 14 has a semantic component (see
+notes). Each check is an independent function, same signature, so they can
+run and be measured separately:
+
+def check_NN(doc, references, crossref_records) -> list[Finding]: ...
+
+Finding:
+{
+  "check_id": 7,
+  "severity": "critical" | "warning",
+  "reference_id": 11,
+  "field": "journal",
+  "declared": "Communications Biology",
+  "actual": "Scientific Reports",
+  "message": "..."
+}
+
+  #   Check                                                    Group
+  1   Ambiguous citation keys (author-year resolving to        A - no API
+      more than one reference without a/b suffix).
+      Note: format-dependent — with numbered input + DOI
+      this barely applies. Partially overlaps check 13.
+  2   Partition coherence (if the text splits N studies into    A
+      subsets, ranges and totals must add up)
+  3   Declared reference count vs. references actually listed  A
+      (simplest and cheapest to run)
+  4   Same figure/number cited differently across sections      A
+      of the document — internal consistency only, no
+      source comparison
+  5   Year-volume coherence (together with 10 and 11 forms      A
+      the field-by-field check against the record)
+  7   Identifier resolves AND matches declared title/author     B - 1 call
+      (the quietest error: link works, leads to a real but      per ref
+      different paper)
+  8   Displaced authorship — compare EVERY declared author of   C - after B
+      EVERY reference against the ACTUAL author list of every
+      OTHER reference. Author is the field that breaks most
+      often in the corpus: 19 cases.
+  9   Synthesized title (paper exists, title wasn't written     B
+      verbatim)
+  10  Journal substitution (journal/volume/pages internally     B
+      consistent but don't match the real record). A simple
+      field-diff catches it.
+  11  Volume within that journal's published range (query by    B
+      ISSN). Specific implementation of check 5.
+  13  Citation markers vs. bibliography, BOTH directions —      A
+      orphaned markers, never-cited entries, collisions
+  14  Declared screening criterion + authors omitted without    A (partial
+      "et al."                                                  semantic)
+
+EXECUTION ORDER (by cost)
+  Phase A (no API, zero cost):     checks 1, 2, 3, 4, 5, 13, 14
+  Phase B (1 API call per ref):    checks 7, 9, 10, 11
+  Phase C (needs B fully done):    check 8
+
+--------------------------------------------------------------------
+REFERENCE RESOLUTION FLOW
+--------------------------------------------------------------------
+
+Runs once per reference and determines its status. Follow it exactly —
+the rescue step is not optional.
+
+  Resolve against Crossref by DOI. If the reference has NO DOI, or the
+  DOI does not resolve at all, resolve by declared title + first author
+  instead. Then:
+
+  Not found by either route
+    → status: not_found (BLOCKS phase 2)
+
+  DOI resolves, but to a different article than declared
+    → attempt rescue: search by declared title + first author
+       ├─ paper not found          → wrong_article, unrecoverable
+       │                             (BLOCKS phase 2)
+       ├─ found, title similarity  → synthesized_title
+       │  is low                     (does NOT block)
+       └─ found and matches well   → proceed to field-by-field comparison
+
+  Record found, title similarity low
+    → synthesized_title (does NOT block)
+
+  Record found and matches
+    → field-by-field comparison: authors, year, journal, volume, issue,
+      pages, plus volume within the journal's published range (ISSN)
+       ├─ all match     → well_cited
+       └─ some mismatch → miscited (does NOT block)
+                          Report which field and the correct value.
+
+--------------------------------------------------------------------
+IMPLEMENTATION NOTES ON THE TRICKY ONES
+--------------------------------------------------------------------
+
+- Check 7 (identifier vs. record): compare normalized title (lowercase, no
+  punctuation, no stopwords) with fuzzy similarity — 0.85 threshold
+  suggested — plus first author by surname. If the DOI resolves but both
+  fail, attempt rescue by title + first author before declaring it
+  unrecoverable.
+
+- Check 8 (displaced authorship): O(n²) over the bibliography. For each
+  reference i, compare every declared author against the actual Crossref
+  author list of every reference j≠i. An exact surname+initial match in a
+  reference that isn't its own is the finding. 50 references = 2,500 list
+  comparisons — trivial in time, but has to run after all references are
+  resolved, not inside the resolution loop. Compare ALL authors, not just
+  the first. When found, the finding should name both references involved
+  so the author can be reassigned between them.
+
+- Check 11 (volume in range): query the range of published volumes by
+  ISSN. If the API has no such view, approximate from the year↔volume
+  relationship across several records from the same journal.
+
+- Check 13 (both directions): one pass gives orphaned markers (cited but
+  not in the bibliography), the other gives never-cited entries (listed
+  but never referenced in the text).
+
+- Check 14: mostly rule-based (counting declared vs. actual authors for
+  the "et al." case). The screening-criterion part needs semantic
+  judgment — this is the one check that is not fully LLM-free. Flag that
+  part separately; it may need a model call.
+
+--------------------------------------------------------------------
+3c — THE REPORT'S THIRD SECTION
+--------------------------------------------------------------------
+
+The report has three sections:
+  1. Claims compared against their source  (already built, v0)
+  2. Claims that could not be compared     (already built, v0)
+  3. Bibliography status                   (NEW — this module)
+
+Reference status lives in its own table, separate from sentence verdicts.
+A reference used by five sentences appears ONCE:
+
+{
+  "reference_id": 11,
+  "status": "well_cited" | "miscited" | "synthesized_title" |
+            "wrong_article" | "not_found" | "technical_failure",
+  "usable_identifier": "10.1038/s41598-018-36681-w",
+  "findings": [ ... ],
+  "used_in_sentences": ["s004", "s017"]
+}
+
+RULE THAT MUST NOT BE BROKEN
+Only "not_found", unrecoverable "wrong_article", and "technical_failure"
+block phase 2 (content comparison). "miscited" NEVER blocks it — the paper
+was located, so content comparison proceeds normally regardless of
+metadata problems.
+
+--------------------------------------------------------------------
+WHAT DOESN'T CHANGE
+--------------------------------------------------------------------
+
+Phase 2 stays exactly as it is: same loop, same prompt (v16), same four
+guards, same four-level aggregation. The only difference is that it
+receives an identifier already verified by this module, rather than one
+resolved by existence alone.
+
+--------------------------------------------------------------------
+ACCEPTANCE CRITERIA
+--------------------------------------------------------------------
+
+- Each check runs in isolation and reports its findings separately
+- Running the 10 hand-verified documents reproduces the metadata errors
+  already annotated by hand (minus those belonging to checks 6 and 12,
+  which are out of scope)
+- A miscited reference used by five sentences produces ONE finding, not
+  five
+- No sentence loses its content verdict because of a miscited reference
+
+--------------------------------------------------------------------
+WHY THIS MATTERS
+--------------------------------------------------------------------
+
+Metadata errors outnumber content errors 3 to 2 in the verified corpus.
+It's the larger half of the real problem, it's deterministic, it costs no
+tokens, and it can run fully in parallel with the gold standard work —
+no dependency on v16 or the content pipeline.

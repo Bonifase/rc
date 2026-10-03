@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>RefCheck Upload</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --panel-alt: #f8fafc;
+        --primary: #1d4ed8;
+        --primary-soft: #dbeafe;
+        --text: #0f172a;
+        --muted: #475569;
+        --border: #dfe7f3;
+        --success: #166534;
+        --success-bg: #dcfce7;
+        --error: #b91c1c;
+        --error-bg: #fee2e2;
+        --shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(180deg, #eff6ff 0%, var(--bg) 100%);
+        color: var(--text);
+      }
+      .card {
+        max-width: 1100px;
+        margin: 2rem auto;
+        background: var(--panel);
+        border-radius: 18px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        border: 1px solid #bfdbfe;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 0.45rem 0.8rem;
+        text-transform: uppercase;
+      }
+      .subtitle {
+        margin: 0 0 1.25rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      form {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+        background: var(--panel-alt);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1rem;
+      }
+      input[type="file"] {
+        padding: 0.7rem 0.8rem;
+        border-radius: 10px;
+        background: white;
+        border: 1px solid var(--border);
+        color: var(--text);
+        flex: 1 1 260px;
+      }
+      button {
+        background: linear-gradient(135deg, var(--primary), #3b82f6);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.8rem 1.25rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+      }
+      button:hover { transform: translateY(-1px); }
+      button:disabled {
+        opacity: 0.65;
+        cursor: wait;
+        transform: none;
+      }
+      #status {
+        margin-top: 0.5rem;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      #progress {
+        margin: 1rem 0 0;
+        padding-left: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        list-style: none;
+      }
+      .progress-item {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin: 0.45rem 0;
+        padding: 0.5rem 0.6rem;
+        border-radius: 10px;
+        border: 1px solid transparent;
+      }
+      .progress-status {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 999px;
+        flex-shrink: 0;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .progress-status.done {
+        background: var(--success-bg);
+        color: var(--success);
+      }
+      .progress-status.error {
+        background: var(--error-bg);
+        color: var(--error);
+      }
+      .progress-status.running {
+        background: rgba(219, 234, 254, 0.5);
+        border: 2px solid rgba(29, 78, 216, 0.4);
+        border-top-color: var(--primary);
+        color: transparent;
+        animation: spin 0.8s linear infinite;
+      }
+      .progress-status.running::after {
+        content: "";
+        position: absolute;
+        inset: 0.1rem;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: var(--primary);
+      }
+      .progress-item.error {
+        background: #fff5f5;
+        border-color: #fecaca;
+      }
+      .progress-text {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem;
+        color: var(--text);
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .progress-item.error .progress-text,
+      .progress-item.error .progress-detail {
+        color: var(--error);
+      }
+      .progress-detail {
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 0.92rem;
+        line-height: 1.4;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .result-block {
+        margin-top: 1.5rem;
+        display: none;
+      }
+      .report-wrap {
+        width: min(1080px, calc(100% - 8px));
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .page-head { padding: 14px 0 4px; }
+      .head-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      .brand {
+        font-size: 27px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--primary);
+      }
+      .doc-title {
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--muted);
+        text-align: right;
+        max-width: 40ch;
+      }
+      .ficha {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px 26px;
+      }
+      .ident {
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 36px;
+      }
+      .ident div { display: flex; flex-direction: column; gap: 2px; }
+      .ident dt {
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #8b94a5;
+        margin: 0;
+      }
+      .ident dd {
+        margin: 0;
+        font-size: 14.5px;
+        color: var(--text);
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .verdict {
+        margin: 22px 0 0;
+        padding: 18px 0 0;
+        border-top: 1px solid #eef1f5;
+        font-size: 17px;
+        line-height: 1.5;
+        color: var(--text);
+      }
+      .verdict b { font-weight: 700; }
+      .method {
+        margin: 0;
+        font-size: 14.5px;
+        line-height: 1.65;
+        color: var(--muted);
+        max-width: 88ch;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .stat {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 22px 24px;
+        text-align: left;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: inherit;
+        cursor: pointer;
+        transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+      }
+      .stat:hover { border-color: #cfd6e2; }
+      .stat[aria-pressed="true"] { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+      .stat-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+      .stat-icon.red { background: #fff1f3; color: var(--error); }
+      .stat-icon.amber { background: #fffaeb; color: var(--warning-text); }
+      .stat-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .stat-label { font-size: 14px; color: var(--muted); }
+      .stat-value { display: flex; align-items: baseline; gap: 7px; }
+      .stat-value b { font-size: 27px; font-weight: 700; letter-spacing: -0.02em; }
+      .stat-value span { font-size: 14.5px; color: var(--muted); }
+      .stat-hint { font-size: 13px; color: #8b94a5; margin-top: 4px; }
+      .active-filter {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #f8fafc;
+        color: var(--text);
+      }
+      .active-filter[hidden] { display: none; }
+      .clear {
+        background: white;
+        color: var(--text);
+        border: 1px solid var(--border);
+        box-shadow: none;
+        padding: 0.55rem 0.9rem;
+        border-radius: 10px;
+        font-weight: 700;
+      }
+      .list { display: flex; flex-direction: column; gap: 16px; }
+      .case {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .case[hidden] { display: none; }
+      .case-head {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        background: rgba(240, 244, 250, 0.8);
+        border: none;
+        font: inherit;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+      .case-head:hover { background: rgba(236, 242, 250, 0.95); }
+      .case-main {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        flex: 1;
+      }
+      .marker {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.1rem;
+        height: 2.1rem;
+        font-size: 12px;
+        font-weight: 700;
+        color: #5d6472;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0 0.5rem;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+      .case-cite {
+        display: inline-block;
+        color: var(--text);
+        font-size: 17px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: min(38vw, 420px);
+      }
+      .case-pill {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+      }
+      .case-pill-red {
+        color: #d74d5d;
+        background: #fce8eb;
+        border: 1px solid rgba(215, 77, 93, 0.22);
+      }
+      .case-pill-amber {
+        color: #8a5b00;
+        background: #fff2cf;
+        border: 1px solid rgba(168, 120, 0, 0.2);
+      }
+      .source-label { font-weight: 700; color: var(--text); }
+      .disclose {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #4b5563;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        background: rgba(255,255,255,0.35);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 7px 12px;
+      }
+      .disclose-label { font-size: 14px; }
+      .toggle-sq {
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        display: grid;
+        place-items: center;
+        background: rgba(255,255,255,0.7);
+        color: var(--muted);
+        transition: transform .2s ease;
+        font-size: 11px;
+      }
+      .case-head[aria-expanded="true"] .toggle-sq { transform: rotate(180deg); }
+      .case-body { display: flex; flex-direction: column; }
+      .case-body[hidden] { display: none; }
+      .panels {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        margin: 0;
+        overflow: hidden;
+      }
+      .panel { padding: 22px 24px 26px; }
+      .panel + .panel { border-left: 1px solid var(--border); }
+      .panel-head {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .panel-head b { font-size: 15px; font-weight: 700; color: var(--text); }
+      .panel-head .small-caption {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .panel-icon,
+      .section-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.1rem;
+        height: 1.1rem;
+        font-size: 0.92rem;
+        color: #4b5563;
+      }
+      .panel p { margin: 0; font-size: 15.5px; line-height: 1.85; color: var(--text); }
+      .panel p.plain { line-height: 1.7; color: var(--muted); }
+      mark { color: inherit; padding: 3px 6px; border-radius: 6px; }
+      mark.claim { background: #ffe0e3; }
+      mark.source {
+        background: #d9f6e3;
+        color: #1d4f39;
+      }
+      .source-meta {
+        margin: 0 0 10px;
+        font-size: 12px;
+        color: #5b6472;
+        font-weight: 600;
+      }
+      .source-meta span { color: #2e3745; }
+      .section {
+        padding: 22px 24px;
+        border-top: 1px solid #eef1f5;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .section-title b { font-size: 15px; font-weight: 700; color: var(--text); }
+      .rewrite-note {
+        font-size: 12px;
+        color: #64748b;
+        font-style: italic;
+        margin-left: 5px;
+      }
+      .copy-btn {
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.6);
+        color: #4b5563;
+        border-radius: 8px;
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 0;
+      }
+      .copy-btn:hover {
+        background: #f8fafc;
+      }
+      .view-source {
+        font-size: 14px;
+        color: #1d4ed8;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .view-source:hover { text-decoration: underline; }
+      .observacion { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--muted); }
+      .glosario {
+        border-top: 1px solid var(--border);
+        padding: 26px 0 0;
+        margin: 10px 0 0;
+        color: var(--text);
+      }
+      .glosario h2 { margin: 0 0 4px; font-size: 17px; }
+      .glosario > p { margin: 0 0 18px; font-size: 14.5px; color: var(--muted); }
+      .glosario dl { margin: 0; display: grid; grid-template-columns: minmax(0,15rem) minmax(0,1fr); gap: 11px 26px; }
+      .glosario dt { margin: 0; font-size: 14.5px; font-weight: 600; }
+      .glosario dd { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--muted); }
+      .downloads {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1rem 0 1rem;
+      }
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+        background: #0f172a;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .report-section {
+        background: var(--panel-alt);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1rem 1.2rem;
+        margin-top: 1rem;
+      }
+      .report-section summary {
+        cursor: pointer;
+        font-weight: 700;
+        list-style: none;
+      }
+      .report-section summary::-webkit-details-marker { display: none; }
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 0.83rem;
+        line-height: 1.6;
+        overflow-x: auto;
+      }
+      @media (max-width: 640px) {
+        .card { margin: 1rem; padding: 1rem; }
+        .topbar { align-items: flex-start; flex-direction: column; }
+        form { padding: 0.85rem; }
+        input[type="file"], button { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="topbar">
+        <div class="brand">RefCheck</div>
+      </div>
+
+      <p class="subtitle">Upload a manuscript (.docx or .pdf) and let the analysis run automatically.</p>
+
+      <form id="upload-form">
+        <input id="manuscript-file" type="file" name="file" accept=".docx,.pdf" required>
+        <button id="submit-button" type="submit">Analyse</button>
+      </form>
+
+      <div id="status">Waiting for manuscript upload.</div>
+      <ul id="progress"></ul>
+
+      <div id="results" class="result-block" aria-live="polite"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById('upload-form');
+      const fileInput = document.getElementById('manuscript-file');
+      const statusEl = document.getElementById('status');
+      const progressEl = document.getElementById('progress');
+      const resultsEl = document.getElementById('results');
+      const summaryEl = document.getElementById('summary');
+      const matchesEl = document.getElementById('matches');
+      const sentencesEl = document.getElementById('sentences');
+      const jsonReportEl = document.getElementById('json-report');
+      const downloadsEl = document.getElementById('downloads');
+      const PAGE_SIZE = 10;
+      const paginationState = { matches: 1, sentences: 1 };
+      const STORAGE_KEY = 'refcheck-last-run';
+      const STORAGE_VERSION = 'refcheck-v3';
+      let currentReport = {};
+      let currentJobId = null;
+
+      function saveSessionState(state) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, version: STORAGE_VERSION }));
+        } catch (e) {}
+      }
+
+      function clearSessionState() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      }
+
+      function restoreStoredSessionState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (!parsed || parsed.version !== STORAGE_VERSION) {
+            clearSessionState();
+            return null;
+          }
+          return parsed;
+        } catch (error) {
+          console.warn('Could not read RefCheck state:', error);
+          clearSessionState();
+          return null;
+        }
+      }
+
+      function setStatus(message) {
+        if (!message || !String(message).trim()) {
+          statusEl.textContent = '';
+          statusEl.style.display = 'none';
+          return;
+        }
+        statusEl.style.display = 'block';
+        statusEl.textContent = message;
+      }
+
+      function renderProgress(items) {
+        progressEl.innerHTML = '';
+        if (!items || !items.length) return;
+
+        const finalIndex = items.length - 1;
+        items.forEach((item, index) => {
+          const message = String(item.message || item.stage || 'Processing...');
+          const isError = /analysis failed/i.test(message) || String(item.stage || '').toLowerCase() === 'error';
+          const isCurrentStep = !isError && index === finalIndex && !message.toLowerCase().includes('complete');
+
+          const li = document.createElement('li');
+          li.className = `progress-item ${isError ? 'error' : ''}`;
+
+          const indicator = document.createElement('span');
+          indicator.className = `progress-status ${isError ? 'error' : isCurrentStep ? 'running' : 'done'}`;
+          indicator.textContent = isError ? '✕' : isCurrentStep ? '' : '✓';
+          indicator.setAttribute('aria-label', isError ? 'Failed' : isCurrentStep ? 'In progress' : 'Completed');
+
+          const textWrap = document.createElement('div');
+          textWrap.className = 'progress-text';
+
+          const label = document.createElement('span');
+          label.textContent = isError ? message.replace(/^Analysis failed:\s*/i, '') : message;
+          textWrap.appendChild(label);
+
+          if (isError) {
+            const match = message.match(/in manuscript:\s*(.*)$/i);
+            if (match && !/in manuscript:/i.test(label.textContent || '')) {
+              const detail = document.createElement('span');
+              detail.className = 'progress-detail';
+              detail.textContent = `in manuscript: ${match[1]}`;
+              textWrap.appendChild(detail);
+            }
+          }
+
+          li.append(indicator, textWrap);
+          progressEl.appendChild(li);
+        });
+      }
+
+      function getDisplaySourceName(value) {
+        if (!value) return 'n/a';
+        const raw = String(value).replace(/\\/g, '/');
+        return raw.split('/').pop() || raw;
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[char]));
+      }
+
+      function escapeRegExp(value) {
+        return String(value ?? '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function renderErrorState(errorMessage) {
+        const message = String(errorMessage || 'Analysis failed.');
+        const sanitized = escapeHtml(message);
+        resultsEl.style.display = 'block';
+        resultsEl.innerHTML = `
+          <div class="report-wrap">
+            <div class="list">
+              <article class="case" data-kind="content">
+                <button class="case-head" type="button" aria-expanded="true" aria-controls="error-case">
+                  <span class="case-main">
+                    <span class="marker">[1]</span>
+                    <span class="source-label">${sanitized}</span>
+                    <span class="pill pill-red">error</span>
+                  </span>
+                  <span class="disclose">
+                    <span class="disclose-label">Hide evidence</span>
+                    <span class="toggle-sq">⌄</span>
+                  </span>
+                </button>
+                <div class="case-body" id="error-case">
+                  <div class="panels">
+                    <div class="panel">
+                      <div class="panel-head"><b>What the reviewed manuscript claims</b></div>
+                      <p class="plain"><mark class="claim">${sanitized}</mark></p>
+                    </div>
+                    <div class="panel">
+                      <div class="panel-head"><b>What the source says</b></div>
+                      <p class="plain">No source passage is available because this manuscript does not contain a valid citation to check.</p>
+                    </div>
+                  </div>
+                  <div class="section">
+                    <div class="section-title"><b>RefCheck observation</b></div>
+                    <p class="observacion">${sanitized}</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        `;
+
+        const trigger = resultsEl.querySelector('.case-head');
+        if (trigger) {
+          trigger.addEventListener('click', () => {
+            const body = document.getElementById('error-case');
+            const expanded = trigger.getAttribute('aria-expanded') === 'true';
+            trigger.setAttribute('aria-expanded', String(!expanded));
+            if (body) body.hidden = expanded;
+            const label = trigger.querySelector('.disclose-label');
+            if (label) label.textContent = expanded ? 'Show evidence' : 'Hide evidence';
+          });
+        }
+      }
+
+      function classifyMatch(match) {
+        const kind = String(match && match.kind ? match.kind : '').toLowerCase();
+        if (kind === 'content' || kind === 'metadata') return kind;
+
+        const ruleText = String(match && match.match_rule ? match.match_rule : '').toLowerCase();
+        const status = String(match && match.status ? match.status : '').toLowerCase();
+        const metadataSignals = /(doi|author|year|journal|title|reference|volume|issue|page|isbn|publisher)/.test(ruleText);
+        if (status !== 'matched') return 'content';
+        return metadataSignals ? 'metadata' : 'content';
+      }
+
+      function normalizeIssueKey(value) {
+        return String(value ?? '')
+          .trim()
+          .toLowerCase()
+          .replace(/\.+$/, '')
+          .replace(/[\s-]+/g, '_')
+          .replace(/_+/g, '_');
+      }
+
+      function getIssueLabel(match) {
+        const statusValue = normalizeIssueKey(match && (match.status || ''));
+        const ruleValue = normalizeIssueKey(match && (match.match_rule || ''));
+        const secondaryFamily = normalizeIssueKey(match && (match.secondary_family || ''));
+        const primaryFamily = normalizeIssueKey(match && (match.primary_family || ''));
+        const verdictValue = normalizeIssueKey(match && (match.verdict || ''));
+
+        const labelMap = {
+          directional_inversion: 'The source says the opposite',
+          scope_distortion: 'The study did not do that',
+          fabricated_specificity: 'Data does not match the study',
+          misattribution: 'Data does not match the study',
+          epistemic_inflation: 'Inflated figure',
+          quantitative_reframing: 'Inflated figure',
+          off_target_relevance: 'Figure taken out of context',
+          evidentiary_type_mismatch: 'One measure confused with another',
+          poor_measure_match: 'One measure confused with another',
+          pure_fabrication: 'Fabricated reference',
+          incorrect_reference_details: 'Incorrect reference details',
+          reference_details_mismatch: 'Incorrect reference details',
+          unsupported: 'Issue',
+          issue: 'Issue',
+          doi_not_found: 'Incorrect reference details',
+          source_not_indexed: 'Incorrect reference details',
+          source_could_not_be_opened: 'Incorrect reference details',
+          source_abstained: 'Source was ambiguous',
+          technical_failure: 'Incorrect reference details',
+          unresolvable_reference: 'Incorrect reference details',
+          unmatched: 'Reference not matched',
+          numbered_reference_number: 'Reference not matched',
+          author_year_lead_author_and_year: 'Reference not matched',
+        };
+
+        const familyMatch = labelMap[statusValue]
+          || labelMap[ruleValue]
+          || labelMap[secondaryFamily]
+          || labelMap[primaryFamily]
+          || labelMap[verdictValue];
+
+        if (familyMatch) return familyMatch;
+        if (statusValue && statusValue !== 'issue') {
+          return statusValue.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        }
+        return 'Issue';
+      }
+
+      function getMatchReasonKey(match) {
+        const candidates = [
+          match && match.status,
+          match && match.match_rule,
+          match && match.secondary_family,
+          match && match.primary_family,
+          match && match.verdict,
+        ].filter((value) => value !== null && value !== undefined && String(value).trim() !== '');
+
+        for (const candidate of candidates) {
+          const normalized = normalizeIssueKey(candidate);
+          if (normalized && normalized !== 'issue') return normalized;
+        }
+
+        const fallback = candidates.map((candidate) => normalizeIssueKey(candidate)).find(Boolean);
+        return fallback || '';
+      }
+
+      function getObservationText(match) {
+        if (match && match.explanation) {
+          return match.explanation;
+        }
+
+        const label = getIssueLabel(match);
+        const reasonKey = getMatchReasonKey(match);
+
+        if (reasonKey === 'source_could_not_be_opened') {
+          return 'This match was flagged by RefCheck: Incorrect reference details.';
+        }
+        if (reasonKey === 'technical_failure') {
+          return 'This match was flagged by RefCheck: Incorrect reference details.';
+        }
+        if (reasonKey === 'source_not_indexed') {
+          return 'This match was flagged by RefCheck: Incorrect reference details.';
+        }
+        if (reasonKey === 'source_abstained') {
+          return 'This match was flagged by RefCheck: Source was ambiguous.';
+        }
+        if (reasonKey === 'fabricated_reference' || reasonKey === 'pure_fabrication') {
+          return 'This match was flagged by RefCheck: Fabricated reference.';
+        }
+        if (reasonKey === 'incorrect_reference_details' || reasonKey === 'reference_details_mismatch' || reasonKey === 'doi_not_found' || reasonKey === 'unresolvable_reference') {
+          return 'This match was flagged by RefCheck: Incorrect reference details.';
+        }
+
+        return `This match was flagged by RefCheck: ${label}.`;
+      }
+
+      function findReferenceForMatch(match) {
+        const refs = Array.isArray(currentReport.references) ? currentReport.references : [];
+        if (!match || !refs.length) return {};
+
+        const possibleNumbers = [
+          match.matched_reference,
+          match.reference_id,
+          match.ref_number,
+          match.reference_number,
+        ]
+          .filter((value) => value !== null && value !== undefined && String(value).trim() !== '')
+          .map((value) => String(value).trim())
+          .flatMap((value) => {
+            const digits = value.match(/\d+/g);
+            return digits ? digits.map((digit) => Number(digit)) : [Number(value)];
+          })
+          .filter((value) => Number.isFinite(value) && value > 0);
+
+        if (possibleNumbers.length) {
+          const exact = refs.find((item) => {
+            const itemNumber = Number(item && item.number);
+            return Number.isFinite(itemNumber) && possibleNumbers.includes(itemNumber);
+          });
+          if (exact) return exact;
+        }
+
+        const citationText = String(match.citation || '').trim();
+        if (citationText) {
+          const byCitation = refs.find((item) => {
+            const raw = String(item && (item.raw || item.reference || item.title || '')).toLowerCase();
+            const target = citationText.toLowerCase().replace(/[\[\]]/g, '');
+            return raw.includes(target) || target.includes(raw.replace(/[^0-9]/g, ''));
+          });
+          if (byCitation) return byCitation;
+        }
+
+        return refs.find((item) => {
+          const raw = String(item && (item.raw || item.reference || item.title || '')).trim();
+          return Boolean(raw);
+        }) || {};
+      }
+
+      function getReferenceText(reference) {
+        if (!reference || typeof reference !== 'object') return 'Reference record';
+
+        const direct = [
+          reference.raw,
+          reference.reference,
+          reference.full_reference,
+          reference.fullReference,
+          reference.formatted_reference,
+          reference.citation,
+        ].find((value) => typeof value === 'string' && value.trim().length > 0);
+        if (direct && !/^\s*(?:[A-Z][A-Za-z'’.-]+(?:\s+(?:et\s+al\.|and|&)\s+[A-Z][A-Za-z'’.-]+)?)?\s*\(\d{4}\)\s*$/i.test(direct.trim())) {
+          return direct.trim();
+        }
+
+        const author = [reference.author, reference.first_author, reference.firstAuthor, reference.authors, reference.author_list]
+          .find((value) => typeof value === 'string' && value.trim().length > 0)
+          || '';
+        const year = reference.year || reference.publication_year || reference.pub_year;
+        const title = [reference.title, reference.article_title, reference.articleTitle, reference.paper_title]
+          .find((value) => typeof value === 'string' && value.trim().length > 0)
+          || '';
+        const journal = [reference.journal, reference.publication, reference.source, reference.container_title]
+          .find((value) => typeof value === 'string' && value.trim().length > 0)
+          || '';
+        const volume = reference.volume ? `, ${reference.volume}` : '';
+        const issue = reference.issue ? `(${reference.issue})` : '';
+        const pages = reference.pages ? `, ${reference.pages}` : '';
+        const doi = reference.doi ? ` https://doi.org/${reference.doi}` : '';
+
+        const authorText = typeof author === 'string' ? author.trim() : '';
+        const titleText = typeof title === 'string' ? title.trim() : '';
+        const journalText = typeof journal === 'string' ? journal.trim() : '';
+
+        if (authorText || titleText || year || journalText) {
+          const parts = [];
+          if (authorText) parts.push(authorText);
+          if (year) parts.push(`(${year})`);
+          if (titleText) parts.push(`. ${titleText}.`);
+          if (journalText) parts.push(` ${journalText}${issue}${volume}${pages}.`);
+          if (doi) parts.push(`${doi}`);
+          const built = parts.join('').replace(/\s+/g, ' ').trim();
+          if (built.length > 0) return built;
+        }
+
+        return direct || reference.reference || reference.title || reference.short || 'Reference record';
+      }
+
+      function renderDetailedReport(report) {
+        currentReport = report || {};
+        const sourceName = getDisplaySourceName(currentReport.source_file);
+        const totalRefs = Array.isArray(currentReport.references) ? currentReport.references.length : 0;
+        const summary = currentReport.summary || {};
+        const matches = Array.isArray(currentReport.citation_matches) ? currentReport.citation_matches.filter((m) => m && typeof m === 'object') : [];
+        const issueMatches = matches.filter((m) => String(m.status || '').toLowerCase() !== 'matched');
+        const totalReviewed = Number(currentReport.citation_count) || matches.length || totalRefs;
+        const errorCount = issueMatches.length;
+        const containsIssues = errorCount > 0;
+        const hasMatchRows = matches.length > 0;
+
+        const listHtml = hasMatchRows ? matches.map((match, idx) => {
+          const kind = classifyMatch(match);
+          const ref = findReferenceForMatch(match);
+          const refText = getReferenceText(ref);
+          const sentence = (currentReport.sentences || []).find((s) => s.sentence_id === match.sentence_id) || {};
+          const sentenceText = sentence.text || sentence.sentence_text || 'No sentence text captured.';
+          const sourceQuote = match.evidence_quote || refText || 'No source passage was captured.';
+          const sourceUrl = ref.url || ref.link || (ref.doi ? `https://doi.org/${ref.doi}` : '');
+          const sourceLabel = refText.length > 120 ? `${refText.slice(0, 117)}…` : refText;
+          const pillText = match.status === 'matched' ? 'matched' : getIssueLabel(match);
+          const bodyId = `case-body-${idx + 1}`;
+          const observation = match.status === 'matched'
+            ? 'This citation matches the referenced entry.'
+            : getObservationText(match);
+          const rewriteText = sentenceText.replace(new RegExp(`\\s*\\(\\s*${escapeRegExp(String(match.citation || '').replace(/[\[\]]/g, ''))}\\s*\\)\\s*`, 'ig'), '').replace(/\s{2,}/g, ' ').trim() || sentenceText;
+          const rawCitation = String(match.citation || '').trim();
+          const citationDisplay = rawCitation ? rawCitation.replace(/[\[\]]/g, '').trim() : `#${idx + 1}`;
+          const citationHeader = citationDisplay.includes('(') ? citationDisplay : citationDisplay.replace(/,\s*(\d{4})\b/, ' ($1)');
+          const usesNumericMarker = /^\s*\[?\d+\]?\s*$/.test(rawCitation) || /^\s*\[\d+\]\s*/.test(rawCitation);
+          const markerHtml = usesNumericMarker ? `<span class="marker">${escapeHtml(rawCitation.includes('[') ? rawCitation : `[${rawCitation}]`)}</span>` : '';
+          const casePillClass = match.status === 'matched' ? 'case-pill-amber' : 'case-pill-red';
+          return `
+            <article class="case" data-kind="${kind}">
+              <button class="case-head" type="button" aria-expanded="false" aria-controls="${bodyId}">
+                <span class="case-main">
+                  ${markerHtml}
+                  <span class="case-cite">${escapeHtml(citationHeader)}</span>
+                  <span class="case-pill ${casePillClass}">${escapeHtml(pillText)}</span>
+                </span>
+                <span class="disclose">
+                  <span class="disclose-label">Hide evidence</span>
+                  <span class="toggle-sq">⌄</span>
+                </span>
+              </button>
+              <div class="case-body" id="${bodyId}" hidden>
+                <div class="panels">
+                  <div class="panel">
+                    <div class="panel-head"><span class="panel-icon">✎</span><b>What the reviewed manuscript claims</b></div>
+                    <p class="plain"><mark class="claim">${escapeHtml(sentenceText)}</mark></p>
+                  </div>
+                  <div class="panel">
+                    <div class="panel-head"><span class="panel-icon">◫</span><b>What the source says</b> <span class="small-caption">(passage from the cited work)</span></div>
+                    <p class="source-meta">Passage source: <span>Abstract</span></p>
+                    <p class="plain"><mark class="source">${escapeHtml(sourceQuote)}</mark></p>
+                  </div>
+                </div>
+                <div class="section">
+                  <div class="section-title"><span class="section-icon">⌕</span><b>RefCheck observation</b></div>
+                  <p class="observacion">${escapeHtml(observation)}</p>
+                </div>
+                <div class="section">
+                  <div class="section-header">
+                    <div class="section-title"><span class="section-icon">✎</span><b>Suggested rewrite</b><span class="rewrite-note">This only fixes the flagged point, based on what the passage shows. Final revision of the text is the author's responsibility.</span></div>
+                    <button type="button" class="copy-btn" data-copy="${escapeHtml(rewriteText)}" aria-label="Copy suggested rewrite">⧉</button>
+                  </div>
+                  <p class="plain">${escapeHtml(rewriteText)}</p>
+                </div>
+                <div class="section">
+                  <div class="section-header">
+                    <div class="section-title"><span class="section-icon">▣</span><b>Cited source</b></div>
+                    ${sourceUrl ? `<a class="view-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">View source ↗</a>` : ''}
+                  </div>
+                  <p class="plain">${escapeHtml(refText)}</p>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('') : (totalReviewed > 0 ? '<div class="case" data-kind="content"><button class="case-head" type="button" aria-expanded="false" aria-controls="empty-case"><span class="case-main"><span class="marker">Review summary</span><span class="source-label">Citations were reviewed, but no detailed match rows were returned for this run.</span></span><span class="disclose"><span class="disclose-label">Show evidence</span><span class="toggle-sq">⌄</span></span></button><div class="case-body" id="empty-case" hidden><div class="section"><div class="section-title"><b>Observation</b></div><p class="observacion">The manuscript has citations in the review summary, but the detailed match list is empty. This usually means the match rows were not populated for the current run.</p></div></div></div>' : '<div class="case" data-kind="content"><button class="case-head" type="button" aria-expanded="false" aria-controls="empty-case"><span class="case-main"><span class="marker">No matches</span><span class="source-label">No citations were detected.</span></span><span class="disclose"><span class="disclose-label">Show evidence</span><span class="toggle-sq">⌄</span></span></button><div class="case-body" id="empty-case" hidden><div class="section"><div class="section-title"><b>Observation</b></div><p class="observacion">No match data was returned for this manuscript.</p></div></div></div>');
+
+        const verdict = !hasMatchRows && totalReviewed > 0
+          ? `${totalReviewed} citation${totalReviewed === 1 ? '' : 's'} reviewed. <b>No detailed match rows were returned for this run.</b>`
+          : containsIssues
+            ? `${totalReviewed} citation${totalReviewed === 1 ? '' : 's'} reviewed. <b>${errorCount} ${errorCount === 1 ? 'contains an error.' : 'contain errors.'}</b>`
+            : `${totalReviewed} citations were reviewed. <b>None contain errors.</b>`;
+
+        const contentCount = matches.filter((m) => classifyMatch(m) === 'content' && String(m.status || '').toLowerCase() !== 'matched').length;
+        const metadataCount = matches.filter((m) => classifyMatch(m) === 'metadata' && String(m.status || '').toLowerCase() !== 'matched').length;
+
+        resultsEl.innerHTML = `
+          <div class="report-wrap">
+
+            <div class="ficha">
+              <dl class="ident">
+                <div>
+                  <dt>Prepared for</dt>
+                  <dd>${summary.prepared_for || 'Document review'}</dd>
+                </div>
+                <div>
+                  <dt>Manuscript reviewed</dt>
+                  <dd>${sourceName}</dd>
+                </div>
+                <div>
+                  <dt>Issued by</dt>
+                  <dd>${summary.issued_by || 'RefCheck'}</dd>
+                </div>
+                <div>
+                  <dt>Review scope</dt>
+                  <dd>${totalReviewed} citations</dd>
+                </div>
+              </dl>
+              <div class="verdict">${verdict}</div>
+              <p class="method">For each claim, the cited work was opened and the passage that decides the verdict was located. Each bibliographic entry was checked field by field against the official record in Crossref.</p>
+            </div>
+
+            <div class="stats">
+              <button class="stat" type="button" data-filter="content" aria-pressed="false">
+                <span class="stat-icon red">✕</span>
+                <span class="stat-text">
+                  <span class="stat-label">Citations the source does not support</span>
+                  <span class="stat-value"><b>${contentCount}</b><span>citations</span></span>
+                  <span class="stat-hint">Click to see only these cases</span>
+                </span>
+              </button>
+              <button class="stat" type="button" data-filter="metadata" aria-pressed="false">
+                <span class="stat-icon amber">!</span>
+                <span class="stat-text">
+                  <span class="stat-label">References with metadata problems</span>
+                  <span class="stat-value"><b>${metadataCount}</b><span>references</span></span>
+                  <span class="stat-hint">Click to see only these cases</span>
+                </span>
+              </button>
+            </div>
+
+            <div class="active-filter" id="active-filter" hidden>
+              <span id="filter-text"></span>
+              <button type="button" class="clear" id="clear-filter">View all cases</button>
+            </div>
+
+            <div class="list" id="report-list">${listHtml}</div>
+
+            <div class="glosario">
+              <h2>Error types</h2>
+              <p>References with metadata problems include: Incorrect reference details, Fabricated reference.</p>
+              <p>First the errors in the content of the citation; then those in the bibliographic details.</p>
+              <dl>
+                <dt>The source says the opposite</dt>
+                <dd>The cited work states the opposite of what the sentence claims.</dd>
+                <dt>The study did not do that</dt>
+                <dd>The study is credited with a design or scope it did not have.</dd>
+                <dt>Data does not match the study</dt>
+                <dd>Molecules or findings are attributed to the study that are not its own.</dd>
+                <dt>Inflated figure</dt>
+                <dd>The stated magnitude is larger than what the source reports.</dd>
+                <dt>Figure taken out of context</dt>
+                <dd>The number exists in the source, but it refers to a different outcome.</dd>
+                <dt>One measure confused with another</dt>
+                <dd>The value is correct, but it corresponds to a different measure than the one named.</dd>
+                <dt>Incorrect reference details</dt>
+                <dd>The article exists, but one or more bibliographic fields do not match the official record.</dd>
+                <dt>Fabricated reference</dt>
+                <dd>No record of the article exists in any bibliographic database.</dd>
+              </dl>
+            </div>
+
+            <div id="downloads" class="downloads"></div>
+
+            <details class="report-section">
+              <summary>Full report JSON</summary>
+              <pre id="json-report" style="margin-top:0.8rem;">${JSON.stringify(currentReport, null, 2)}</pre>
+            </details>
+          </div>
+        `;
+
+        const downloadsEl = document.getElementById('downloads');
+        const files = currentReport.output_files || {};
+        const entries = [
+          ['report_json', 'Generated report JSON'],
+          ['excel_dataset', 'Excel Dataset (.xlsx)'],
+          ['run_record', 'Run Record JSON'],
+        ].filter(([key]) => files[key]).map(([key, label]) => ({ key, label, fileName: files[key] }));
+        downloadsEl.innerHTML = entries.length ? entries.map(({ label, fileName }) => `
+          <a class="download-btn" href="/api/download/${currentJobId}/${fileName}" download>${label}</a>
+        `).join('') : '';
+
+        document.querySelectorAll('.case-head').forEach((button) => {
+          button.addEventListener('click', () => {
+            const body = document.getElementById(button.getAttribute('aria-controls'));
+            const expanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', String(!expanded));
+            if (body) body.hidden = expanded;
+            const label = button.querySelector('.disclose-label');
+            if (label) label.textContent = expanded ? 'Show evidence' : 'Hide evidence';
+          });
+        });
+
+        document.querySelectorAll('.copy-btn').forEach((button) => {
+          button.addEventListener('click', async () => {
+            const text = button.getAttribute('data-copy') || '';
+            if (!text) return;
+            try {
+              await navigator.clipboard.writeText(text);
+              const oldLabel = button.textContent;
+              button.textContent = '✓';
+              setTimeout(() => { button.textContent = oldLabel; }, 1200);
+            } catch (error) {
+              const textarea = document.createElement('textarea');
+              textarea.value = text;
+              document.body.appendChild(textarea);
+              textarea.select();
+              document.execCommand('copy');
+              textarea.remove();
+            }
+          });
+        });
+
+        const filterText = document.getElementById('filter-text');
+        const activeFilter = document.getElementById('active-filter');
+        const clearFilter = document.getElementById('clear-filter');
+        let currentFilter = null;
+
+        function applyFilter(kind) {
+          currentFilter = kind;
+          document.querySelectorAll('.stat').forEach((stat) => {
+            stat.setAttribute('aria-pressed', String(stat.dataset.filter === kind));
+          });
+          document.querySelectorAll('.case').forEach((el) => {
+            const shouldShow = !kind || el.dataset.kind === kind;
+            el.hidden = !shouldShow;
+          });
+          if (kind) {
+            activeFilter.hidden = false;
+            filterText.innerHTML = kind === 'content'
+              ? 'Showing only <b>citations the source does not support</b>.'
+              : 'Showing only <b>references with metadata problems</b>.';
+          } else {
+            activeFilter.hidden = true;
+            filterText.textContent = '';
+          }
+        }
+
+        document.querySelectorAll('.stat').forEach((stat) => {
+          stat.addEventListener('click', () => {
+            const next = currentFilter === stat.dataset.filter ? null : stat.dataset.filter;
+            applyFilter(next);
+          });
+        });
+
+        clearFilter.addEventListener('click', () => applyFilter(null));
+
+        saveSessionState({
+          currentJobId,
+          status: 'done',
+          progress: currentReport.progress || [],
+          report: currentReport,
+          error: null,
+        });
+      }
+
+      function renderReport(report) {
+        currentReport = report || {};
+        resultsEl.style.display = 'block';
+        renderDetailedReport(currentReport);
+      }
+
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('.pager-btn');
+        if (!button) return;
+
+        const { list: listName, dir } = button.dataset;
+        if (!listName || !dir) return;
+
+        const current = paginationState[listName] || 1;
+        const items = listName === 'matches' ? (currentReport.citation_matches || []) : (currentReport.sentences || []);
+        const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+        const nextPage = dir === 'next' ? Math.min(current + 1, totalPages) : Math.max(current - 1, 1);
+        paginationState[listName] = nextPage;
+
+        if (listName === 'matches') renderMatches(currentReport);
+        else renderSentences(currentReport);
+      });
+
+      async function pollJob(jobId) {
+        const response = await fetch(`/api/progress/${jobId}`);
+        const data = await response.json();
+
+        if (data.progress) {
+          renderProgress(data.progress);
+          saveSessionState({ currentJobId: jobId, status: data.status, progress: data.progress, report: data.report || currentReport || null, error: data.error || null });
+        }
+
+        if (data.status === 'running') {
+          setStatus('Processing manuscript...');
+          setTimeout(() => pollJob(jobId), 1200);
+          return;
+        }
+
+        if (data.status === 'done') {
+          setStatus('Analysis complete.');
+          renderReport(data.report || {});
+          return;
+        }
+
+        if (data.status === 'error') {
+          renderProgress(data.progress || []);
+          renderErrorState(data.error || 'Analysis failed.');
+          setStatus('');
+          return;
+        }
+      }
+
+      function restoreSessionState() {
+        const state = restoreStoredSessionState();
+        if (!state) return;
+
+        currentJobId = state.currentJobId || null;
+        if (Array.isArray(state.progress) && state.progress.length) {
+          renderProgress(state.progress);
+        }
+
+        if (state.report && Object.keys(state.report).length) {
+          renderReport(state.report);
+          setStatus('Analysis restored from the last run.');
+          return;
+        }
+
+        if (state.error) {
+          renderProgress(state.progress || []);
+          renderErrorState(state.error);
+          setStatus('');
+        }
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const file = fileInput.files[0];
+        if (!file) {
+          setStatus('Please choose a .docx or .pdf manuscript first.');
+          return;
+        }
+
+        currentReport = {};
+        currentJobId = null;
+        resultsEl.innerHTML = '';
+        progressEl.innerHTML = '';
+        clearSessionState();
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const submitButton = document.getElementById('submit-button');
+        submitButton.disabled = true;
+        setStatus('Uploading manuscript...');
+
+        try {
+          const response = await fetch('/api/upload-manuscript', { method: 'POST', body: formData });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.error || 'Upload failed.');
+
+          currentJobId = payload.job_id;
+          setStatus('Upload accepted. Starting RefCheck analysis...');
+          pollJob(payload.job_id);
+        } catch (error) {
+          setStatus(error.message || 'Upload failed.');
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+
+      restoreSessionState();
+    </script>
+  </body>
+</html>
