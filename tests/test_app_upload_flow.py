@@ -212,6 +212,35 @@ def test_run_orchestrator_keeps_local_matches_when_library_report_is_empty(tmp_p
     assert report["citation_count"] == len(report["citation_matches"])
 
 
+def test_normalize_library_report_uses_the_real_manuscript_citation_token():
+    from orchestrator import runner
+
+    report = {
+        "sentences": [
+            {
+                "sentence_id": "s1",
+                "sentence_text": "Johnston et al. (2011) reported a similar signal.",
+                "pairs": [
+                    {
+                        "sentence_id": "s1",
+                        "sentence_text": "Johnston et al. (2011) reported a similar signal.",
+                        "ref_number": 1109473,
+                        "status": "verdict",
+                        "verdict": "supported",
+                        "explanation": "The claim is supported by the cited source.",
+                        "source_type": "full_text",
+                    }
+                ],
+            }
+        ],
+        "summary": {"total_sentences": 1},
+    }
+
+    normalized = runner._normalize_library_report(report)
+    assert normalized["citation_matches"][0]["citation"] == "Johnston et al. (2011)"
+    assert normalized["citation_matches"][0]["matched_reference"] == 1109473
+
+
 def test_normalize_library_report_keeps_llm_verdict_and_issue_rows():
     from orchestrator import runner
 

@@ -55,6 +55,38 @@ def _reference_identity(entry: dict[str, Any]) -> tuple[str | None, int | None, 
     return lead_author, int(number) if isinstance(number, int) else None, year
 
 
+def _infer_citation_token(sentence_text: str, ref_number: Any | None) -> str:
+    """Return the real citation token from the manuscript, not an internal numeric ID."""
+    if not sentence_text:
+        return f"[{ref_number}]" if ref_number is not None else "citation"
+
+    if ref_number is not None:
+        try:
+            ref_int = int(ref_number)
+        except (TypeError, ValueError):
+            ref_int = None
+        if ref_int is not None:
+            for match in NUMBERED_CITATION_RE.finditer(sentence_text):
+                inner = match.group(1)
+                for part in re.split(r"\s*(?:,|-)\s*", inner.strip()):
+                    if not part:
+                        continue
+                    try:
+                        if int(part) == ref_int:
+                            return f"[{part}]"
+                    except ValueError:
+                        continue
+
+    for regex in (AUTHOR_YEAR_RE, AUTHOR_YEAR_PAREN_RE, AUTHOR_YEAR_PLAIN_RE):
+        for match in regex.finditer(sentence_text):
+            return match.group(0)
+
+    for match in NUMBERED_CITATION_RE.finditer(sentence_text):
+        return match.group(0)
+
+    return f"[{ref_number}]" if ref_number is not None else "citation"
+
+
 def _match_citations_to_references(sentences: list[dict[str, Any]], references: list[dict[str, Any]]) -> list[dict[str, Any]]:
     matches: list[dict[str, Any]] = []
     ref_by_number = {int(ref.get("number")): ref for ref in references if isinstance(ref.get("number"), int)}
@@ -331,7 +363,7 @@ def _normalize_library_report(report: dict[str, Any]) -> dict[str, Any]:
 
             matches.append({
                 "sentence_id": sentence_id,
-                "citation": f"[{ref_number}]" if isinstance(ref_number, int) else str(ref_number),
+                "citation": _infer_citation_token(sentence_text, ref_number),
                 "status": status,
                 "matched_reference": ref_number,
                 "match_rule": match_rule,

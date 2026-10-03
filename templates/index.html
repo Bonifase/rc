@@ -974,6 +974,33 @@
         return direct || reference.reference || reference.title || reference.short || 'Reference record';
       }
 
+      function getDisplayCitationToken(match, sentenceText) {
+        const raw = typeof match?.citation === 'string' ? match.citation.trim() : '';
+        if (raw && !/^\d{4,}$/.test(raw.replace(/[\[\]\s]/g, ''))) {
+          return raw;
+        }
+
+        const text = sentenceText || '';
+        const noBrackets = text.replace(/\[[^\]]*\]/g, ' ');
+        const patterns = [
+          /[A-Z][A-Za-z'’.-]+(?:,\s*[A-Z]\.)*(?:\s+(?:et\s+al\.?|and|&)\s*(?:[A-Z][A-Za-z'’.-]+)?)?\s*\(\d{4}\)/g,
+          /[A-Z][A-Za-z'’.-]+(?:,\s*[A-Z]\.)*(?:\s+(?:et\s+al\.?|and|&)\s*(?:[A-Z][A-Za-z'’.-]+)?)?\s*,\s*\d{4}/g,
+          /\[[^\]]+\]/g,
+        ];
+
+        for (const pattern of patterns) {
+          const candidate = text.match(pattern)?.[0];
+          if (candidate) return candidate.trim();
+        }
+
+        for (const pattern of patterns) {
+          const candidate = noBrackets.match(pattern)?.[0];
+          if (candidate) return candidate.trim();
+        }
+
+        return raw || 'citation';
+      }
+
       function renderDetailedReport(report) {
         currentReport = report || {};
         const sourceName = getDisplaySourceName(currentReport.source_file);
@@ -1001,7 +1028,7 @@
             ? 'This citation matches the referenced entry.'
             : getObservationText(match);
           const rewriteText = sentenceText.replace(new RegExp(`\\s*\\(\\s*${escapeRegExp(String(match.citation || '').replace(/[\[\]]/g, ''))}\\s*\\)\\s*`, 'ig'), '').replace(/\s{2,}/g, ' ').trim() || sentenceText;
-          const rawCitation = String(match.citation || '').trim();
+          const rawCitation = getDisplayCitationToken(match, sentenceText);
           const citationDisplay = rawCitation ? rawCitation.replace(/[\[\]]/g, '').trim() : `#${idx + 1}`;
           const citationHeader = citationDisplay.includes('(') ? citationDisplay : citationDisplay.replace(/,\s*(\d{4})\b/, ' ($1)');
           const usesNumericMarker = /^\s*\[?\d+\]?\s*$/.test(rawCitation) || /^\s*\[\d+\]\s*/.test(rawCitation);
@@ -1240,6 +1267,13 @@
         renderDetailedReport(currentReport);
       }
 
+      function setSubmitButtonState(isBusy) {
+        const submitButton = document.getElementById('submit-button');
+        if (!submitButton) return;
+        submitButton.disabled = isBusy;
+        submitButton.textContent = isBusy ? 'Analysing...' : 'Analyse';
+      }
+
       document.addEventListener('click', (event) => {
         const button = event.target.closest('.pager-btn');
         if (!button) return;
@@ -1267,18 +1301,21 @@
         }
 
         if (data.status === 'running') {
+          setSubmitButtonState(true);
           setStatus('Processing manuscript...');
           setTimeout(() => pollJob(jobId), 1200);
           return;
         }
 
         if (data.status === 'done') {
+          setSubmitButtonState(false);
           setStatus('Analysis complete.');
           renderReport(data.report || {});
           return;
         }
 
         if (data.status === 'error') {
+          setSubmitButtonState(false);
           renderProgress(data.progress || []);
           renderErrorState(data.error || 'Analysis failed.');
           setStatus('');
@@ -1324,8 +1361,7 @@
         const formData = new FormData();
         formData.append('file', file);
 
-        const submitButton = document.getElementById('submit-button');
-        submitButton.disabled = true;
+        setSubmitButtonState(true);
         setStatus('Uploading manuscript...');
 
         try {
@@ -1337,9 +1373,8 @@
           setStatus('Upload accepted. Starting RefCheck analysis...');
           pollJob(payload.job_id);
         } catch (error) {
+          setSubmitButtonState(false);
           setStatus(error.message || 'Upload failed.');
-        } finally {
-          submitButton.disabled = false;
         }
       });
 
