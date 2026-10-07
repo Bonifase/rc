@@ -1,0 +1,646 @@
+{
+  "doc1_a2_1_pereira": {
+    "doi": "10.1038/s41598-021-95408-6",
+    "status": "resolved",
+    "title": "Transcriptomic profiling of Gh/Igf system reveals a prompted tissue-specific differentiation and novel hypoxia responsive genes in gilthead sea bream",
+    "authors": [
+      {
+        "family": "Naya-Català",
+        "given": "F."
+      },
+      {
+        "family": "Simó-Mirabet",
+        "given": "P."
+      },
+      {
+        "family": "Calduch-Giner",
+        "given": "J."
+      },
+      {
+        "family": "Pérez-Sánchez",
+        "given": "J."
+      }
+    ],
+    "year": 2021,
+    "journal": "Scientific Reports",
+    "volume": "11",
+    "issue": "1",
+    "pages": null,
+    "article_number": "16466",
+    "issn": "2045-2322",
+    "publication_type": "journal-article"
+  },
+  "doc2_a4_1_naya_venus": {
+    "doi": "10.1038/s41598-021-95408-6",
+    "status": "resolved",
+    "title": "Transcriptomic profiling of Gh/Igf system reveals a prompted tissue-specific differentiation and novel hypoxia responsive genes in gilthead sea bream",
+    "authors": [
+      {
+        "family": "Naya-Català",
+        "given": "F."
+      },
+      {
+        "family": "Simó-Mirabet",
+        "given": "P."
+      },
+      {
+        "family": "Calduch-Giner",
+        "given": "J."
+      },
+      {
+        "family": "Pérez-Sánchez",
+        "given": "J."
+      }
+    ],
+    "year": 2021,
+    "journal": "Scientific Reports",
+    "volume": "11",
+    "issue": "1",
+    "pages": null,
+    "article_number": "16466",
+    "issn": "2045-2322",
+    "publication_type": "journal-article"
+  },
+  "doc1_a2_2_weng_zhong": {
+    "doi": "10.3389/fimmu.2022.959717",
+    "status": "resolved",
+    "title": "Insulin-like growth factor 1 injection changes gene expression related to amino acid transporting, complement and coagulation cascades in the stomach of tilapia revealed by RNA-seq",
+    "authors": [
+      {
+        "family": "Zhong",
+        "given": "Huan"
+      },
+      {
+        "family": "Lou",
+        "given": "Chenyi"
+      },
+      {
+        "family": "Ren",
+        "given": "Bingxin"
+      },
+      {
+        "family": "Zhou",
+        "given": "Yi"
+      }
+    ],
+    "year": 2022,
+    "journal": "Frontiers in Immunology",
+    "volume": "13",
+    "issue": null,
+    "pages": null,
+    "article_number": "959717",
+    "issn": "1664-3224",
+    "publication_type": "journal-article"
+  },
+  "doc1_a2_3_doc3_12_lema_bersin": {
+    "doi": "10.1016/j.mce.2023.111951",
+    "status": "resolved",
+    "title": "Nutritional status affects Igf1 regulation of skeletal muscle myogenesis, myostatin, and myofibrillar protein degradation pathways in gopher rockfish (Sebastes carnatus)",
+    "authors": [
+      {
+        "family": "Bersin",
+        "given": "Theresa V."
+      },
+      {
+        "family": "Cordova",
+        "given": "Kasey L."
+      },
+      {
+        "family": "Saenger",
+        "given": "E. Kate"
+      },
+      {
+        "family": "Journey",
+        "given": "Meredith L."
+      },
+      {
+        "family": "Beckman",
+        "given": "Brian R."
+      },
+      {
+        "family": "Lema",
+        "given": "Sean C."
+      }
+    ],
+    "year": 2023,
+    "journal": "Molecular and Cellular Endocrinology",
+    "volume": "573",
+    "issue": null,
+    "pages": "111951",
+    "article_number": "111951",
+    "issn": "0303-7207",
+    "publication_type": "journal-article"
+  },
+  "doc1_a2_4_duplicate_doi": {
+    "doi": "10.3390/ijms252413583",
+    "status": "resolved",
+    "title": "Extended Photoperiod Facilitated the Restoration of the Expression of GH-IGF Axis Genes in Submerged Rainbow Trout (Oncorhynchus mykiss)",
+    "authors": [
+      {
+        "family": "Dong",
+        "given": "Kang"
+      },
+      {
+        "family": "Hou",
+        "given": "Zhishuai"
+      },
+      {
+        "family": "Li",
+        "given": "Zhao"
+      },
+      {
+        "family": "Xu",
+        "given": "Yuling"
+      },
+      {
+        "family": "Gao",
+        "given": "Qinfeng"
+      }
+    ],
+    "year": 2024,
+    "journal": "International Journal of Molecular Sciences",
+    "volume": "25",
+    "issue": "24",
+    "pages": "13583",
+    "article_number": null,
+    "issn": "1422-0067",
+    "publication_type": "journal-article"
+  },
+  "doc1_a2_6_retracted": {
+    "doi": "10.1155/2021/5554487",
+    "status": "resolved",
+    "title": "[Retracted] A Permissioned Blockchain\u2010Based Clinical Trial Service Platform to Improve Trial Data Transparency",
+    "authors": [
+      {
+        "family": "Hang",
+        "given": "Lei"
+      },
+      {
+        "family": "Kim",
+        "given": "BumHwi"
+      },
+      {
+        "family": "Kim",
+        "given": "KyuHyung"
+      },
+      {
+        "family": "Kim",
+        "given": "DoHyeun"
+      }
+    ],
+    "year": 2021,
+    "journal": "BioMed Research International",
+    "volume": "2021",
+    "issue": "1",
+    "pages": null,
+    "article_number": "5554487",
+    "issn": "2314-6133",
+    "publication_type": "journal-article",
+    "retracted": true,
+    "retraction_notice": "10.1155/2024/9753878",
+    "retraction_source": "retraction-watch"
+  },
+  "doc2_a4_2_nornberg": {
+    "doi": "10.1016/j.ygcen.2015.12.017",
+    "status": "resolved",
+    "title": "Expression profile of IGF paralog genes in liver and muscle of a GH-transgenic zebrafish",
+    "authors": [
+      {
+        "family": "Nornberg",
+        "given": "Bruna Felix"
+      },
+      {
+        "family": "Figueiredo",
+        "given": "Marcio Azevedo"
+      },
+      {
+        "family": "Marins",
+        "given": "Luis Fernando"
+      }
+    ],
+    "year": 2016,
+    "journal": "General and Comparative Endocrinology",
+    "volume": "226",
+    "issue": null,
+    "pages": "36-41",
+    "article_number": null,
+    "issn": "0016-6480",
+    "publication_type": "journal-article"
+  },
+  "doc2_a4_3_serrana_macqueen": {
+    "doi": "10.3389/fendo.2018.00080",
+    "status": "resolved",
+    "title": "Insulin-Like Growth Factor-Binding Proteins of Teleost Fishes",
+    "authors": [
+      {
+        "family": "Garcia de la Serrana",
+        "given": "Daniel"
+      },
+      {
+        "family": "Macqueen",
+        "given": "Daniel J."
+      }
+    ],
+    "year": 2018,
+    "journal": "Frontiers in Endocrinology",
+    "volume": "9",
+    "issue": null,
+    "pages": null,
+    "article_number": "80",
+    "issn": "1664-2392",
+    "publication_type": "journal-article"
+  },
+  "doc2_a4_4_sanchez_moya": {
+    "doi": "10.3389/fendo.2023.1211470",
+    "status": "resolved",
+    "title": "Cysteamine improves growth and the GH/IGF axis in gilthead sea bream (Sparus aurata): in vivo and in vitro approaches",
+    "authors": [
+      {
+        "family": "Sánchez-Moya",
+        "given": "Albert"
+      },
+      {
+        "family": "Balbuena-Pecino",
+        "given": "Sara"
+      },
+      {
+        "family": "Vélez",
+        "given": "Emilio J."
+      },
+      {
+        "family": "Perelló-Amorós",
+        "given": "Miquel"
+      },
+      {
+        "family": "García-Meilán",
+        "given": "Irene"
+      },
+      {
+        "family": "Fontanillas",
+        "given": "Ramón"
+      },
+      {
+        "family": "Calduch-Giner",
+        "given": "Josep Àlvar"
+      },
+      {
+        "family": "Pérez-Sánchez",
+        "given": "Jaume"
+      },
+      {
+        "family": "Fernández-Borràs",
+        "given": "Jaume"
+      },
+      {
+        "family": "Blasco",
+        "given": "Josefina"
+      },
+      {
+        "family": "Gutiérrez",
+        "given": "Joaquin"
+      }
+    ],
+    "year": 2023,
+    "journal": "Frontiers in Endocrinology",
+    "volume": "14",
+    "issue": null,
+    "pages": null,
+    "article_number": "1211470",
+    "issn": "1664-2392",
+    "publication_type": "journal-article"
+  },
+  "doc2_a4_5_duran": {
+    "doi": "10.3390/ijms23031180",
+    "status": "resolved",
+    "title": "Amino Acids and IGF1 Regulation of Fish Muscle Growth Revealed by Transcriptome and microRNAome Integrative Analyses of Pacu (Piaractus mesopotamicus) Myotubes",
+    "authors": [
+      {
+        "family": "Duran",
+        "given": "Bruno Oliveira Silva"
+      },
+      {
+        "family": "Zanella",
+        "given": "Bruna Tereza Thomazini"
+      },
+      {
+        "family": "Perez",
+        "given": "Erika Stefani"
+      },
+      {
+        "family": "Mareco",
+        "given": "Edson Assunção"
+      },
+      {
+        "family": "Blasco",
+        "given": "Josefina"
+      },
+      {
+        "family": "Dal-Pai-Silva",
+        "given": "Maeli"
+      },
+      {
+        "family": "Garcia de la serrana",
+        "given": "Daniel"
+      }
+    ],
+    "year": 2022,
+    "journal": "International Journal of Molecular Sciences",
+    "volume": "23",
+    "issue": "3",
+    "pages": "1180",
+    "article_number": null,
+    "issn": "1422-0067",
+    "publication_type": "journal-article"
+  },
+  "doc2_a4_6_fuentes": {
+    "doi": "10.1016/j.ygcen.2013.06.009",
+    "status": "resolved",
+    "title": "Regulation of skeletal muscle growth in fish by the growth hormone – Insulin-like growth factor system",
+    "authors": [
+      {
+        "family": "Fuentes",
+        "given": "Eduardo N."
+      },
+      {
+        "family": "Valdés",
+        "given": "Juan Antonio"
+      },
+      {
+        "family": "Molina",
+        "given": "Alfredo"
+      },
+      {
+        "family": "Björnsson",
+        "given": "Björn Thrandur"
+      }
+    ],
+    "year": 2013,
+    "journal": "General and Comparative Endocrinology",
+    "volume": "192",
+    "issue": null,
+    "pages": "136-148",
+    "article_number": null,
+    "issn": "0016-6480",
+    "publication_type": "journal-article"
+  },
+  "doc3_b4_7_elizur": {
+    "doi": "10.3389/fendo.2024.1369043",
+    "status": "resolved",
+    "title": "Characterization of a novel fast-growing zebrafish: a new approach to growth hormone transgenesis",
+    "authors": [
+      {
+        "family": "Cohen-Rothschild",
+        "given": "Noam"
+      },
+      {
+        "family": "Mizrahi",
+        "given": "Naama"
+      },
+      {
+        "family": "Levavi-Sivan",
+        "given": "Berta"
+      }
+    ],
+    "year": 2024,
+    "journal": "Frontiers in Endocrinology",
+    "volume": "15",
+    "issue": null,
+    "pages": null,
+    "article_number": "1369043",
+    "issn": "1664-2392",
+    "publication_type": "journal-article"
+  },
+  "doc3_b4_30_zohar": {
+    "doi": "10.3389/fendo.2024.1373623",
+    "status": "resolved",
+    "title": "Gene expression analyses of GH/IGF axis in triploid crucian carp with growth heterosis",
+    "authors": [
+      {
+        "family": "Qing",
+        "given": "Weiling"
+      },
+      {
+        "family": "Ren",
+        "given": "Bingxin"
+      },
+      {
+        "family": "Lou",
+        "given": "Chenyi"
+      },
+      {
+        "family": "Zhong",
+        "given": "Huan"
+      },
+      {
+        "family": "Zhou",
+        "given": "Yi"
+      },
+      {
+        "family": "Liu",
+        "given": "Shaojun"
+      }
+    ],
+    "year": 2024,
+    "journal": "Frontiers in Endocrinology",
+    "volume": "15",
+    "issue": null,
+    "pages": null,
+    "article_number": "1373623",
+    "issn": "1664-2392",
+    "publication_type": "journal-article"
+  },
+  "doc3_b4_6_doyle": {
+    "doi": "10.1016/j.ygcen.2009.04.020",
+    "status": "resolved",
+    "title": "Effects of cortisol, growth hormone and prolactin on gill claudin expression in Atlantic salmon",
+    "authors": [
+      {
+        "family": "Tipsmark",
+        "given": "C.K."
+      },
+      {
+        "family": "Jørgensen",
+        "given": "C."
+      },
+      {
+        "family": "Brande-Lavridsen",
+        "given": "N."
+      },
+      {
+        "family": "Engelund",
+        "given": "M."
+      },
+      {
+        "family": "Olesen",
+        "given": "J.H."
+      },
+      {
+        "family": "Madsen",
+        "given": "S.S."
+      }
+    ],
+    "year": 2009,
+    "journal": "General and Comparative Endocrinology",
+    "volume": "163",
+    "issue": "3",
+    "pages": "270-277",
+    "article_number": null,
+    "issn": "0016-6480",
+    "publication_type": "journal-article"
+  },
+  "doc3_b4_9_15_guan_liu": {
+    "doi": "10.1080/09712119.2024.2440045",
+    "status": "resolved",
+    "title": "Characterization of the growth-related transcriptome in the Liver and Brain of mandarin fish (\n            <i>Siniperca chuatsi</i>\n            ) through RNA-Seq analysis",
+    "authors": [
+      {
+        "family": "Ding",
+        "given": "Weidong"
+      },
+      {
+        "family": "Cao",
+        "given": "Liping"
+      },
+      {
+        "family": "Cao",
+        "given": "Zheming"
+      },
+      {
+        "family": "Bing",
+        "given": "Xuwen"
+      }
+    ],
+    "year": 2024,
+    "journal": "Journal of Applied Animal Research",
+    "volume": "52",
+    "issue": "1",
+    "pages": null,
+    "article_number": "2440045",
+    "issn": "0971-2119",
+    "publication_type": "journal-article"
+  },
+  "doc3_b4_27_xie": {
+    "doi": "10.1242/jeb.006890",
+    "status": "resolved",
+    "title": "Myogenesis and muscle metabolism in juvenile Atlantic salmon (<i>Salmo salar</i>) made transgenic for growth hormone",
+    "authors": [
+      {
+        "family": "Levesque",
+        "given": "H. M."
+      },
+      {
+        "family": "Shears",
+        "given": "M. A."
+      },
+      {
+        "family": "Fletcher",
+        "given": "G. L."
+      },
+      {
+        "family": "Moon",
+        "given": "T. W."
+      }
+    ],
+    "year": 2008,
+    "journal": "Journal of Experimental Biology",
+    "volume": "211",
+    "issue": "1",
+    "pages": "128-137",
+    "article_number": null,
+    "issn": "1477-9145",
+    "publication_type": "journal-article"
+  },
+  "doc3_b4_19_picha": {
+    "doi": "10.1577/a07-038.1",
+    "status": "resolved",
+    "title": "Endocrine Biomarkers of Growth and Applications to Aquaculture: A Minireview of Growth Hormone, Insulin-Like Growth Factor (IGF)-I, and IGF-Binding Proteins as Potential Growth Indicators in Fish",
+    "authors": [
+      {
+        "family": "Picha",
+        "given": "Matthew E"
+      },
+      {
+        "family": "Turano",
+        "given": "Marc J"
+      },
+      {
+        "family": "Beckman",
+        "given": "Brian R"
+      },
+      {
+        "family": "Borski",
+        "given": "Russell J"
+      }
+    ],
+    "year": 2008,
+    "journal": "North American Journal of Aquaculture",
+    "volume": "70",
+    "issue": "2",
+    "pages": "196-211",
+    "article_number": null,
+    "issn": "1522-2055",
+    "publication_type": "journal-article"
+  },
+  "doc3_b1_3_berishvili": {
+    "doi": "10.1016/j.ygcen.2010.01.023",
+    "status": "resolved",
+    "title": "Insulin-like growth factor-3 (IGF-3) in male and female gonads of the tilapia: Development and regulation of gene expression by growth hormone (GH) and 17α-ethinylestradiol (EE2)",
+    "authors": [
+      {
+        "family": "Berishvili",
+        "given": "Giorgi"
+      },
+      {
+        "family": "Baroiller",
+        "given": "Jean-François"
+      },
+      {
+        "family": "Eppler",
+        "given": "Elisabeth"
+      },
+      {
+        "family": "Reinecke",
+        "given": "Manfred"
+      }
+    ],
+    "year": 2010,
+    "journal": "General and Comparative Endocrinology",
+    "volume": "167",
+    "issue": "1",
+    "pages": "128-134",
+    "article_number": null,
+    "issn": "0016-6480",
+    "publication_type": "journal-article"
+  },
+  "doc3_b1_29_zhong": {
+    "doi": "10.3389/fimmu.2022.959717",
+    "status": "resolved",
+    "title": "Insulin-like growth factor 1 injection changes gene expression related to amino acid transporting, complement and coagulation cascades in the stomach of tilapia revealed by RNA-seq",
+    "authors": [
+      {
+        "family": "Zhong",
+        "given": "Huan"
+      },
+      {
+        "family": "Lou",
+        "given": "Chenyi"
+      },
+      {
+        "family": "Ren",
+        "given": "Bingxin"
+      },
+      {
+        "family": "Zhou",
+        "given": "Yi"
+      }
+    ],
+    "year": 2022,
+    "journal": "Frontiers in Immunology",
+    "volume": "13",
+    "issue": null,
+    "pages": null,
+    "article_number": "959717",
+    "issn": "1664-3224",
+    "publication_type": "journal-article"
+  }
+}

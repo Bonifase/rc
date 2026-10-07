@@ -1,0 +1,559 @@
+﻿
+
+Experimento de detección — Doc7: informe de Elicit sobre la vía IGF-I/PI3K/Akt en músculo de peces
+
+Agosto 2026 · corrida del prompt v7 sobre Elicit — IGF-I/PI3K/Akt Pathway in Fish Muscle Growth — Report 1. Séptimo documento del set y quinta plataforma probada.
+
+Resultado en una línea
+
+Cero referencias fabricadas, cero autores inventados, cero localizadores incorrectos: 9 de 10 referencias con metadata impecable, la mejor higiene bibliográfica de todo el experimento. Y a la vez ~26 cifras cuyos dígitos son todos correctos pero cuyo marco de referencia se altera de forma sistemática: siete errores confirmados, seis de ellos de reformulación semántica —cambiar el denominador de un porcentaje, borrar un hedge, convertir la edad de un cultivo en la edad del animal.
+
+Es un perfil invertido respecto de todo lo anterior. ChatGPT, Gemini y SciSpace fallaban en la identidad de la cita; Elicit acierta ahí casi perfecto y falla en la capa semántica — que es exactamente la capa que el prompt de comparación existe para cubrir.
+
+Y trae el hallazgo más importante de la serie completa, que desarrollo en la sección 6: el documento declara qué estudios leyó en texto completo y cuáles solo en abstract, y los siete errores confirmados están, sin excepción, en los nueve estudios leídos solo por abstract. El único estudio leído completo no tiene ni un error.
+
+
+
+1. El error dominante: reformulación cuantitativa
+
+1.1 Tres cifras convertidas de “% del control” a “% de aumento” [confirmado]
+
+Es el mismo error repetido tres veces, y es el hallazgo que hace falta agregar a la taxonomía.
+
+Caso 167. El documento lo escribe de dos maneras distintas, en dos secciones distintas:
+
+Dónde
+
+Cómo lo dice
+
+¿Correcto?
+
+Abstract
+
+“myoblast DNA synthesis reaches 167% of control levels with 1 nM IGF-II”
+
+✓
+
+Resultados
+
+“maximum 167±17% increase at 1 nM relative to controls”
+
+✗
+
+Codina et al. 2008, literal: “with the maximum increase at 1 nM (167±17% with respect to control values)”. Es 167 % del control, o sea 1,67×. La variante “167 % de aumento” implicaría 2,67× — sesenta puntos porcentuales de más.
+
+Caso 359. Tres redacciones para el mismo número:
+
+Dónde
+
+Cómo lo dice
+
+¿Correcto?
+
+Abstract
+
+“359% increase”
+
+✗
+
+Efectos sobre el crecimiento
+
+“359±18.5% of control levels”
+
+✓
+
+Componentes de la vía
+
+“359±18.5% above control levels”
+
+✗
+
+Fuente literal: “up to 359±18.5% in IGF-II-treated cells with respect to control”. Es 3,59×, no 4,59×.
+
+Caso 125.7. “IGF-II stimulated MAPK phosphorylation maximally (125.7±16.9% increase)”. Fuente: “increases of up to 125.7±16.9%… with respect to control”. Es 125,7 % del control — un aumento real de 25,7 %. Presentado como “125,7 % de aumento”, el efecto queda casi cinco veces sobredimensionado.
+
+El caso 125.7 es el más grave de los tres precisamente porque el número está cerca de 100: la diferencia entre “125 % del control” (un efecto modesto) y “125 % de aumento” (un efecto que más que duplica) cambia la conclusión, no solo la magnitud. Y es la cifra sobre la que descansa todo el argumento de la sección “Differential pathway contributions across developmental stages”.
+
+Dato omitido que refuerza el problema: el mismo paper reporta 125,3±3,3 % para IGF-I — prácticamente idéntico a IGF-II. Esa equivalencia es el punto central del paper, y el documento cita solo una de las dos cifras.
+
+1.2 Por qué esto no encaja en ninguna de las nueve familias de v7
+
+fabricated_specificity no aplica: el número existe y es exacto.
+
+misattribution no aplica: está atribuido al estudio, al tejido y a la condición correctos.
+
+epistemic_inflation se le acerca en espíritu, pero esa familia es sobre grado de certeza, no sobre magnitud.
+
+scope_distortion es sobre amplitud, no sobre escala.
+
+Lo que ocurre es que el valor se preserva y su marco de referencia se cambia, lo que altera lo que el valor significa. Es un modo de falla propio y frecuente en literatura cuantitativa, y no está cubierto. Propuesta concreta para v8 en la sección 7.
+
+
+
+2. Hedges eliminados: cinco casos, cuatro fuentes
+
+2.1 Nörnberg et al. 2016 — “may potentiate” → “potentiating” [confirmado]
+
+Documento (abstract y sección de moduladores): “IGFBP5a potentiating IGF-II action during muscle differentiation”. Fuente literal: “The presence of IGFBP5a may potentiate the IGF2 action in muscle cells differentiation.”
+
+Este es el tercer documento del experimento que tropieza con el mismo paper y el mismo hedge. ChatGPT lo hizo en el Doc2 (donde además construyó una cadena causal completa sobre tres hedges encadenados). Que tres plataformas distintas conviertan el mismo “may” en afirmación plana sugiere que no es azar: los verbos modales son lo primero que se pierde en la compresión.
+
+2.2 Codina et al. 2006 — cuatro salvedades borradas [confirmado]
+
+Esta fuente marca sus resultados como preliminares tres veces, y el documento no lo refleja ninguna:
+
+Documento
+
+Fuente literal
+
+“IGF-I overexpression in zebrafish muscle increased both MyoD and myogenin expression”
+
+“In preliminary experiments in zebrafish… ectopic overexpression of IGF-I increased MyoD and myogenin expression” — y además: “the half life of the plasmid in the cells is short and the increase of IGF-I is lower than expected”, “High variability between animals was seen”
+
+“c-met expression highest during early developmental stages before declining with differentiation”
+
+“we did preliminary experiments using c-met…”
+
+“refeeding restoring IGF expression and muscle growth after fasting”
+
+“IGF expression and muscle growth were partially restored by refeeding”
+
+“The PI3K/Akt pathway proved essential for glucose uptake”
+
+“the main pathway in muscle involved in glucose uptake is the PI3K/Akt” · “the PI3K/Akt pathway is important for this process”
+
+“Partially restored” → “restoring”, y “main/important” → “essential/proved essential”, son escaladas pequeñas cada una y acumulativas en conjunto.
+
+2.3 Una conclusión que la fuente no solo no dice, sino que contradice [confirmado]
+
+Documento: “Wortmannin inhibited Akt phosphorylation while PD98059 blocked MAPK activation, confirming pathway independence [7].”
+
+Los hechos sobre inhibidores están bien: “wortmannin decreased Akt phosphorylation stimulated by hIGF-II, while treatment with PD98059 reduced the activation of MAPK.”
+
+Pero la conclusión no está en el paper, y su conclusión real apunta en dirección opuesta: “the two pathways exert opposite effects in muscle, and depending on the differentiation stage of the cells, one or the other is activated.” Dos vías con efectos opuestos y activación alternante según el estadio no son vías independientes — son vías acopladas de forma recíproca.
+
+Familia v7: causal_overreach, con la variante de conclusión mecanística que la fuente no extrae.
+
+Detalle secundario: en el paper el efecto de wortmannin sobre Akt se reporta específicamente bajo estimulación con hIGF-II; el documento lo enuncia sin esa condición.
+
+
+
+3. La edad del cultivo convertida en la edad del animal
+
+Cleveland & Weber 2010 — “4-day-old larvae” [confirmado]
+
+La tabla de características de estudios asigna a Cleveland & Weber 2010 el estadio de vida “4-day-old larvae”.
+
+Fuente literal (Métodos): “Muscle tissue was removed from young rainbow trout (5–10 g) and collected in ice-cold suspension media.”
+
+El “4-day” del paper existe, pero se refiere a la edad del cultivo celular, no a la del pez: - Abstract: “…in primary cultures of 4-day-old rainbow trout myocytes” - Métodos: “Protein degradation assays were performed on 4- and 7-day-old cell cultures, which exhibit the morphology of small and large myotubes, respectively.”
+
+Comprobación biológica que cierra el caso: una trucha arcoíris de cuatro días es un embrión dentro del huevo — la eclosión ocurre a las cuatro a siete semanas. De ahí no se aíslan células satélite.
+
+Familia v7: misattribution — el valor es correcto y la entidad a la que se adhiere es otra. Es la misma estructura que el caso del músculo y el estómago de Sánchez-Moya, aplicada a un parámetro experimental en vez de a un tejido.
+
+Es además el único error de la tabla de características, que por lo demás es honesta: nueve de diez celdas de tamaño muestral dicen “Not specified”, y el documento lo reconoce explícitamente en el texto (“Only one study provided full methodological details with specified sample sizes”).
+
+
+
+4. Dos estudios de la misma especie y el mismo laboratorio presentados como evidencia independiente
+
+Fuentes 2011 [8] y Fuentes 2015 [6] [confirmado]
+
+La tabla los lista como especies distintas: “Fine flounder” [8] y “Paralichthys adspersus” [6].
+
+Paralichthys adspersus es el lenguado fino. Son el mismo pez. Y no solo eso:
+
+
+
+Fuentes et al. 2011 [8]
+
+Fuentes et al. 2015 [6]
+
+Especie
+
+Paralichthys adspersus
+
+Paralichthys adspersus
+
+Primer autor
+
+Eduardo N. Fuentes
+
+Eduardo N. Fuentes
+
+Autor sénior
+
+Alfredo Molina
+
+Alfredo Molina
+
+Laboratorio
+
+Biotecnología Molecular, U. Andrés Bello / INCAR
+
+el mismo
+
+Colaboradores
+
+Björnsson BT, Einarsdóttir IE (U. Gotemburgo), Valdés JA
+
+los mismos
+
+Diseño
+
+ayuno/realimentación, músculo esquelético
+
+ayuno/realimentación, músculo esquelético
+
+Dos consecuencias:
+
+En la tabla, la cobertura taxonómica del review queda inflada: aparenta nueve especies cuando son ocho, y dos de las diez entradas son el mismo sistema experimental.
+
+En la Síntesis, se usan como evidencia convergente independiente: “This reconciles the apparent discrepancy between studies showing robust IGF-I effects in fed conditions [2] versus limited effects during nutritional deprivation [6, 8].” Dos trabajos del mismo grupo, sobre el mismo pez, con el mismo protocolo, contados como dos observaciones independientes que refuerzan una conclusión.
+
+Esto es el caso que la Regla B de retrieval (v6) anticipa, en una variante nueva: allá era el mismo dataset republicado en dos papers; acá es la misma especie y el mismo laboratorio. Igual que allá, ninguna afirmación individual es falsa y ningún prompt de comparación afirmación-pasaje puede detectarlo — solo aparece cruzando las referencias entre sí.
+
+
+
+5. Errores aritméticos y de consistencia interna, detectables sin recuperar nada
+
+Los cuatro se resuelven leyendo el documento contra sí mismo. Son material directo para el módulo estructural.
+
+5.1 Recuento de diseños experimentales. “Five studies used in vivo approaches [5, 6, 8–10], four employed in vitro cell culture systems [1–3], and two combined both approaches [4, 7].” El rango [1–3] contiene tres referencias, no cuatro. Y la suma declarada da 5 + 4 + 2 = 11 sobre un total de 10 estudios. La partición real —in vivo [5,6,8,9,10] = 5; in vitro [1,2,3] = 3; ambos [4,7] = 2— sí suma 10. Es señal (k) de v7 en estado puro: un total y su desglose que no cuadran.
+
+5.2 Rango de concentraciones incoherente entre abstract y cuerpo. El abstract dice que los factores de crecimiento activan la vía “at concentrations of 1-100 nM in cultured myocytes [1, 2]”. El cuerpo dice que se usó insulina a 1 μM, que son 1.000 nM — fuera del rango declarado por un factor de diez.
+
+5.3 La misma cifra con tres marcos distintos. Los casos 167 y 359 de la sección 1 aparecen con redacciones incompatibles en el abstract, en Resultados y en la Síntesis. Sin abrir una sola fuente, un documento que dice “359 % del control” en un lugar y “359 % por encima del control” en otro está mal en al menos uno de los dos.
+
+5.4 El propio criterio de cribado, incumplido. La sección de screening declara excluir “conference abstract, editorial, opinion piece, or case report”. La referencia [7] es una contribución al 2º Working Group Meeting de la COST Action 925, publicada en Archives Animal Breeding 49 (2006), Special Issue, pp. 33–38. El prefacio de ese número lo dice literal: “contains the contributions of the participants to the sessions of the two working groups either as abstracts or short papers”. Es literatura gris de congreso, sin revisión por pares de revista y sin indexación en PubMed, Crossref, Semantic Scholar ni Google Scholar.
+
+No es una referencia fabricada —existe y respalda casi todo lo que se le atribuye— pero no debería estar en el corpus según el protocolo que el propio documento declara, y es la única de las diez sin revista, volumen, páginas ni DOI. Además omite cuatro de sus ocho autores (García de la Serrana D., Rallière C., Gabillard J.Ch., Rescan P.Y.) sin marcar “et al.”, lo que convierte una abreviación en una atribución incompleta.
+
+
+
+6. El hallazgo central: los errores están donde no hubo texto completo
+
+Elicit hace algo que ninguna de las cuatro plataformas anteriores hizo: declara, estudio por estudio, si recuperó el texto completo. La columna se llama “Full text retrieved?” y su contenido es inequívoco:
+
+Estudio
+
+Texto completo
+
+¿Errores confirmados en lo que se le atribuye?
+
+Duran et al. 2022 [4]
+
+Sí
+
+Ninguno — los cuatro fold-changes exactos (0,31 · 0,35 · 2,34 · 2,16), el protocolo exacto (100 ng/mL, 24 h)
+
+Codina et al. 2008 [1]
+
+No
+
+3 errores de marco cuantitativo + 1 de atribución de rangos
+
+Cleveland & Weber 2010 [2]
+
+No
+
+1 error (edad del animal) — aunque sus seis cifras son exactas
+
+Codina et al. 2006 [7]
+
+No
+
+4 hedges borrados + 1 conclusión contradicha + metadata mutilada
+
+Nörnberg et al. 2016 [9]
+
+No
+
+1 hedge borrado
+
+Zhu et al. 2021 [10]
+
+No
+
+1 error de encuadre (los 619 DEG)
+
+Fuentes 2011 [8] / 2015 [6]
+
+No
+
+presentados como especies distintas
+
+Vélez 2014 [3], Wei 2020 [5]
+
+No
+
+sin errores detectados
+
+El único estudio leído en texto completo es el único sin ningún error. Y sus cifras eran de las más difíciles del documento: cuatro fold-changes de tres decimales, todos exactos.
+
+Los tres errores de marco cuantitativo de la sección 1 son el caso más elocuente. El abstract de Codina 2008 dice “with respect to control values” — la información estaba disponible. Lo que se perdió no fue el acceso al dato, sino la frase que le da sentido, que en un abstract va comprimida y fácilmente se cae al resumir. Con la tabla del paper a la vista, donde la fila del control dice 100 %, la ambigüedad no existe.
+
+Esto convierte lo que en v6 y v7 era una recomendación razonable en una conclusión respaldada por evidencia directa: la regla de retrieval no es una optimización, es la variable que más pesa. Un documento con higiene bibliográfica casi perfecta acumuló siete errores de contenido, y todos cayeron del mismo lado de esa línea.
+
+
+
+7. Qué se lleva el prompt: familia nueva para v8
+
+7.1 quantitative_reframing
+
+Definición propuesta: el valor numérico de la afirmación coincide con el de la fuente, pero su marco de referencia —línea base, denominador, unidad o convención— se altera, de modo que el número significa una magnitud distinta de la que la fuente reporta.
+
+Casos que cubriría, todos del Doc7: - “% del control” presentado como “% de aumento” (167, 359, 125,7) — y viceversa - “% por encima del control” cuando la fuente dice “% del control” - Un fold-change presentado como cambio porcentual sin conversión - Un valor absoluto presentado como relativo
+
+Por qué merece familia propia y no un subtipo: es el único modo de falla del catálogo donde la afirmación pasaría cualquier verificación de dígitos y aun así reporta una magnitud equivocada. Un chequeo automático que busque “167” en el paper lo encuentra y lo da por bueno. Solo se detecta leyendo la frase completa que rodea al número.
+
+7.2 Señal nueva (n) — CONVENCIONES DE LÍNEA BASE Y UNIDAD
+
+Texto propuesto para el paso 3:
+
+(n) BASELINE AND UNIT CONVENTIONS. When the claim and the excerpt share a number, do not stop at matching the digits — check what the number is measured against. Phrases like “with respect to control”, “of control values”, “relative to control”, “as a percentage of control” set the control at 100%, so a reported value of 167% means 1.67× (a 67% increase). Phrases like “increase of”, “above control”, “over baseline” set the control at 0%, so 167% would mean 2.67×. These are different magnitudes and the difference grows as values approach 100%: “125% of control” is a 25% effect, while “125% increase” is a 125% effect. The same care applies to fold-change versus percent change, absolute versus relative values, and per-animal versus per-group counts. A claim that preserves the digits but changes the frame misreports the magnitude even though every figure in it appears in the source.
+
+7.3 Dos ejemplos nuevos, y el balance
+
+El set de v7 quedó en 8 no_sostenida / 4 sostenida / 2 incierta. Manteniendo la regla que fijamos en v7 —cada versión que agrega señales debe agregar al menos un ejemplo que enseñe a no marcar— propongo dos:
+
+Ejemplo 15 (no_sostenida, quantitative_reframing): el caso 125,7, que es el más didáctico porque el error es invisible a simple vista y cambia la conclusión.
+
+Ejemplo 16 (incierta): un abstract que da un porcentaje sin especificar la convención. Es exactamente el escenario que produjo los tres errores del Doc7, y la respuesta correcta cuando la frase de referencia no está en el excerpt no es marcar el error, es abstenerse y pedir el cuerpo del paper. Este ejemplo cierra el círculo con la regla 2 y con la Regla C de retrieval.
+
+Balance resultante: 9 / 4 / 3.
+
+7.4 Ampliación de la Regla B de retrieval
+
+La regla actual advierte sobre datasets solapados entre fuentes distintas. El caso Fuentes 2011/2015 muestra una segunda forma del mismo problema: misma especie, mismo laboratorio, mismo diseño, contados como evidencia independiente. Propuesta de redacción ampliada: marcar cuando dos o más referencias de un documento compartan primer autor o autor sénior y especie y diseño experimental, y el texto las use como convergentes.
+
+7.5 Un chequeo interno para el módulo estructural
+
+Cuatro de los hallazgos de este documento (§5) no requieren recuperar ninguna fuente. Vale la pena que el módulo previo incluya:
+
+Coherencia de particiones: cuando el texto reparte N estudios en subconjuntos, verificar que los rangos de referencias declarados contengan la cantidad que se afirma y que las partes sumen el total.
+
+Consistencia de una misma cifra entre secciones: si un número aparece en el abstract, en resultados y en la síntesis con marcos distintos, marcarlo sin consultar la fuente.
+
+Cumplimiento del criterio de cribado declarado: si el documento declara excluir actas de congreso, comprobar que ninguna referencia sea literatura gris. Un indicador barato y sorprendentemente efectivo: referencias sin revista ni DOI.
+
+Autores omitidos sin “et al.”: comparar el conteo de autores de la referencia contra Crossref y marcar las omisiones no señalizadas.
+
+
+
+8. Verificado exacto
+
+Metadata: 9 de 10 referencias perfectas. Volumen, páginas, año, revista y lista de autores correctos en [1], [2], [3], [4], [5], [6], [8], [9] y [10]. Cero autores inventados, cero localizadores incorrectos, cero referencias fabricadas. La única con defecto es [7], y su defecto es incompletitud, no incorrección.
+
+Vale la pena destacar un caso: Nörnberg et al. 2016 aparece con sus tres autores reales (Nornberg, Figueiredo, Marins) y su volumen y páginas correctos. ChatGPT, en el Doc2, citó ese mismo paper inventando dos autores (“Marafon, M., Storozhenko, S.”) y equivocando volumen y páginas. Misma fuente, dos plataformas, resultados opuestos.
+
+Cifras verificadas — todos los dígitos correctos:
+
+Fuente
+
+Cifras exactas
+
+Codina 2008 [1]
+
+167±17 ✓ · 359±18,5 ✓ · 125,7±16,9 ✓ · 5–100 nM captación de glucosa ✓ · 0,1–10 nM síntesis de ADN ✓ · máximo a 1 nM ✓
+
+Cleveland & Weber [2]
+
+síntesis +13 % con IGF-I y con insulina ✓ · degradación −14 % (IGF-I) y −17 % (insulina) ✓ · leucina 2,5 mM adicional sobre línea base 0,6 mM, −8 % degradación sin efecto en síntesis ✓ · Fbx32 −70 %, Fbx25 −40 %, MuRF1 −25 % ✓ · privación de suero: síntesis −60 %, degradación +40 % ✓ · FOXO1 y FOXO4 (no FOXO3) ✓
+
+Duran 2022 [4]
+
+igfbp1a fold-change 0,31 (AA) y 0,35 (IGF1) ✓ · igfbp5a 2,34 (AA) y 2,16 (IGF1) ✓ · 100 ng/mL IGF1, 24 h ✓
+
+Wei 2020 [5]
+
+FPH a 0, 45 y 180 g/kg ✓ exacto
+
+Zhu 2021 [10]
+
+619 DEG ✓ (con matiz de encuadre, ver abajo)
+
+Codina 2006 [7]
+
+trucha arcoíris, pez cebra y dorada ✓ · in vivo e in vitro ✓ · ayuno/realimentación ✓
+
+El inhibidor “CKB” no es un error del documento. Lo revisé porque parecía una corrupción de “CB” (citocalasina B). El paper dice CKB literalmente: “The results of incubation with inhibitors (Wortmannin and CKB)…”. Es citocalasina B, que el mismo laboratorio abrevia “CK” en otros dos trabajos. El documento reproduce la fuente con fidelidad; lo único mejorable es que omite a wortmannin, nombrado en la misma frase.
+
+El encuadre causal de Nörnberg, correcto donde importa. En la sección de resultados el documento escribe “GH-transgenic zebrafish exhibited muscle hypertrophy associated with increased igf2b expression” — exactamente el verbo que la fuente admite, y justo donde ChatGPT escribió “activó la vía PI3K/Akt e impulsó hipertrofia muscular”. El desliz aparece más tarde, en la Síntesis: “these fish still exhibited muscle hypertrophy through elevated igf2b”, donde “through” reintroduce la causalidad. Bien en el reporte, flojo en la interpretación.
+
+Transparencia de proceso. El documento declara su motor de búsqueda, la consulta exacta, los cinco criterios de cribado, el número de resultados (50), el número de exclusiones (40) y las instrucciones de extracción dadas al modelo. La aritmética del cribado cierra: 50 − 40 = 10. Ninguna plataforma anterior expuso su pipeline de esta manera.
+
+Dos imprecisiones menores que no llegan a error:
+
+“identified 619 differentially expressed genes related to metabolic homeostasis” — los 619 son el total de DEG entre control y grupo tratado con LY294002; la asociación con homeostasis metabólica viene del enriquecimiento funcional posterior. El número es correcto; el orden lógico está invertido.
+
+Los rangos 5–100 nM y 0,1–10 nM son de IGF-II; el documento los atribuye a IGF-I e IGF-II conjuntamente. IGF-I se ensayó a 100 nM. scope_distortion leve.
+
+
+
+9. Comparación con los seis documentos anteriores
+
+
+
+ChatGPT (Doc1+2)
+
+Gemini (Doc3)
+
+Humano (Doc4)
+
+Claude (Doc5)
+
+SciSpace (Doc6)
+
+Elicit (Doc7)
+
+Referencias fabricadas
+
+0
+
+0
+
+0
+
+0
+
+1 de 19
+
+0
+
+Autores inventados
+
+4
+
+3
+
+0
+
+1
+
+2 insertados
+
+0
+
+Errores de metadata
+
+9 de 12
+
+11 de 30
+
+1 de 30
+
+2 de 31
+
+10 de 19
+
+1 de 10, por omisión
+
+Referencias off-target
+
+algunas
+
+9+
+
+0
+
+0
+
+10 de 19
+
+0
+
+Contradicciones de la fuente
+
+1
+
+3
+
+0
+
+1
+
+—
+
+1
+
+Hedges eliminados
+
+sí
+
+sí
+
+0
+
+0
+
+—
+
+5
+
+Reformulación cuantitativa
+
+0
+
+0
+
+0
+
+0
+
+0
+
+3
+
+Citas huérfanas
+
+5
+
+lista completa
+
+0
+
+2 refs + 3 afirm.
+
+0
+
+0
+
+Cifras con dígitos correctos
+
+—
+
+—
+
+~35
+
+~30
+
+~6
+
+~26
+
+Declara qué leyó completo
+
+no
+
+no
+
+—
+
+no
+
+no
+
+sí
+
+Tres lecturas de esta tabla:
+
+Elicit y el borrador humano son los dos únicos documentos sin ningún error de identidad de cita. Cero referencias fabricadas, cero autores inventados, cero citas huérfanas, cero fuentes fuera de dominio. Las cuatro plataformas generativas restantes fallaron en al menos una de esas categorías. La diferencia plausible es de arquitectura: Elicit parte de un índice de papers reales y extrae de ellos, en vez de generar la referencia junto con el texto.
+
+Su modo de falla es el complementario. Donde ChatGPT y Gemini inventaban la fuente, Elicit reporta fielmente una fuente real y le cambia el marco: el denominador de un porcentaje, un verbo modal, la edad de un cultivo. Son errores más difíciles de ver —no hay nada que “no exista”— y quedan completamente fuera del alcance de los detectores de citas del mercado.
+
+Y es exactamente el modo de falla que el prompt de comparación existe para atrapar. Los siete errores del Doc7 son, sin excepción, errores de fidelidad afirmación-pasaje: el tipo que solo se detecta poniendo la afirmación al lado del texto de la fuente. Que la plataforma con mejor higiene bibliográfica de todo el experimento sea también la que más depende de este paso es el mejor argumento disponible a favor del producto.
+
+Fuentes recuperadas de PubMed, PubMed Central, Crossref, FishBase y las páginas de editorial. Texto completo consultado: Cleveland & Weber 2010 (AJP), Codina et al. 2006 (Archives Animal Breeding 49, Special Issue, pp. 33–38, actas COST Action 925). Papers de contraste del mismo laboratorio: Castillo et al. 2004 10.1152/ajpregu.00459.2003 y Vélez et al. 2012 10.3389/fendo.2012.00055, que fijan la convención “sin tratamiento = 100 %”.

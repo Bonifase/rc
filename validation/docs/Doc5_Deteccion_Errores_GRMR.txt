@@ -1,0 +1,365 @@
+﻿
+
+Experimento de detección — Doc5: revisión GR/MR en músculo de teleósteos (Claude)
+
+Agosto 2026 · corrida del prompt v5 sobre grmrteleostmusclereview. Segundo documento del set generado por un agente de IA distinto de ChatGPT y Gemini, y primero que trae una nota de auto-verificación de DOIs.
+
+Resultado en una línea
+
+~30 cifras verificadas exactas y 31 DOIs correctos. 5 errores confirmados: 1 autor inventado, 1 error de fascículo, 1 mecanismo nunca medido, 1 relación aritmética imposible, 1 inversión de atribución. 2 referencias huérfanas, 3 afirmaciones sin cita (las tres tienen fuente real localizable). 1 mecanismo sin respaldo pendiente de PDF.
+
+Perfil intermedio entre el Doc4 (humano, casi limpio) y los documentos de ChatGPT/Gemini. La metadata es notablemente mejor que la de aquellos —2 errores en 31 referencias, contra 9 de 12 y 11 de 30—, pero reaparecen dos patrones que el Doc4 no tenía: un autor que no existe en el paper citado y un mecanismo atribuido a un estudio que no lo midió.
+
+
+
+Errores confirmados
+
+1. Autor inventado en Dindia et al. 2012 [confirmado]
+
+Documento: “Dindia, L., Faught, E., Leonenko, Z., Thomas, R., & Vijayan, M. M. (2012)” Real: Dindia L, Murray J, Faught E, Davis TL, Leonenko Z, Vijayan MM (PMID 23056491).
+
+Tres defectos en una sola referencia: “Thomas, R.” no es autor de ese paper, faltan Murray, J. y Davis, T. L., y el orden de autoría queda alterado. Revista, volumen, artículo y DOI sí son correctos.
+
+Es exactamente el mismo tipo de error que dominó los documentos de ChatGPT y Gemini —autor inventado dentro de una referencia por lo demás real— y es el hallazgo más relevante del Doc5, porque el documento declara explícitamente al final que verificó cada referencia. La verificación cubrió DOIs, no listas de autores.
+
+2. Fascículo equivocado en Aedo et al. 2019a [confirmado]
+
+Documento: Physiological Genomics, 51(12), 596–606. Real: 51(11), 596–606 (PubMed PMID 31588873, Crossref issue: 11, y la revisión PMC8214340 la cita igual).
+
+Páginas, volumen, DOI, año y autores correctos. Solo el número de fascículo.
+
+3. Apoptosis atribuida a un estudio que no la midió — Valenzuela et al. 2020 [confirmado]
+
+Documento: “crowding stress in rainbow trout activates the UPS and apoptosis pathways early, with ALS activation following later, while the calpain system was suppressed throughout.”
+
+La secuencia temporal es correcta: UPS al alza a los 15 días, ALS a los 60 días, y el sistema de calpaínas “inactivated during the entire trial” — la parte más fácil de invertir salió bien. Pero el texto completo (PMC7429773) mide exclusivamente los tres mecanismos proteolíticos (UPS, ALS, calpaína/calpastatina) más marcadores de crecimiento y genes de estrés. No hay ningún ensayo, gen ni marcador apoptótico en el paper.
+
+Familia: causal_overreach en su variante de mecanismo que la fuente nunca midió — la misma que se agregó en v4 a partir del caso de la somatostatina de Sánchez-Moya.
+
+Arreglo: eliminar “and apoptosis” de la frase.
+
+4. Relación aritméticamente imposible entre las cifras de Zuloaga et al. 2023 [confirmado]
+
+Documento: “DOC … regulates 131 muscle transcripts (122 GR-mediated, 133 MR-mediated)” 122 + 133 = 255 ≠ 131.
+
+Los tres números existen en el paper, pero corresponden a tres comparaciones pareadas independientes, no a un total con dos subconjuntos:
+
+Cifra
+
+Comparación real
+
+131 DETs
+
+vehículo vs. DOC (efecto global de DOC)
+
+122 DETs
+
+DOC vs. mifepristona+DOC (dependiente de GR)
+
+133 DETs
+
+DOC vs. eplerenona+DOC (dependiente de MR)
+
+El solapamiento real (diagrama de Venn del paper) es de 13 DETs comunes a las tres comparaciones. Presentarlas como total y subconjuntos es incorrecto tanto aritmética como conceptualmente.
+
+Segundo defecto en la misma frase: las categorías de enriquecimiento están mezcladas entre comparaciones. “Ensamblaje de autofagosomas” pertenece solo a la comparación MR (133), no al conjunto de 131 inducido por DOC, que se enriquece en organización del sarcómero, contracción muscular y adhesión celular.
+
+Redacción corregida sugerida: “DOC regulated 131 muscle transcripts relative to vehicle (sarcomere organization, muscle contraction, cell adhesion); independent antagonist comparisons identified 122 GR-dependent transcripts and 133 MR-dependent transcripts, the latter enriched for autophagosome assembly.”
+
+5. Inversión de atribución — Faught & Vijayan 2018 [confirmado]
+
+Documento (§5, “MR’s physiological relevance in fish has been actively disputed”): “Some earlier literature argued MR has no clear physiological role in ray-finned fish, with osmoregulation attributed to GR alone (Faught & Vijayan, 2018), while more recent functional work assigns MR a clear, non-redundant role…”
+
+El título de ese paper es “The mineralocorticoid receptor is essential for stress axis regulation in zebrafish larvae”.
+
+La frase citada sí está en el paper, pero en su Introducción, como estado del arte previo que el propio trabajo viene a refutar: “Despite its persistence, there is no known physiological role for MR in ray-finned fish.” Su conclusión es la contraria: “Our results for the first time highlight a key physiological role for MR signalling in fish.”
+
+El documento convierte al paper en portavoz de la postura que ese paper demuele, y presenta como disputa entre 2018 y 2022 algo que el trabajo de 2018 ya había resuelto a favor del MR. En el esquema del prompt esto es misattribution con source_attribution = cites_prior_work: el contenido está en la fuente, pero no es su posición.
+
+Defecto secundario en la misma frase: “osmoregulation attributed to GR alone” — la fuente dice que el glucocorticoide media “most of the changes” en función iono/osmorreguladora vía GR. La mayoría, no la totalidad. scope_distortion por sobre-restricción.
+
+Arreglo: “As reviewed by Faught and Vijayan (2018), earlier literature assumed no known physiological role for MR in ray-finned fish and attributed most iono- and osmoregulatory change to GR — an assumption that same study went on to overturn.”
+
+
+
+Error probable pendiente de PDF
+
+6. La “ruta tipo PKA” de Aravena-Canales et al. 2021 [sin resolver — alta sospecha]
+
+Documento: “membrane-initiated cortisol signaling regulates murf1 (via a PKA-type pathway) but not atrogin-1”
+
+La asimetría está bien y no invertida — el abstract lo dice literal: “membrane-initiated cortisol action regulates murf1 but not atrogin-1 in rainbow trout myotubes.”
+
+El problema es el mecanismo. El abstract atribuye el efecto a otra vía: “Using RU486 to selectively block glucocorticoid receptor (GR), we found that early downregulation of murf1 is potentially mediated by membrane GR signaling in myotubes.” Las palabras clave del paper no incluyen PKA y ninguna búsqueda dirigida encontró PKA asociada a ese trabajo.
+
+Hipótesis de origen: atribución cruzada con Dindia et al. 2012, que sí reporta fosforilación de sustratos putativos de PKA, PKC y AKT — y que está citada dos párrafos más arriba en el mismo documento.
+
+El texto completo está tras muro de pago (Elsevier, sin copia en PMC). Recomendación: verificar contra el PDF original, que tú puedes conseguir y yo no. Si el paper no menciona PKA, es causal_overreach de manual y hay que reemplazar “via a PKA-type pathway” por “via membrane GR signalling”.
+
+Dato adicional útil del abstract, que el documento omite: in vivo, el cortisol a 10 mg/kg bajó ambos atrogenes a las 3 h y los subió a las 9 h.
+
+
+
+Referencias huérfanas y afirmaciones sin cita
+
+Dos referencias en la lista que ningún punto del texto invoca (2 de 31): - Das, C., & Vijayan, M. M. (2023). Biology, 12(2), 311. — el texto cita a “Das, Thraya, and Vijayan (2018)”, nunca a esta. - Faught, E., & Vijayan, M. M. (2019). Am J Physiol Endocrinol Metab, 316(6). — el texto cita 2018, 2020, 2022 y 2025, nunca 2019.
+
+Tres afirmaciones sustantivas sin ninguna cita. Las tres tienen fuente real y localizable:
+
+§5, salmón atlántico: “long-term stressed wild Atlantic salmon showed markedly lower plasma cortisol than unstressed controls despite substantially poorer growth” — sin cita. La fuente existe y coincide con precisión: Opinion, A. G. R., Vanhomwegen, M., De Boeck, G., & Aerts, J. (2023). J Exp Biol, 226(22), jeb246504. 10.1242/jeb.246504. Cortisol plasmático 29,1 % menor y crecimiento 33,7 % más lento. Agregar la cita.
+
+§3, disputa sobre GPR97: “this candidacy is itself contested by more recent work arguing GPR97/ADGRG3 is activated by its own tethered peptide agonist rather than by steroids” — sin cita. La fuente existe: Bernadyn, T., et al. (2026). Sci Signal, 19(925), eabo5234. 10.1126/scisignal.abo5234 (preprint bioRxiv 2025, 10.1101/2025.09.11.675646). El framing del documento es exacto. Agregar la cita.
+
+§1: “skeletal muscle — a tissue accounting for roughly 60% of body mass in teleosts” — sin cita. Cifra estándar del campo, pero conviene anclarla.
+
+Nota sobre la auto-verificación del documento. El cierre declara: “Every DOI above was independently resolved and confirmed against the publisher’s page, PubMed, or PMC; none were reproduced from memory.” Eso es cierto: los 31 DOIs resolvieron correctamente. Pero la verificación cubrió DOIs, no listas de autores ni fascículos —de ahí los errores 1 y 2— y la nota no menciona las tres afirmaciones que quedaron sin cita en el cuerpo. La declaración es exacta en lo que afirma y silenciosa sobre lo que no cubrió.
+
+
+
+Imprecisiones menores (no son errores, pero un revisor las vería)
+
+Vías de enriquecimiento asignadas al conjunto equivocado, tres veces: - Aravena-Canales 2024: interacción ECM-receptor y citoesqueleto de actina son del análisis de DEG; señalización Wnt es del de DMG. El documento las agrupa como un solo conjunto. - Aravena-Canales 2025: autofagia, mitofagia y señalización de insulina no son el enriquecimiento de los 4.050 DEG ni de los 11.672 DMG, sino del subconjunto integrado de 263 genes (expresión ↑ / metilación ↓). - Zuloaga 2025: cullin-3 no es regulador de TORC1 — el paper lo asigna a ubiquitinación de proteínas. Los reguladores negativos de TORC1 son samtor, sesn1 y sesn2. Además, los factores de transcripción (Fos, AP-1, FoxO1/3, Mef2, ATF4) y los genes de TORC1 son hallazgos separados en el paper; la frase los encadena causalmente más de lo que la fuente sostiene.
+
+Evidencia contradictoria omitida, dos veces: - Galt et al. 2014: la afirmación “no significant myostatin-1a/1b response to cortisol” es correcta solo in vivo. En mioblastos primarios el cortisol sí aumentó myostatin-1b de forma dosis-dependiente, y myostatin-2a subió en músculo rojo. Como el documento usa este caso para argumentar divergencia respecto de mamíferos, la omisión debilita el argumento si un revisor la nota. - Faught & Vijayan 2020: el documento dice que GR y MR actúan “in opposing directions”, lo cual es correcto a nivel molecular. Pero el hallazgo central del paper es que se requiere la activación de ambos para la supresión del crecimiento por cortisol: “cortisol-mediated reduction in body mass and protein content required the activation of both MR and GR.” Antagónicos en mecanismo, cooperativos en fenotipo.
+
+Otros: - Faught et al. 2025: cita incompleta. Ya tiene volumen y páginas asignados — Mol Psychiatry 31(4), 2338–2350. Y los autores son Faught E, Canino Avilés V, Schaaf MJM: Vijayan no es autor. El documento no lo afirma explícitamente, pero §1 encuadra los estudios de pez cebra como provenientes del “Vijayan laboratory”, lo que puede leerse mal. - Faught & Vijayan 2022: el documento dice “established MR as a direct regulator”; los autores escriben “we postulate that MR acts as a key modulator”. Más fuerte que la fuente, aunque no la contradice. - Espinoza 2017: el abstract documenta que RU486 abolió la producción de ROS; no afirma que aboliera la transcripción de pgc1a. La frase del documento es ambigua sobre a cuál se refiere. - Aedo 2019c: el corte de “three hours onward” para la fase genómica de pdk2 no aparece en el abstract y el paper está cerrado. INCIERTO, no error. - Sturm 2005: “roughly an order of magnitude” cubre desigualmente los dos pares — DOC vs. cortisol ≈ 7×, aldosterona vs. 11-desoxicortisol ≈ 34×. Aproximación aceptable, pero los valores mismos y sus cuatro asignaciones de ligando son exactos. - RU486 y mifepristona son el mismo compuesto, nombrado de las dos formas en secciones distintas (§2 “mifepristone”, §3 “RU486”). No es error, pero conviene unificar o aclararlo la primera vez.
+
+
+
+Verificado exacto
+
+31 DOIs, todos resuelven correctamente. Ninguno inventado, ninguno reproducido de memoria — la declaración del documento se sostiene en este punto.
+
+Cifras verificadas contra texto completo o abstract:
+
+Fuente
+
+Cifras correctas
+
+Aedo et al. 2023
+
+135 y 68 DETs ✓ · cxcr2, c3, clca3p (GR) ✓ · myh2, gadd45g (MR) ✓ · categorías de enriquecimiento ✓ · diseño con mifepristona/eplerenona ✓
+
+Zuloaga et al. 2023
+
+DOC plasmático 14 → 76 pg/mL ✓ exacto · “administrado independientemente del cortisol” ✓ (pretratamiento con metirapona)
+
+Sturm et al. 2005
+
+los cuatro EC50 ✓ y sus cuatro asignaciones de ligando ✓ (DOC 1,6×10⁻¹⁰ · aldosterona 1,1×10⁻¹⁰ · cortisol 1,1×10⁻⁹ · 11-desoxicortisol 3,7×10⁻⁹)
+
+Aravena-Canales 2024
+
+7 días ✓ · 550 DEG ✓ · 9.059 DMG ✓ (y “genes” es el término correcto: 79.605 DMR → 9.059 DMG)
+
+Aravena-Canales 2025
+
+30 días ✓ · 4.050 DEG ✓ · 11.672 DMG ✓
+
+Zuloaga 2025
+
+3 h ✓ · 163.802 DAR ✓ · Fos, AP-1, FoxO1/3, Mef2, ATF4 ✓ · samtor, sesn1/2 ✓
+
+Palstra 2019
+
+183 (mutantes) vs. 351 (silvestres) ✓ y sin invertir · crecimiento por ejercicio normal en mutantes ✓
+
+Faught & Vijayan 2020
+
+murf1 y redd1 al alza por GR ✓ · depósito proteico al alza por MR ✓
+
+Aravena-Canales 2021
+
+murf1 sí / atrogin-1 no ✓ sin invertir
+
+Mapes 2025
+
+Igf1 plasmática ↓ ✓ · myod2 ↓ (p = 0,0026) ✓ · fbxo32 sin cambio (p = 0,7455) ✓ · murf1 sin cambio (p = 0,1913) ✓
+
+Saulnier 2021
+
+recuperación muscular en 4 días ✓ · hígado incompleto ✓
+
+Valenzuela 2020
+
+UPS temprano ✓ · ALS tardío ✓ · calpaínas suprimidas todo el ensayo ✓
+
+Nesan 2012
+
+vínculo GR–BMP ✓ (reducción de 70–90 % en bmp2a, bmp2b, bmp4 en morfantes de GR)
+
+Galt 2016
+
+divergencia especie-específica ✓
+
+Bury & Sturm 2007
+
+“Teleosts lack aldosterone” ✓ literal
+
+Cita textual entre comillas — la única del documento, exacta: Das, Thraya y Vijayan (2018), “the primary receptors involved in this pathway activation remain elusive” → aparece palabra por palabra en el abstract, y en contexto fiel.
+
+
+
+Lo más valioso de esta corrida: dos casos nuevos de fuente defectuosa
+
+El Doc4 aportó el caso CH-Wang, donde el abstract de un paper contradecía su propia tabla. El Doc5 aporta dos casos más del mismo género, y eso convierte lo que parecía una anomalía en un patrón que el pipeline tiene que manejar.
+
+Caso A — un abstract que se contradice con su propia sección de resultados
+
+Zuloaga et al. 2025: el abstract dice “1864 downregulated”; los Resultados dicen 1.846. La aritmética decide: 2.204 + 1.846 = 4.050, el total que ambos declaran. El 1.864 del abstract es una errata.
+
+Un verificador que solo lea abstracts y reciba una afirmación que diga “1.846” la marcaría como fabricated_specificity. Falso positivo, con la fuente misma como causa. Es el segundo caso del set, y a diferencia de CH-Wang aquí la contradicción es interna al mismo paper y resoluble por aritmética.
+
+Caso B — dos papers distintos que publican el mismo conjunto de datos de RNA-seq
+
+Aravena-Canales et al. 2025 (hacinamiento, 30 días) y Zuloaga et al. 2025 (cortisol inyectado, 3 h) reportan cifras de RNA-seq numéricamente idénticas pese a corresponder a experimentos completamente distintos:
+
+
+
+Aravena-Canales 2025
+
+Zuloaga 2025
+
+Lecturas crudas
+
+335.693.902
+
+335.693.902
+
+DEG
+
+4.050
+
+4.050
+
+Sobreexpresados
+
+2.204
+
+2.204
+
+Subexpresados
+
+1.846
+
+1.846
+
+Vías KEGG ↑ y ↓
+
+idénticas
+
+idénticas
+
+El bloque de RNA-seq de Zuloaga 2025 reutiliza el conjunto de datos del estudio de hacinamiento. El documento reproduce fielmente lo publicado —cita 4.050 solo para Aravena-Canales 2025, así que no hay error que corregir— pero conviene saberlo antes de usar ambas cifras como si fueran evidencia convergente e independiente.
+
+Este caso es de una clase que ningún prompt de comparación afirmación-pasaje puede detectar, porque cada afirmación es fiel a su fuente por separado. Solo aparece al cruzar dos fuentes entre sí.
+
+
+
+Qué se lleva el prompt (candidatos para v6)
+
+El pendiente de v6 sube de prioridad. Ya son tres casos —CH-Wang (abstract vs. tabla), Zuloaga 2025 (abstract vs. resultados), y ahora el solapamiento de datasets— donde el problema no está en el documento que cita sino en la fuente. La regla de retrieval que quedó anotada para v6 (si el abstract contradice al cuerpo, mandar el cuerpo) resuelve los dos primeros. El tercero no lo resuelve nadie a nivel de afirmación individual.
+
+Verificación de lista de autores como paso estructural, no de contenido. El error 1 (Thomas, R.) es exactamente lo que el módulo estructural con Crossref debe atrapar, y es el que más se repite en todo el set. El Doc5 demuestra además que verificar el DOI no basta: los 31 DOIs eran correctos y aun así había un autor inventado y un fascículo mal. El chequeo tiene que comparar la lista completa de autores del registro Crossref contra la de la referencia, no solo resolver el identificador.
+
+Señal nueva para el paso 4: pathway/enrichment category assigned to the wrong analysis. Aparece tres veces en el Doc5 (Aravena-Canales 2024, 2025 y Zuloaga 2025) y es un caso limpio de misattribution que el prompt actual cubre en teoría pero que ningún ejemplo ilustra. Un paper multi-ómico reporta varios conjuntos de genes con enriquecimientos distintos, y la afirmación toma la vía de un conjunto y la pega al número de otro. Los valores son todos reales; lo que está mal es a qué análisis pertenecen.
+
+Confirmación del valor de la señal (c), atribución secundaria. El error 5 es el mejor caso del set para la regla de source_attribution: el contenido citado está literalmente en la fuente, pero en su Introducción, describiendo lo que el propio paper va a refutar. cites_prior_work no basta como etiqueta aquí — habría que distinguir “la fuente cita trabajo previo con el que concuerda” de “la fuente cita trabajo previo que viene a refutar”. La segunda es mucho más grave y es la que se coló.
+
+
+
+Comparación con los cuatro documentos anteriores
+
+
+
+ChatGPT (Doc1+2)
+
+Gemini (Doc3)
+
+Proyecto B, humano (Doc4)
+
+Claude (Doc5)
+
+Contradicciones directas de la fuente
+
+1
+
+3
+
+0
+
+1
+
+Atribuciones de autor inventadas
+
+4
+
+3
+
+0
+
+1
+
+Mecanismo nunca medido por la fuente
+
+1
+
+1
+
+0
+
+1 (+1 probable)
+
+Citas huérfanas
+
+5
+
+lista completa huérfana
+
+0
+
+2 refs + 3 afirmaciones
+
+Errores de metadata
+
+9 de 12 refs
+
+11 de 30 refs
+
+1 de 30
+
+2 de 31
+
+DOIs correctos
+
+—
+
+—
+
+—
+
+31 de 31
+
+Citas textuales entre comillas
+
+ninguna
+
+ninguna
+
+3, todas exactas
+
+1, exacta
+
+Cifras verificadas correctas
+
+—
+
+—
+
+~35
+
+~30
+
+Lectura corta: en metadata el Doc5 se acerca al documento humano y se aleja mucho de ChatGPT y Gemini —los DOIs son perfectos y el documento se auto-verificó—, pero en fidelidad de contenido conserva los dos errores característicos de la generación por IA: inventar un autor dentro de una referencia real y atribuirle a un estudio un mecanismo que nunca midió. La auto-verificación de DOIs no atrapó ninguno de los dos, porque ninguno es un error de DOI.
+
+Fuentes recuperadas de PubMed, PubMed Central, Crossref, Europe PMC, OpenAlex y el repositorio de NOAA. Textos completos consultados: PMC9852899, PMC9957386, PMC6308233, PMC11276852, PMC12040688, PMC12250572, PMC7429773.

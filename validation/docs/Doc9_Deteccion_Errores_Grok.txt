@@ -1,0 +1,499 @@
+﻿
+
+Experimento de detección — Doc9: informe de Grok sobre estrés y músculo esquelético
+
+Agosto 2026 · corrida del prompt v9. Noveno documento del set y octava plataforma probada. Cierra la serie.
+
+Resultado en una línea
+
+Nueve de dieciséis primeros autores están equivocados o fabricados. Cuatro identificadores resuelven correctamente a papers reales que no son el citado. Ocho errores de contenido, incluido uno que contradice el control experimental de la propia fuente. Ninguna de las dieciséis referencias trae revista, volumen ni páginas.
+
+Es el peor documento del experimento, y lo es por una razón que ningún otro había mostrado: sus identificadores funcionan. Un chequeo que se limite a comprobar que el DOI resuelve da luz verde a cuatro citas que apuntan a un artículo sobre paro cardíaco, otro sobre química oncológica, otro sobre pérdida de peso y ejercicio, y uno que sencillamente no existe. Esa es la lección que el Doc9 aporta al proyecto y la desarrollo en la sección 1.
+
+
+
+1. El hallazgo central: identificadores que validan contra el paper equivocado
+
+[confirmado]
+
+Cuatro de las dieciséis referencias traen un DOI o un PMID que resuelve sin error a un artículo real, y ese artículo no tiene nada que ver con el que la referencia declara.
+
+Referencia declarada
+
+Identificador dado
+
+A qué resuelve realmente
+
+Waddell, D. S., et al. (2008), “The glucocorticoid receptor and FOXO1 synergistically activate the… MuRF1 gene”
+
+PMID 18617627
+
+Amati F et al., “Separate and combined effects of exercise training and weight loss on exercise efficiency and substrate oxidation”, J Appl Physiol 105(3)
+
+Powers, S. K., et al. (2023), “Exploring the Role of Oxidative Stress in Skeletal Muscle Atrophy”
+
+PMID 37611576
+
+“[Targeted temperature management after cardiac arrest]”, artículo en alemán sobre paro cardíaco, Dtsch Med Wochenschr
+
+Fiorenza, M., et al. (2023), “Effects of exercise training on glucocorticoid-induced muscle atrophy”
+
+DOI 10.1016/j.steroids.2023.109258
+
+Agarwal DS et al., “Steroid-triazole conjugates: A brief overview of synthesis and their application as anticancer agents” — química oncológica
+
+Dieguez, C., & Casanueva, F. F. (1995)
+
+DOI 10.1016/1043-2760(94)00113-4
+
+No existe (Crossref devuelve 404). El DOI real es (94)00206-J
+
+Los tres primeros son el caso peligroso. Un validador que pregunte “¿resuelve este DOI?” responde que sí. Los tres apuntan a literatura revisada por pares, indexada, perfectamente real. Solo que a otra.
+
+Esto es un modo de falla distinto de los dos que la serie ya había catalogado:
+
+Referencia fabricada (SciSpace, Doc6): el identificador o el título no existen. Se detecta buscando.
+
+Localizador incorrecto (Elicit, Doc7; Claude, Doc5): volumen, número o páginas equivocados sobre un identificador correcto. Se detecta comparando campos.
+
+Identificador que apunta a otro paper (Grok, Doc9): el identificador es válido, el paper existe, y no es el citado. Solo se detecta comparando el registro resuelto contra el título y los autores declarados.
+
+El chequeo que hace falta no es “¿resuelve?” sino “¿lo que resuelve coincide con lo que la referencia dice?”. Es una línea más de código y es la diferencia entre atrapar esto y no atraparlo.
+
+Y hay un antecedente directo en la serie que refuerza la lección. El Doc5 (Claude) resolvió correctamente sus 31 DOIs y lo declaró explícitamente al cierre; aun así tenía un autor inventado y un fascículo equivocado. Ahí ya vimos que verificar el DOI no basta. El Doc9 lleva el mismo principio a su forma extrema: aquí el DOI ni siquiera identifica el paper correcto.
+
+
+
+2. Autoría: nueve de dieciséis primeros autores equivocados
+
+[confirmado]
+
+#
+
+Declarado
+
+Real
+
+5
+
+Wing, D. L.
+
+Wing, S. S. (Simon S. Wing) — iniciales inventadas
+
+7
+
+Gomes, M. D.
+
+Gokulakrishnan, G., con Fiorotto ML como autora de correspondencia
+
+2
+
+Leal-Cerro, A.
+
+Wajchenberg, B. L. et al.
+
+6
+
+Li, J.
+
+Siddiqui, S. H. et al.
+
+9
+
+Jensen, P. J.
+
+Jellyman, J. K. et al.
+
+11
+
+Macedo, A. G.
+
+Fappi, A. et al.
+
+13
+
+Kim, J. C.
+
+Lee, M-K. et al.
+
+14
+
+Fiorenza, M.
+
+Macedo, A. G. et al.
+
+16
+
+Powers, S. K.
+
+Agrawal, S. et al.
+
+Correctos: Dieguez, Braun, Chadwick, Waddell, Salamone, Schakman y Hoberman — siete de dieciséis.
+
+Tres observaciones sobre el patrón, porque no es fabricación aleatoria:
+
+Hay un desplazamiento posicional, no solo invención. La referencia 11 declara “Macedo, A. G.” y su primer autor real es Fappi. La referencia 14 declara “Fiorenza, M.” y su primer autor real es Macedo, A. G. El apellido correcto de una referencia aparece asignado a otra de la misma lista. Eso no es alucinación libre: es una columna corrida.
+
+Los nombres inventados son plausibles y del campo. “Powers, S. K.” no es un nombre al azar: Scott K. Powers es un investigador real y muy citado en atrofia muscular y estrés oxidativo — exactamente el tema de la referencia. Un revisor que conozca el área lee “Powers, S. K.” sobre estrés oxidativo y no sospecha nada. Lo mismo con “Gomes, M. D.”, que sí es primer autor del paper fundacional de atrogin-1 (PNAS 2001, con Goldberg AL) — solo que no de este.
+
+Los coautores explican varias sustituciones. Goldberg AL es coautor tanto del paper de Wing como del de atrogin-1 de Gomes. Borges MH, Kater CE y Lengyel AM son coautores tanto del paper de 1993 del que salen las cifras como del de 1996 que se cita. Los apellidos migran por vecindad en el grafo de coautoría.
+
+
+
+3. Errores de contenido
+
+3.1 Chadwick citado contra el control experimental de la propia fuente [confirmado]
+
+Es el más grave del documento, y de un tipo que no habíamos visto en ocho corridas.
+
+Afirmación: “Los receptores de glucocorticoides (GR) y mineralocorticoides (MR) están presentes en el músculo esquelético, permitiendo que el cortisol ejerza efectos directos sobre las células musculares (Chadwick et al., 2015).”
+
+La presencia del MR sí está: “MR mRNA and protein are present in all tested skeletal muscles… MR expression is cell autonomous in both undifferentiated myoblasts and differentiated myotubes from mouse and human skeletal muscle cultures.”
+
+Pero los ligandos del estudio son aldosterona y espironolactona, no cortisol. Y los autores corrieron un control específicamente para excluir al cortisol como explicación de sus resultados: “These data support the notion that gene expression changes observed between antagonist (spironolactone)- and agonist (aldosterone)-treated myotubes were aldosterone dependent and not caused by cortisol in the media.”
+
+El documento usa como respaldo de la acción del cortisol un paper que hizo un experimento para descartar precisamente eso.
+
+Defecto secundario: el paper no investiga el GR en músculo. Aparece solo como contexto de fondo. Su hallazgo declarado como novedoso es el MR: “The presence and function of MR in skeletal muscle have not been explored”.
+
+Familia v9: directional_inversion. Y motiva una señal nueva, que desarrollo en la sección 6.
+
+3.2 Salamone citado al revés de su tesis [confirmado]
+
+El documento lo cita en una sección sobre atrofia inducida por glucocorticoides. El título del paper es “Intermittent glucocorticoid treatment enhances skeletal muscle performance”, y su abstract dice: “once-weekly prednisone–treated mice of both sexes exhibited increased specific force”, concluyendo “resulting in enhanced performance”.
+
+El paper existe precisamente para contrastar dos regímenes: “chronic daily use produces adverse effects, including muscle wasting and weakness. In contrast, shorter glucocorticoid pulses may improve athletic performance.” Citarlo como evidencia de atrofia invierte su mensaje.
+
+Lo que sí está bien: la asignación por sexo es correcta y no está invertida — “Male myofibers had increased expression of genes in the IGF1/PI3K pathway… while female myofibers had profound upregulation of lipid metabolism genes.” El documento lo reproduce fielmente. El error es de encuadre, no de dirección.
+
+3.3 Waddell extendido a atrogin-1 [confirmado]
+
+Afirmación: “…la interacción sinérgica entre GR y los factores de transcripción FOXO, que aumentan la expresión de MuRF1 y atrogin-1 (Waddell et al., 2008).”
+
+Los términos atrogin-1, MAFbx y Fbxo32 aparecen cero veces en el cuerpo del artículo — introducción, métodos, resultados y discusión. Solo figuran en la lista de referencias, en títulos de trabajos de terceros.
+
+La conclusión del paper es explícitamente específica de gen: “FOXO1 and GR synergistically and specifically induce the MuRF1 proximal promoter”. La sinergia se demuestra sobre el promotor de MuRF1 —un GRE palindrómico con un FBE adyacente, en transfecciones de HepG2 y miotubos C2C12, más ChIP—. Atrogin-1 no está en ninguna parte del diseño.
+
+Familia v9: fabricated_specificity (un gen que el excerpt nunca menciona), detectado por la señal (l).
+
+3.4 Jellyman: REDD1 nunca se midió, y la dirección de Akt está invertida [confirmado]
+
+Afirmación: “La vía PI3K/Akt/mTOR… se reduce la fosforilación de mTOR y S6K, en parte mediante la inducción de REDD1, un regulador negativo de mTOR (Jensen et al., 2012).”
+
+REDD1 no está entre las variables medidas. La lista completa de anticuerpos del paper es IR-β, IGF-1R, PKCζ, Akt1, Akt2, p-Akt Ser473, p-mTOR Ser2448, p-S6K Thr389, calpastatina y GLUT4. REDD1 aparece únicamente en la Discusión, citando trabajos ajenos: “glucocorticoids have been shown to suppress mTOR levels, at least in part, by activation of the translation repressor protein REDD1 in cultured L6 myoblasts and in rat skeletal muscle.”
+
+La reducción de p-mTOR y p-S6K existe, pero solo con cortisol. Con dexametasona no hubo efecto: “p-mTOR Ser2448 and p-S6K Thr389… were not significantly different between the saline and dexamethasone-treated animals.”
+
+Y hay una inversión. Describir la vía como reprimida omite que la Akt fosforilada aumentó, algo que los propios autores califican de inesperado: “significant increases in the muscle protein level of p-Akt Ser473 and the expression of Akt2”.
+
+El modelo, además, es feto ovino de 125–131 días de gestación — no un modelo de atrofia en adulto.
+
+Familias v9: causal_overreach (mecanismo nunca medido) y directional_inversion como secundaria.
+
+3.5 Wing & Goldberg: “no experimentaron atrofia” es categóricamente más fuerte que el resultado [confirmado]
+
+Afirmación: “…observaciones en animales adrenalectomizados, que no experimentaron atrofia muscular en respuesta al ayuno.”
+
+Fuente: “In muscles from fasted normal and adrenalectomized (ADX) rats, the protein breakdown sensitive to inhibitors of the lysosomal or Ca(2+)-dependent pathways did not differ. However, the ATP-dependent process was 30% slower in muscles from fasted ADX rats.”
+
+Los animales adrenalectomizados sí degradaron proteína durante el ayuno; solo un 30 % más lento en una de las tres vías. Y el paper no mide atrofia —masa ni sección muscular—: mide tasas de proteólisis y mRNA de ubiquitina.
+
+Familia v9: epistemic_inflation, con misattribution de la variable medida como secundaria.
+
+3.6 Hoberman: el mecanismo está, la localización muscular y la etiqueta no [confirmado]
+
+Afirmación: “Estudios pioneros en la década de 1950 demostraron que los glucocorticoides exógenos y la ACTH promueven la degradación proteica mientras inhiben la síntesis de proteínas en el músculo, un fenómeno conocido como miopatía esteroidea (Hoberman, 1950).”
+
+El trabajo existe y está bien identificado: Yale J Biol Med 22(4):341–367, PMC2598935. Y el mecanismo sí está: “The rise in the output of nitrogen following treatment with ACTH appears to be a consequence of a more rapid rate of protein breakdown and of a decline in the rate of incorporation of amino acids into protein.” Con cortisona (Compound E) reporta lo mismo.
+
+Pero: - **“myopath*” tiene cero apariciones en el texto completo. El término no está en el paper. - La palabra “muscle” aparece una sola vez en todo el artículo, y no como sistema medido. El estudio mide metabolismo nitrogenado de cuerpo entero con glicina-N¹⁵ en ratas: excreción urinaria de N¹⁵ y urea, con adrenalectomía, tiro-paratiroidectomía, hipofisectomía y diabetes por aloxano. No hay ninguna medición muscular.**
+
+3.7 Las cifras de Cushing: reales, pero de otro paper y en una comparación que nadie hizo [confirmado]
+
+Afirmación: “picos de GH significativamente más bajos (2.2 ± 0.3 μg/L frente a 46.2 ± 15.9 μg/L en controles)”.
+
+Los dos números existen y las unidades son correctas, pero vienen de Borges MH et al. (1993), Braz J Med Biol Res 26(11), no del paper citado. Y sobre todo: son de dos comparaciones distintas, fusionadas en una que la fuente nunca hace.
+
+Comparación real en la fuente
+
+Valores
+
+Todos los hipercortisolémicos vs. controles
+
+5,8 ± 1,6 vs. 46,2 ± 15,9
+
+Hipercortisolemia endógena vs. exógena
+
+2,2 ± 0,3 vs. 8,5 ± 2,4
+
+El documento toma el 2,2 de la segunda y el 46,2 de la primera y los enfrenta. El contraste real contra controles es 5,8 — el documento lo reemplaza por una cifra 2,6 veces menor, exagerando el efecto. Además son ± SEM, no ± SD, distinción que el documento no hace.
+
+Familia v9: misattribution (valores atados a la comparación equivocada), con quantitative_reframing como secundaria por el SEM/SD.
+
+3.8 Fappi: la caída de ERK1/2 es de otra dosis, de otro fármaco y de otro mecanismo [confirmado]
+
+Afirmación: “los glucocorticoides, como la dexametasona, disminuyen la fosforilación de ERK1/2 en la vía MAPK/ERK, lo que puede contribuir a la atrofia muscular.”
+
+Tres desviaciones: - La caída ocurre en los grupos DX2.5, MP6 y MP13 — dexametasona solo a dosis alta, no a 1,25. - La conclusión del paper señala a otro fármaco: “MP significantly affects P-ERK1/2 signalization more than other glucocorticoids”. - Los autores no vinculan la caída con atrofia sino con transición de tipo de fibra: “it is possibly related to fiber type transition”. Y la atrofia ocurrió en todos los grupos, incluidos aquellos sin cambio en P-ERK1/2 — lo que desacopla ambos fenómenos.
+
+Modelo: ratas Wistar macho, 70 animales, 10 días.
+
+3.9 Gokulakrishnan: una inferencia presentada como medición [matiz]
+
+El documento afirma que la exposición a dexametasona “redujo el número de células Pax7+ y la proliferación de células progenitoras musculares”.
+
+Lo de Pax7+ es correcto y literal. Lo de proliferación no: los índices medidos (BrdU+/núcleos totales, BrdU+/Pax7+) fueron similares entre grupos, y los autores escriben “The data are consistent with GLC inhibition of muscle progenitor cell proliferation”. Es una inferencia declarada como tal.
+
+
+
+4. Una fuente defectuosa, y el documento la reproduce bien
+
+Marqué como sospechosa esta frase: “el tratamiento con cortisol (28 μmol mL⁻¹) disminuyó la viabilidad celular y la expresión de MyoD”. 28 μmol/mL son 28 mmol/L, una concentración enorme para cortisol.
+
+El documento copió bien. El abstract del paper original dice literalmente: “We selected 28 μmol mL⁻¹ cortisol for treatment based on their efficacy.”
+
+Y la sospecha sobre la magnitud se sostiene: 28 mM excede la solubilidad acuosa del cortisol (~0,3 g/L ≈ 0,83 mM), y un estudio equivalente en células satélite usa 0–70 ng/mL, un máximo de ~0,19 μM — unas 150.000 veces menos. La unidad correcta es casi con certeza μmol/L o nmol/mL.
+
+Es el cuarto caso de fuente defectuosa de la serie, después del abstract de CH-Wang que contradice su propia tabla, la errata de 1.864 contra 1.846 en Zuloaga 2025, y el solapamiento de datasets entre Aravena-Canales y Zuloaga. Aquí el error está en el paper publicado, no en quien lo cita.
+
+(El primer autor de ese paper, eso sí, no es “Li, J.” sino Siddiqui SH.)
+
+
+
+5. Estructura y formato
+
+Etiquetas internas filtradas al entregable. El documento contiene, a mitad de página, esto:
+
+<xaiArtifact artifact_id="890d6233-635c-44c8-8535-077db34e8603" artifact_version_id="c7ef16ee-68f6-4771-8965-93779d18c81e" title="Revisión bibliográfica sobre los efectos del estrés en el músculo esquelético.md" contentType="text/markdown">
+
+y su cierre </xaiArtifact> al final. Es andamiaje interno de la plataforma que quedó en el documento que el usuario recibe.
+
+El documento está duplicado. Antes de esa etiqueta hay una versión resumida con “Puntos clave” y secciones cortas; después, la revisión completa. Los mismos contenidos, dos veces, concatenados.
+
+Ninguna de las dieciséis referencias trae revista, volumen ni páginas. La tabla tiene solo cuatro columnas: Autor, Título, Año, DOI/URL. Es la lista bibliográfica más incompleta de las nueve del experimento — y la que más depende, por tanto, de que el identificador sea correcto. Que es justamente donde falla.
+
+Identificadores de tres tipos mezclados: DOIs, URLs de PubMed, una URL de editorial y un “No disponible”. La URL de editorial además está truncada a mitad de camino —https://joe.bioscientifica.com/view/journals/joe/232/3/5— y no resuelve.
+
+
+
+6. Qué se lleva el prompt
+
+6.1 Chequeo estructural nuevo: el identificador tiene que coincidir con lo que resuelve
+
+Es el aporte principal del Doc9 y el más importante de toda la serie para el módulo previo.
+
+Para cada referencia con DOI o PMID: resolver el identificador y comparar el título y el primer autor del registro recuperado contra los declarados en la referencia. Si el identificador resuelve pero el registro no coincide, marcar la referencia como identificador que apunta a otro artículo — una categoría distinta de “referencia fabricada” y de “localizador incorrecto”, porque el chequeo de resolución la deja pasar.
+
+Umbral sugerido: coincidencia difusa de título por encima de un umbral alto, más coincidencia del apellido del primer autor. En el Doc9 los cuatro casos son inequívocos: paro cardíaco, química oncológica, ejercicio y pérdida de peso, y un DOI inexistente.
+
+6.2 Chequeo estructural nuevo: desplazamiento de autoría dentro de la lista
+
+Cuando el primer autor declarado de la referencia N coincide con el primer autor real de la referencia M de la misma lista, no es fabricación sino desplazamiento. Importa porque la corrección es distinta: no hay que buscar un nombre, hay que reasignar dos.
+
+En el Doc9: la referencia 11 declara “Macedo, A. G.” y su autor real es Fappi; la referencia 14 declara “Fiorenza, M.” y su autor real es Macedo, A. G.
+
+6.3 Señal nueva (p) — CONTROLES DE EXCLUSIÓN EXPLÍCITA
+
+El caso Chadwick no encaja del todo en las señales existentes. La (l) cubre “el estudio no midió esto”; aquí el estudio sí midió y corrió un control específicamente para descartar el mecanismo que la afirmación le atribuye. Es la forma más fuerte posible de contradicción, y merece nombrarse.
+
+Texto propuesto para el paso 3:
+
+(p) EXPLICIT EXCLUSION CONTROLS. Look for statements in which the source rules a factor OUT: “not caused by”, “independent of”, “was excluded”, “cannot be attributed to”, “ruled out the possibility that”, “in the absence of”, “we controlled for”. Authors write these sentences because a reviewer asked whether an alternative explanation could account for the result, and they ran an experiment to close it. A claim that attributes an effect to a factor the source explicitly excluded is not merely unsupported — it asserts the exact thing the source designed a control to eliminate. Treat it as a contradiction of the strongest kind, stronger than an unmeasured variable, and never as an “incierta”.
+
+6.4 Refuerzo de la señal (b)
+
+El Doc9 confirma dos escaladas que la (b) ya nombra y añade una tercera: “consistent with” convertido en resultado medido (caso Gokulakrishnan). Conviene añadir esa expresión a la lista de hedges, junto a “the data are consistent with” y “appears to be”.
+
+
+
+7. Comparación con los ocho documentos anteriores
+
+
+
+ChatGPT
+
+Gemini
+
+Humano
+
+Claude
+
+SciSpace
+
+Elicit
+
+Consensus
+
+Grok
+
+Referencias
+
+12
+
+30
+
+30
+
+31
+
+19
+
+10
+
+37
+
+16
+
+Referencias fabricadas
+
+0
+
+0
+
+0
+
+0
+
+1
+
+0
+
+0
+
+0
+
+Identificador → otro paper
+
+—
+
+—
+
+0
+
+0
+
+—
+
+0
+
+0
+
+4
+
+Primer autor equivocado
+
+4
+
+3
+
+0
+
+1
+
+2
+
+0
+
+0
+
+9
+
+Errores de metadata
+
+9 de 12
+
+11 de 30
+
+1 de 30
+
+2 de 31
+
+10 de 19
+
+1 de 10
+
+11 de 37
+
+16 de 16 sin revista/vol/pág
+
+Contradicciones de la fuente
+
+1
+
+3
+
+0
+
+1
+
+—
+
+1
+
+1
+
+3
+
+Citas huérfanas
+
+5
+
+lista completa
+
+0
+
+2 + 3
+
+0
+
+0
+
+0
+
+0
+
+Andamiaje interno filtrado
+
+no
+
+no
+
+no
+
+no
+
+no
+
+no
+
+no
+
+sí
+
+Citas textuales exactas
+
+0
+
+0
+
+3
+
+1
+
+0
+
+0
+
+0
+
+0
+
+Tres lecturas del conjunto:
+
+Grok concentra el peor perfil de autoría de la serie: 56 % de primeros autores equivocados, contra un 33 % de ChatGPT, 10 % de Gemini y 0 % de Elicit, Consensus y el borrador humano.
+
+Pero su aporte real no es esa cifra, sino el tipo de error. Es la única plataforma cuyos identificadores validan contra el paper equivocado. Esa categoría no existía en el catálogo después de ocho documentos y setenta y tantas referencias, y es la que rompe el atajo de verificación que cualquiera implementaría primero.
+
+Y confirma la hipótesis de arquitectura. Las tres fuentes que parten de un índice de papers reales —Elicit, Consensus y el borrador humano— tienen cero primeros autores equivocados. Las cinco que generan la referencia junto con el texto —ChatGPT, Gemini, SciSpace, Claude y Grok— fallan todas ahí, en grados que van de 1 a 9 casos. No es una diferencia de calidad de modelo: es dónde nace la cita.
+
+Fuentes recuperadas de PubMed, PubMed Central, Crossref y Europe PMC. Textos completos consultados: Hoberman 1950 (PMC2598935), Fappi et al. 2019, Jellyman et al. 2012, Waddell et al. 2008 y Chadwick et al. 2015.

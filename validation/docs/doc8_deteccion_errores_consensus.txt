@@ -1,0 +1,547 @@
+﻿
+
+Experimento de detección — Doc8: informe de Consensus sobre mecanismos endocrino-moleculares del músculo en peces
+
+Agosto 2026 · corrida del prompt v8. Octavo documento del set y sexta plataforma probada.
+
+Resultado en una línea
+
+Cero referencias fabricadas, cero autores inventados, cero citas huérfanas, los 14 DOIs verificados resuelven correctamente. Y a la vez: tres claves de cita que apuntan cada una a dos papers distintos sin forma de distinguirlos, seis años desplazados, un recuento de 50 estudios incluidos frente a 37 listados, una figura cuyo pie afirma un consenso que la figura no contiene, y cuatro errores de contenido — uno de ellos una inversión completa del hallazgo de la fuente.
+
+Consensus aporta dos modos de falla que ninguna de las cinco plataformas anteriores había producido, y los dos son estructurales antes que semánticos. Los desarrollo en las secciones 1 y 2 porque son lo que el prompt se lleva.
+
+
+
+1. Claves de cita ambiguas: el error que bloquea la verificación
+
+[confirmado — estructural, no requiere recuperar ninguna fuente]
+
+Tres claves autor-año del documento apuntan cada una a dos artículos distintos, y el documento no las desambigua en ningún lugar. No hay 2011a/2011b, ni ninguna otra marca.
+
+Clave usada en el texto
+
+Apunta a
+
+y también a
+
+Fuentes et al., 2013
+
+“Regulation of skeletal muscle growth in fish by the GH–IGF system”, GCE 192, 136–48
+
+“Nutritional status modulates plasma leptin, AMPK and TOR activation…”, GCE 186, 172–80
+
+Fuentes et al., 2011
+
+“Inherent growth hormone resistance in the skeletal muscle of the fine flounder…”, Endocrinology 153(1), 283–94
+
+“IGF-I/PI3K/Akt and IGF-I/MAPK/ERK pathways in vivo…”, AJP-Regu 300(6), R1532–42
+
+Vélez et al., 2017
+
+“Understanding fish muscle growth regulation to optimize aquaculture production”, Aquaculture 467, 28–40
+
+“Recombinant bovine growth hormone (rBGH) enhances somatic growth…”, GCE 257, 192–202
+
+Las seis referencias son reales y están correctamente listadas. El problema no es la bibliografía: es que ninguna afirmación que use esas tres claves se puede verificar, porque no hay forma de saber a cuál de los dos papers apunta. Y son claves muy usadas: “Fuentes et al., 2013” aparece siete veces en el documento, incluida la primera oración de la introducción y tres celdas de la tabla de evidencia.
+
+La ambigüedad no se resuelve en ningún lado, y el propio documento lo demuestra sin querer. En la tabla Top Contributors, la fila de E. Fuentes dice:
+
+(Fuentes et al., 2013; Fuentes et al., 2011; Fuentes et al., 2013; Fuentes et al., 2014)
+
+La misma clave, dos veces, en la misma celda. El generador sabe que son dos papers distintos —por eso los cuenta dos veces— y aun así los nombra igual.
+
+Por qué esto importa más que un error de metadata. Un volumen equivocado se corrige y la cita sigue siendo verificable. Una clave ambigua detiene el pipeline: el paso 4 recibe una afirmación y no puede decidir qué pasaje recuperar. No es una distorsión de contenido —ninguna de las diez familias aplica— sino una condición previa que impide juzgar. Propuesta concreta en la sección 7.
+
+
+
+2. Una figura que afirma en el pie lo que su contenido desmiente
+
+[confirmado — estructural]
+
+Bajo la pregunta “¿La vía endocrina GH/IGF regula el crecimiento del músculo esquelético en peces?”, el documento coloca esto:
+
+“Requires at least 5 papers that directly answer your question. Try adjusting your query to find more papers.”
+
+Y el pie de figura dice:
+
+FIGURE 1 Consenso sobre el rol de la vía GH/IGF en el crecimiento muscular de peces.
+
+Es un mensaje de error de la interfaz —el medidor de consenso no se pudo calcular por falta de papers que respondan directamente la pregunta— presentado con un pie que afirma que ahí se muestra un consenso.
+
+Vale la pena ver dónde cae. La tesis de todo el documento, en su primera línea, es que el crecimiento muscular “está regulado principalmente por la vía endocrina GH/IGF”. La tabla de evidencia califica esa misma afirmación como Strong. Y la única figura del documento diseñada para cuantificar el consenso sobre exactamente esa pregunta no pudo generarse por falta de estudios que la respondan de forma directa.
+
+Nada de esto vuelve falsa la afirmación —el rol del eje GH/IGF está sólidamente establecido en la literatura—. Lo que muestra es que la calificación “Strong” y el pie de la Figura 1 no se apoyan en el instrumento que el propio documento presenta como su medida de consenso. Un lector que hojee las figuras se lleva la impresión contraria.
+
+Chequeo estructural derivable: si el contenido de una figura es un mensaje de error o está vacío, el pie no puede describir un resultado. Es barato de implementar y detecta un caso que un revisor humano apurado deja pasar.
+
+
+
+3. Errores de contenido confirmados
+
+3.1 Mapes et al. citado para lo contrario de lo que encontró [confirmado]
+
+Es el error más grave del documento.
+
+Afirmación: “El cortisol… reduce la expresión de IGF-I, activa vías catabólicas (ubiquitina-proteasoma, autofagia) y promueve la atrofia muscular” — con Mapes et al. entre las seis fuentes citadas.
+
+Lo que el paper reporta, con texto completo a la vista:
+
+Los genes catabólicos no cambiaron. Cita textual de Resultados: “relative mRNA levels for myod1 (p = 0.8246), myogenin (p = 0.1905), myostatin1 (p = 0.3631), muRF1 (p = 0.1913), y fbxo32 (p = 0.9535) were similar in relative expression.”
+
+La autofagia no se midió en absoluto.
+
+La expresión de igf1 tampoco bajó. El paper dice que “relative expression of igf1 mRNAs in the liver was unaffected”; lo que descendió fue la proteína Igf1 circulante en plasma a las 24 h. En músculo, igf1 tampoco cambió (p = 0,4759). El mecanismo que los autores proponen son las Igfbps, no la transcripción de igf1.
+
+Y el paper argumenta explícitamente lo contrario de lo que se le atribuye. De su Discusión: “our observation that 24 h of elevated cortisol downregulated muscle myod2 expression in blue rockfish without altering fbxo32 or muRF1 gene expression suggests that glucocorticoids first downregulate anabolic pathways promoting myogenesis.”
+
+El único cambio significativo en músculo fue myod2 a la baja (p = 0,0026) — un gen anabólico. Es decir: el paper es el contraejemplo del enunciado que respalda.
+
+Familias v8: directional_inversion como primaria, causal_overreach como secundaria (la autofagia nunca se midió).
+
+Detalle adicional: la afirmación dice “expresión de IGF-I” donde la fuente reporta proteína circulante. Cambiar nivel de proteína por nivel de transcrito no es lo mismo, y es una variante de misattribution sobre la variable medida.
+
+3.2 “Diferenciación prematura” — un adjetivo que no está en la fuente [confirmado]
+
+Afirmación: “La miostatina es un potente inhibidor del crecimiento muscular, suprimiendo la proliferación de células satélite y promoviendo la diferenciación prematura” (Garikipati & Rodgers 2012).
+
+Las palabras “premature” y “prematurely” no aparecen en ninguna parte de ese artículo. Lo que dice, literal: “myostatin-stimulated cellular growth inhibition activates rather than represses differentiation”. La miostatina subió los marcadores de diferenciación: Myf5, MyoD1, miogenina y cadena ligera de miosina.
+
+La supresión de la proliferación sí está verificada (“recombinant myostatin suppressed proliferation”). El problema es solo el adjetivo, y no es cosmético: “prematura” carga una valoración negativa —diferenciación fuera de tiempo, patológica— que convierte un resultado neutro en uno adverso.
+
+Familia v8: epistemic_inflation — un calificativo evaluativo añadido a un hallazgo que la fuente describe sin él.
+
+Contexto que el documento omite y que es el punto central del paper: el sistema es trucha arcoíris, células miosatélite primarias, y los autores concluyen que “the current understanding of myostatin action, based primarily on mammalian cell lines, may not be entirely applicable to other vertebrate systems”. El paper existe precisamente para señalar que el modelo mamífero no se transfiere.
+
+3.3 “En peces y otros vertebrados” — los cinco estudios son peces [confirmado]
+
+En la tabla de claims, la justificación de la calificación Strong para “La vía PI3K/AKT/mTOR es esencial para la síntesis proteica y la hipertrofia muscular” dice: “Evidencia funcional y molecular en peces y otros vertebrados, con inhibidores y análisis transcriptómicos.”
+
+Las cinco fuentes citadas:
+
+Fuente
+
+Especie
+
+Duran et al. 2022
+
+pacú, Piaractus mesopotamicus
+
+Fuentes et al. 2014
+
+lenguado fino, Paralichthys adspersus
+
+Zhao et al. 2020
+
+bagre híbrido, Pelteobagrus vachelli × Leiocassis longirostris
+
+Vélez et al. 2014
+
+dorada, Sparus aurata
+
+Zhu et al. 2021
+
+perca china, Siniperca chuatsi
+
+Los cinco son teleósteos. No hay un solo vertebrado no-pez. Familia v8: scope_distortion por sobre-generalización.
+
+Lo distintivo de este caso, y por qué lo separo de los demás: no es una afirmación del texto, es la justificación de una calificación de fuerza de evidencia. Consensus asigna Strong / Moderate / Weak y explica por qué. Esa explicación es en sí misma una afirmación verificable, y esta es falsa. Ninguna de las siete plataformas anteriores produjo una tabla de evidencia graduada, así que este tipo de error no había podido aparecer. Vuelvo sobre esto en la sección 7.
+
+Matiz aparte sobre la misma fila: Zhu et al. 2021 trata de homeostasis metabólica, no de hipertrofia. Su título es “…the function of PI3K/AKT pathway in maintaining metabolic homeostasis of Chinese perch muscle”, y sus 619 genes diferencialmente expresados son entre control y grupo tratado con LY294002. Sostiene la parte de “inhibidores” pero no la de “hipertrofia”.
+
+3.4 Yang et al. 2024 citado para miocinas y crosstalk que el paper no contiene [confirmado]
+
+Afirmación: “Existe crosstalk entre músculo y otros tejidos (hueso, hígado), mediado por miocinas y factores sistémicos (Otero-Tarrazón et al., 2023; Yang et al., 2024).”
+
+Yang et al. 2024 es un transcriptoma comparativo de individuos de crecimiento rápido vs. lento de anguila de fuego (Mastacembelus armatus): tres grandes contra tres pequeños, a los tres meses.
+
+La palabra “myokine” no aparece en ninguna parte del artículo — ni abstract, ni discusión, ni conclusiones.
+
+No hay ningún análisis de crosstalk. Los tres tejidos (cerebro, hígado, músculo) se analizan por separado, sin comunicación intertisular.
+
+El hueso no se muestreó, y la afirmación lo nombra explícitamente.
+
+Familia v8: off_target_relevance, rozando pure_fabrication en la parte de miocinas.
+
+La otra cita de la misma afirmación, Otero-Tarrazón et al. 2023, sí la sostiene y con precisión: “suggesting a possible role for these molecules as myokines”, “suggesting a possible tissue crosstalk during the regenerative process”, y muestreo paralelo de hueso. Una fuente correcta y una que no tiene relación, en la misma oración.
+
+3.5 Valenzuela et al. usado para una afirmación específica sobre cortisol [matiz, no error pleno]
+
+El estudio es de hacinamiento crónico, no de administración de cortisol. El cortisol plasmático se midió como variable de respuesta —subió significativamente solo a las 4 semanas— no como tratamiento.
+
+Es evidencia sólida de estrés crónico → catabolismo, pero la afirmación es específicamente sobre la acción del cortisol. La inferencia es razonable y muy común en el campo; la anoto como matiz, no como error.
+
+Dato correcto que conviene registrar: las “dos vías no solapadas” del título son ubiquitina-proteasoma más apoptosis a las 4 semanas y autofagia a las 7 semanas, momento en que las primeras ya habían vuelto a niveles control. Separadas en el tiempo, no en el mecanismo.
+
+
+
+4. Metadata: DOIs perfectos, años desplazados, localizadores truncados
+
+Los 14 DOIs verificados resuelven correctamente y apuntan al artículo declarado. Cero fabricaciones, cero autores inventados, cero citas huérfanas — las 37 referencias listadas están citadas en el texto.
+
+4.1 Seis años desplazados
+
+Referencia
+
+Año declarado
+
+Año real del fascículo
+
+Detalle
+
+Fuentes, Endocrinology
+
+2011
+
+2012
+
+vol. 153(1) es de enero de 2012
+
+Fuentes, GCE (TORC1)
+
+2014
+
+2015
+
+vol. 210, enero de 2015
+
+Valenzuela, AJP-Regu
+
+2017
+
+2018
+
+vol. 314(1), enero de 2018
+
+Mapes, GCE
+
+2024
+
+2025
+
+vol. 361, enero de 2025
+
+Koganti, Animals
+
+2020
+
+2021
+
+vol. 11(1), enero de 2021
+
+Vélez, GCE (rBGH)
+
+2017
+
+2018
+
+vol. 257, febrero de 2018
+
+La hipótesis natural es que Consensus use por convención el año de publicación online. Hay un contraejemplo que la descarta, y es contundente: Vélez et al., Aquaculture 467, 28–40 se declara 2017, que es el año del fascículo — su epub fue julio de 2016.
+
+Es decir: dos referencias del mismo primer autor, ambas declaradas 2017, obtenidas por reglas opuestas. Un estilo de cita coherente no puede producir eso. Lo que se ve no es una convención editorial sino herencia del campo year del índice, que varía según cómo cada editorial depositó su metadata en Crossref.
+
+Un caso es internamente contradictorio y detectable sin consultar nada: Koganti se cita como “(2020) … Animals, 11”. El volumen 11 de Animals corresponde a 2021. Año y volumen no pueden ser ambos correctos.
+
+4.2 Localizadores truncados
+
+Patrón claro en publicaciones con número de artículo en vez de rango de páginas:
+
+Mapes — falta 361: 114659
+
+Sáez-Arteaga — falta 39: 102448
+
+Ayala — falta el número 23 y el artículo 13118
+
+Aedo — falta el artículo 1024
+
+Bower — falta el número 24
+
+Aravena-Canales 2024, 2025 y Duran 2022 — solo volumen, sin número de artículo
+
+El generador recupera bien volumen y páginas cuando existen como rango, y falla cuando el localizador es un e-locator.
+
+4.3 Un capítulo de libro con formato de artículo
+
+Sadoul & Vijayan (2016), “Stress and Growth”, se cita como si fuera un artículo de revista: “Fish Physiology, 35, 167-205”. Es el capítulo 5 del volumen 35 de la serie Fish Physiology, titulado Biology of Stress in Fish (Elsevier, 2016). Crossref lo tipifica como book-chapter.
+
+A diferencia del caso de Elicit, aquí no hay violación de criterio: Consensus no declara excluir capítulos de libro. Es solo un formato de cita incorrecto.
+
+
+
+5. Aritmética interna
+
+5.1 Cincuenta declarados, treinta y siete listados. La sección de Métodos dice: “finalmente se incluyeron los 50 más relevantes para este análisis”, y el diagrama de flujo repite “50 Included”. La lista de referencias tiene 37 entradas. Faltan trece, y el documento no explica la diferencia.
+
+Es señal (k) de v8 en estado puro, detectable contando.
+
+5.2 La matriz de vacíos suma 114 sobre 50 papers. La Figura 6 es una matriz de 5 × 5 con estos valores: 15, 10, 7, 2, 8 / 2, 12, 3, 1, 4 / 3, 2, 10, 1, 2 / 1, 1, 1, 7, 2 / 4, 3, 2, 1, 10. Suman 114.
+
+Si cada celda cuenta papers, 114 asignaciones sobre 50 estudios declarados —o sobre los 37 realmente listados— implica que cada paper se cuenta en promedio entre dos y tres celdas. Es plausible que un estudio toque varios temas, pero el documento no documenta el criterio de asignación ni advierte el conteo múltiple, y la matriz se presenta como si fuera un recuento directo. Un lector la interpretará como “hay 15 papers sobre regulación endocrina del eje GH/IGF”, que no es lo que mide.
+
+5.3 Una etapa del cribado aparece en la prosa y no en la figura. El texto describe 1.092 → 758 → 454 → 50. El diagrama muestra 1,1K → 454 → 50. La etapa de 758 no está representada, y la caída de 1.092 a 758 no se explica.
+
+
+
+6. Verificado exacto, y un falso positivo que descarté
+
+Estructura bibliográfica. Las 37 referencias están citadas en el texto y las 14 verificadas resuelven a papers reales, con autores correctos. Cero autores inventados es un resultado que solo Elicit y tu borrador habían logrado antes.
+
+Aravena-Canales et al. 2021 sostiene bien su afirmación, y es el mejor respaldo real de la tesis del cortisol: cortisol a 10 mg/kg en trucha arcoíris aumentó atrogin-1 y murf1 a las 9 h. Matiz que el documento omite: a las 3 h los había bajado. La respuesta es bifásica, no monótona.
+
+Otero-Tarrazón et al. 2023 sostiene bien la afirmación de crosstalk, con sus hedges intactos en la fuente.
+
+Las calificaciones de fuerza de evidencia son, en conjunto, razonables. Strong para el eje GH/IGF y para el cortisol, Moderate para miostatina y epigenética, Weak para leptina/insulina/FGF y miocinas. Esa gradación es defendible y está bien ordenada; el problema está en el texto de una de las justificaciones, no en las calificaciones.
+
+La Discusión reconoce sus límites sin que se lo pidan: “La mayoría de los estudios se centran en modelos de acuicultura, por lo que se requieren más investigaciones en especies silvestres y bajo condiciones naturales”, y “la interacción entre vías anabólicas y catabólicas… aún no está completamente dilucidado”. Es una honestidad epistémica que ni ChatGPT ni Gemini mostraron.
+
+Un falso positivo mío, para que quede registrado
+
+Marqué Aedo et al. 2015 como sospechoso: el título es “mRNA-seq reveals skeletal muscle atrophy in response to handling stress”, y se cita para una afirmación sobre cortisol. Parecía el patrón clásico de atribuir a una hormona lo observado con un estresor.
+
+Estaba equivocado. El paper incluye un brazo in vitro con cortisol exógeno: “using a primary culture of fish skeletal muscle cells, the effect of cortisol was evaluated in relation to red cusk-eel skeletal muscle atrophy”, y concluye que “cortisol was a powerful inductor of skeletal muscle atrophy in fish myotubes”. La cita es correcta.
+
+Lo anoto porque es exactamente el tipo de falso positivo contra el que existen la regla 6 y los ejemplos 7, 8, 13, 14 y 16 de v8: el título sugería un error que el cuerpo del paper desmiente. Sin recuperar el texto completo, lo habría reportado mal.
+
+
+
+7. Qué se lleva el prompt: dos aportes nuevos para v9
+
+7.1 ambiguous_citation_key — chequeo estructural, no familia de contenido
+
+Es un modo de falla que impide juzgar en vez de producir un juicio equivocado, así que no pertenece a las diez familias del paso 4: pertenece al módulo estructural previo, y debería detener la afirmación antes de que llegue al LLM.
+
+Propuesta de implementación, barata:
+
+Construir el índice de claves autor-año a partir de la bibliografía. Si una clave resuelve a más de una referencia y el documento no usa sufijos de desambiguación (2011a, 2011b), marcar todas las afirmaciones que la usen como no verificables por ambigüedad de cita, y reportarlas aparte de los errores de contenido. El mensaje al usuario debe ser distinto: no “esta afirmación es incorrecta” sino “esta afirmación no se puede comprobar hasta desambiguar la cita”.
+
+Con el añadido de que este chequeo también detecta el caso más peligroso: cuando un documento cita dos papers del mismo autor y año y usa uno para respaldar lo que dice el otro. En el Doc8 no pude descartarlo en ninguna de las tres claves, precisamente porque son ambiguas.
+
+7.2 Señal nueva (o) — LA JUSTIFICACIÓN DE UNA CALIFICACIÓN TAMBIÉN ES UNA AFIRMACIÓN
+
+Consensus es la primera plataforma del set que produce una tabla de evidencia graduada: cada claim con una calificación (Strong / Moderate / Weak) y un texto que explica por qué. Ese texto pasa desapercibido como si fuera metadato editorial, y en realidad contiene afirmaciones verificables.
+
+En el Doc8, la justificación del Strong para PI3K/AKT/mTOR dice “en peces y otros vertebrados” — y los cinco estudios son peces. Nadie revisa esa columna, y es la que le dice al lector cuánto confiar.
+
+Texto propuesto para el paso 3:
+
+(o) CONFIDENCE JUSTIFICATIONS. When the reviewed document assigns an evidence rating (strong / moderate / weak, high / low confidence, well-established / emerging) and states a reason for it, treat that reason as a claim to be checked, not as editorial commentary. Reasons typically assert something about the cited set as a whole — the range of species, the number of independent groups, the presence of functional or interventional evidence, replication across systems — and each of those is verifiable against the cited excerpts. A justification that misdescribes the evidence base inflates the rating even when every individual citation is correct, and it is the sentence a reader relies on to decide how much weight to give the claim.
+
+Esta señal tiene una propiedad que la distingue de las catorce anteriores: opera sobre el conjunto de fuentes citadas, no sobre una sola. Eso significa que necesita un excerpt distinto — no un pasaje, sino la lista de fuentes con su especie, diseño y tipo de evidencia. Vale la pena tratarla como un paso separado del pipeline, no como una comparación afirmación-pasaje más.
+
+7.3 Tres chequeos más para el módulo estructural
+
+Pie de figura contra contenido de figura. Si el contenido es un mensaje de error o está vacío, el pie no puede describir un resultado. Caso: la Figura 1 del Doc8.
+
+Coherencia año-volumen. Cuando la referencia trae año y volumen, comprobar que el volumen corresponda a ese año en esa revista. Detecta el caso Koganti (“2020” + “Animals, 11”) sin salir del documento, y es el indicio más barato de que la metadata viene heredada de un índice.
+
+Recuento declarado contra referencias listadas. “Se incluyeron los 50 más relevantes” contra 37 entradas. Trivial de implementar.
+
+7.4 Sobre el balance de ejemplos
+
+v8 quedó en 9 no_sostenida / 4 sostenida / 3 incierta. Los aportes del Doc8 son una señal y cuatro chequeos estructurales, ninguno de los cuales exige ejemplos few-shot nuevos —la señal (o) opera fuera de la comparación afirmación-pasaje—. Así que v9 puede incorporarlos sin tocar el balance, que es la primera vez que ocurre en la serie. Si más adelante se agrega un ejemplo para (o), debería venir acompañado de uno de sostenida.
+
+
+
+8. Comparación con los siete documentos anteriores
+
+
+
+ChatGPT (Doc1+2)
+
+Gemini (Doc3)
+
+Humano (Doc4)
+
+Claude (Doc5)
+
+SciSpace (Doc6)
+
+Elicit (Doc7)
+
+Consensus (Doc8)
+
+Referencias fabricadas
+
+0
+
+0
+
+0
+
+0
+
+1 de 19
+
+0
+
+0
+
+Autores inventados
+
+4
+
+3
+
+0
+
+1
+
+2 insertados
+
+0
+
+0
+
+Citas huérfanas
+
+5
+
+lista completa
+
+0
+
+2 refs + 3 afirm.
+
+0
+
+0
+
+0
+
+Claves de cita ambiguas
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+3 claves / 6 refs
+
+Errores de metadata
+
+9 de 12
+
+11 de 30
+
+1 de 30
+
+2 de 31
+
+10 de 19
+
+1 de 10
+
+11 de 37
+
+DOIs correctos
+
+mayoría
+
+mayoría
+
+—
+
+31 de 31
+
+sin DOIs
+
+—
+
+14 de 14
+
+Referencias off-target
+
+algunas
+
+9+
+
+0
+
+0
+
+10 de 19
+
+0
+
+1 de 37
+
+Contradicciones de la fuente
+
+1
+
+3
+
+0
+
+1
+
+—
+
+1
+
+1
+
+Hedges o calificativos alterados
+
+sí
+
+sí
+
+0
+
+0
+
+—
+
+5
+
+1
+
+Errores aritméticos internos
+
+—
+
+—
+
+0
+
+1
+
+1
+
+2
+
+3
+
+Citas textuales entre comillas
+
+ninguna
+
+ninguna
+
+3, exactas
+
+1, exacta
+
+ninguna
+
+ninguna
+
+ninguna
+
+Tres lecturas:
+
+La higiene bibliográfica de Consensus está entre las mejores del set. Comparte con Elicit y con tu borrador el resultado de cero fabricaciones, cero autores inventados y cero huérfanas. Y con 14 de 14 DOIs correctos iguala a Claude en el único indicador donde ese documento era impecable. La explicación vuelve a ser de arquitectura: las plataformas que parten de un índice de papers reales no inventan referencias.
+
+Su modo de falla propio es el conteo y la identidad de la clave, no el contenido. Tres claves ambiguas, 50 contra 37, una matriz que suma 114, una figura fallida con pie afirmativo. Cuatro de sus siete hallazgos más relevantes se detectan sin recuperar una sola fuente — la proporción más alta de todo el experimento. Para el producto eso es una buena noticia: son los chequeos más baratos de implementar.
+
+Y sus errores de contenido son pocos pero uno es de los peores del set. Citar a Mapes para “activa vías catabólicas y promueve la atrofia” cuando ese paper reporta fbxo32 con p = 0,95, murf1 con p = 0,19, no midió autofagia y concluye explícitamente lo contrario, es una inversión completa. Un revisor que conozca ese trabajo lo ve de inmediato.
+
+Fuentes recuperadas de PubMed, PubMed Central, Crossref, el repositorio de NOAA y las páginas de editorial. Textos completos consultados: Mapes et al. 2025 (GCE 361:114659), Garikipati & Rodgers 2012 (J Endocrinol, acceso abierto), Yang et al. 2024 (PMC10812625), Otero-Tarrazón et al. 2023 (PMC).

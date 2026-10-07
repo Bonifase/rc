@@ -1,0 +1,11 @@
+{
+  "id": "PP-01-stage05",
+  "manuscript_text": "Cortisol drives the stress response through the glucocorticoid receptor [1].\n\nThe response is conserved across teleosts and is supported by prior work [2].\n\nReferences\n[1] Smith, A. L., & Jones, B. (2020). Stress signaling in teleost fish. Journal of Comparative Physiology, 210(4), 345-360. https://doi.org/10.1000/one\n[2] Johnson, C. D. (2022). Conserved pathways in teleost stress adaptation. Comparative Biochemistry and Physiology, 190(2), 100-118. https://doi.org/10.1000/two",
+  "expected": {
+    "sentence_count": 2,
+    "reference_count": 2,
+    "doi_count": 2,
+    "citation_numbers": [1, 2],
+    "author_year_citations": 0
+  }
+}

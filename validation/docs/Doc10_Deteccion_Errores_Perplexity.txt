@@ -1,0 +1,613 @@
+﻿
+
+Experimento de detección — Doc10: introducción de Perplexity sobre MR en músculo esquelético de peces
+
+Agosto 2026 · corrida del prompt v10. Décimo documento del set y novena plataforma probada.
+
+Resultado en una línea
+
+14 de 19 referencias con algún error: dos revistas fabricadas, un contenedor bibliográfico inexistente, y nueve títulos alterados — tres de ellos inventados a partir del contenido del paper, y uno con el sentido invertido. Seis errores de contenido, incluido uno donde una precisión añadida da vuelta la biología. Cero DOIs en las diecinueve referencias.
+
+Perplexity aporta un modo de falla que las ocho plataformas anteriores no habían producido: títulos sintetizados. La referencia apunta al paper correcto, en la revista correcta, y el título no existe — es un resumen del contenido, o directamente la frase de conclusión del abstract convertida en título. Es insidioso porque el título inventado suele ser más informativo que el real, así que se lee como una cita bien elegida.
+
+Es también, en descargo, el único documento del set que es una introducción —una sección, no una revisión completa—, con la densidad de citas por párrafo que ese género impone. La comparación de la sección 7 lo tiene en cuenta.
+
+
+
+1. El hallazgo nuevo: títulos sintetizados a partir del contenido
+
+[confirmado]
+
+Tres referencias traen un título que no existe y que sin embargo describe con precisión lo que el paper dice.
+
+[18] McCormick et al. 2008 — el caso limpio
+
+Título citado
+
+“Cortisol, not DOC or aldosterone, is involved in regulating the mineralocorticoid functions in Atlantic salmon”
+
+Título real
+
+“Are we missing a mineralocorticoid in teleost fish? Effects of cortisol, deoxycorticosterone and aldosterone on osmoregulation, gill Na⁺,K⁺-ATPase activity and isoform mRNA levels in Atlantic salmon”
+
+Revista citada
+
+Journal of Experimental Biology, 211, 1449–1459
+
+Revista real
+
+Gen Comp Endocrinol 157(1), 35–40
+
+El título citado es, palabra por palabra, la frase de conclusión del abstract: “The results provide support that cortisol, and not DOC or aldosterone, is involved in regulating the mineralocorticoid functions of ion uptake and salt secretion in teleost fish.”
+
+Lo que ocurrió es reconocible: el generador tomó la oración que mejor resume el paper y la usó como título. El resultado es una cita que un lector encuentra más útil que la real —el título verdadero es una pregunta retórica que no adelanta la respuesta— y que no existe en ninguna base de datos.
+
+[16] Sakamoto et al. 2017 y [15] Faught et al. 2021 — el mismo patrón
+
+Ref
+
+Título citado
+
+Título real
+
+[16]
+
+“The mineralocorticoid receptor knockout in medaka is viable and reveals a role for MR in visuomotor behavior”
+
+“The mineralocorticoid receptor knockout in medaka is further validated by glucocorticoid receptor compensation”
+
+[15]
+
+“Coordinated action of corticotropin-releasing hormone and cortisol in mediating stress-induced hyperactivity in zebrafish larvae”
+
+“Coordinated Action of Corticotropin-Releasing Hormone and Cortisol Shapes the Acute Stress-Induced Behavioural Response in Zebrafish”
+
+En ambos, el contenedor —revista, volumen, número de artículo, año— es correcto. Solo el título es inventado, y en los dos casos la mitad inicial es literal y la segunda mitad se reescribe.
+
+Detalle adicional de [15]: los autores son solo dos (Faught y Vijayan), así que el “et al.” sobra. Y el año declarado, 2021, corresponde al online-first; el fascículo impreso 112(1) es de 2022.
+
+Por qué esto es una categoría nueva
+
+La serie ya tenía cuatro formas de referencia rota. Esta es la quinta, y no la atrapa ninguno de los chequeos anteriores:
+
+Modo de falla
+
+Dónde apareció
+
+Qué falla
+
+Referencia fabricada
+
+SciSpace (Doc6)
+
+No existe nada
+
+Localizador incorrecto
+
+Claude, Elicit, Consensus
+
+Volumen, número o páginas
+
+Identificador → otro paper
+
+Grok (Doc9)
+
+El DOI resuelve a otro artículo
+
+Clave de cita ambigua
+
+Consensus (Doc8)
+
+Una clave apunta a dos papers
+
+Título sintetizado
+
+Perplexity (Doc10)
+
+El paper es real y está bien ubicado; el título no existe
+
+Un chequeo que busque el título en Crossref no encuentra nada y podría concluir “referencia fabricada”, que es un diagnóstico equivocado y manda a corregir lo que no corresponde. El chequeo correcto es al revés: buscar por autor + año + revista, recuperar el título real, y comparar por similitud difusa. Si el paper aparece pero el título no se parece, es síntesis, no fabricación.
+
+
+
+2. Dos revistas fabricadas y un contenedor inexistente
+
+[1] Faught & Vijayan 2018 — revista, volumen y artículo inventados [confirmado]
+
+Documento: “Communications Biology, 1, 195”. Real: Scientific Reports 8, 18081, DOI 10.1038/s41598-018-36681-w.
+
+No es solo un error de revista: Faught y Vijayan no tienen ningún paper en Communications Biology, de ningún año. La consulta a Crossref por ISSN 2399-3642 filtrando por autor devuelve cero resultados, y el volumen 1 de esa revista no tiene un artículo 195 de estos autores. El contenedor completo es inventado, y es plausible —Communications Biology volumen 1 sí es 2018, y los números de artículo de tres cifras existen en ese rango—.
+
+Es además la referencia [1] del documento, la primera del texto.
+
+[6] Lu et al. 2022 — mismo patrón [confirmado]
+
+Documento: “Reviews in Aquaculture, 14(3), 1352-1362”. Real: Frontiers in Endocrinology 13:923475, DOI 10.3389/fendo.2022.923475.
+
+Otra vez un contenedor coherente consigo mismo: el volumen 14 de Reviews in Aquaculture es efectivamente de 2022 y el rango de páginas es del orden correcto para esa revista. Y otra vez el paper nunca estuvo ahí. El título también está truncado: el real termina en “…mediated by the hypothalamus–pituitary–inter-renal endocrine axis”.
+
+[13] Zuloaga et al. 2024 — el caso más grave [confirmado]
+
+Documento: “Aquaculture, 768, 739765”.
+
+Tres capas de problema:
+
+El volumen 768 de Aquaculture no existe. Los volúmenes de esa revista llegan hoy a ~626; el 768 está fuera de rango por más de 140 volúmenes.
+
+El número de artículo 739765 sí existe, y es otro paper: “Assessing the suitability of three purple soils for aquaculture by physiological responses in freshwater bivalves (Hyriopsis cumingii)”, Aquaculture 575:739765 (2023). Suelos morados y bivalvos de agua dulce.
+
+El título sí corresponde a un paper real, pero de otra revista y otro tejido: Zuloaga, Ahumada-Langer, Aedo, Molina y Valdés (2024), “Early metabolic and transcriptomic regulation in rainbow trout (Oncorhynchus mykiss) liver by 11-deoxycorticosterone through two corticosteroid receptors pathways”, Comp Biochem Physiol A 298:111746, DOI 10.1016/j.cbpa.2024.111746.
+
+Nótese: hígado, no músculo esquelético. Aun corrigiendo la cita, ese estudio no es del tejido sobre el que trata el documento. Y existe además un tercer paper real y distinto —Zuloaga et al. 2023, Genes 14(2):512, sobre DOC en músculo de trucha— que es probablemente el que correspondía citar.
+
+
+
+3. Errores de contenido
+
+3.1 La concentración de DOC: dos órdenes de magnitud, y el origen es rastreable [confirmado]
+
+Afirmación: “el DOC… un corticosteroide presente en peces con concentraciones fisiológicas de 5-10 nM”.
+
+Lo que reportan las fuentes:
+
+Fuente
+
+Condición
+
+Valor
+
+En nM
+
+Zuloaga et al. 2023
+
+trucha juvenil, basal
+
+14 ± 7 pg/mL
+
+0,042
+
+Zuloaga et al. 2023
+
+tras dosificación de 1 mg/kg
+
+76 ± 8 pg/mL
+
+0,23
+
+Milla et al. 2008
+
+machos inmaduros
+
+20–100 pg/mL
+
+0,06–0,3
+
+Milla et al. 2008
+
+pico de espermiación, machos maduros
+
+240–1800 pg/mL
+
+0,7–5,4
+
+La cifra real para un pez juvenil es 0,03–0,15 nM. La declarada está inflada entre 35 y 330 veces. Y Zuloaga et al. 2023 —el trabajo que el documento cita en la misma frase— dice lo contrario de forma explícita: “the plasmatic levels of DOC are substantially smaller than cortisol under both basal and stress conditions.”
+
+El origen de la cifra es identificable, y es lo más interesante del caso. Kiilerich et al. 2018 (Gen Comp Endocrinol 265:22-30) escribe: “With whole egg DOC levels ranging between 0.2-6.5 nM… and an MR EC50 value of 0.1 nM (Sturm et al. 2005), activation of MR by DOC is theoretically possible at all stages of development.”
+
+Ese rango nanomolar es de contenido de huevo entero en embriones de trucha, no de plasma. Es el único valor en nM de toda esta literatura, y coincide en magnitud con el “5-10 nM” del documento. La conversión de compartimento —contenido de huevo leído como concentración plasmática— explica la cifra por completo.
+
+Familias v10: misattribution (compartimento equivocado) con quantitative_reframing como secundaria.
+
+Y hay un agravante que no es culpa de Perplexity. El propio Zuloaga et al. 2023 reproduce ese rango con una conversión errónea: “egg DOC concentrations varied over a range from 0.2 to 6.5 nM, which is equivalent to a total concentration from 4 pg/mL to 130 pg/mL”. En realidad 6,5 nM son ~2.148 pg/mL, no 130. La cifra ya venía degradada en la cadena bibliográfica antes de llegar aquí.
+
+Es el quinto caso de fuente defectuosa de la serie, y el primero de un tipo nuevo: no una fuente que se contradice a sí misma, sino un error de conversión publicado que se propaga aguas abajo.
+
+3.2 “Afinidad diez veces mayor por cortisol comparado con GR2” — la precisión añadida invierte la biología [confirmado]
+
+Es el mejor hallazgo del documento, y falla en tres niveles.
+
+Ninguna de las dos fuentes citadas lo dice. Sturm et al. 2005 solo midió MR; no hay ningún GR en ese estudio. Fuller et al. 2019 trata de progesterona y espironolactona, no de cortisol, y es un trabajo de evolución molecular comparando MR humano y de pez cebra.
+
+La fuente correcta dice “GR”, no “GR2”. Faught & Vijayan 2022 escribe: “The MR has an approximately 10-fold higher affinity for cortisol compared with the GR” — en genérico, y en pez cebra, que tiene un solo GR.
+
+Y para trucha, especificar GR2 vuelve la afirmación falsa. Comparando EC50 de cortisol por transactivación, ambos del mismo grupo y el mismo tipo de ensayo:
+
+Receptor
+
+EC50 cortisol
+
+Fuente
+
+rtMRa
+
+1,1 ± 0,3 nM
+
+Sturm 2005
+
+rtGR2
+
+0,72 ± 0,87 nM
+
+Bury 2003
+
+rtGR1
+
+46 ± 12 nM
+
+Bury 2003
+
+El GR2 de trucha es igual o ligeramente más sensible al cortisol que el MR — no diez veces menos. La brecha de un orden de magnitud existe entre MR y GR1, y ahí es de ~40×, no de 10×.
+
+Esto coincide con lo que dice la introducción de Aedo et al. 2023, otra de las referencias del documento: “In the rainbow trout, GR2 is more sensitive to reduced plasma cortisol levels, whereas GR1 is more sensitive to higher levels.”
+
+El patrón general es el que vale la pena registrar: una afirmación general correcta se vuelve falsa al añadirle una precisión. En el esquema de v10 es fabricated_specificity en su variante de identificador de receptor alterado —GR pasa a GR2—, y demuestra que esa familia cubre bien un caso que a primera vista parece inocuo.
+
+3.3 “Prácticamente inactivo en receptores GR” — cita equivocada, y contradicho por otra fuente del propio documento [confirmado]
+
+Se atribuye a Sturm et al. 2005, que no mide actividad sobre GR en absoluto: su diseño son células COS-7 transfectadas solo con rtMRa y rtMRb. El dato viene de Bury et al. 2003 (J Mol Endocrinol 31(1):141-56), que sí caracterizó rtGR1 y rtGR2.
+
+Pero además hay una tensión con el propio corpus del documento. Zuloaga et al. 2023 —la referencia [13], una vez corregida— encontró in vivo que la mifepristona revierte 122 transcritos inducidos por DOC, y concluye: “These results propose that both receptors have a differential contribution in the physiological response to DOC.” Buena parte de la respuesta transcripcional al DOC en músculo es GR-dependiente.
+
+“Prácticamente inactivo en GR” es cierto en transactivación aislada y falso como descripción de la fisiología, según una de las fuentes que el propio documento cita.
+
+3.4 “Aproximadamente 10 veces más potente que el cortisol” — es 6,9 [matiz]
+
+Sturm et al. 2005: EC50 de DOC 1,6 × 10⁻¹⁰ M contra cortisol 1,1 × 10⁻⁹ M. Ratio 6,9, no 10. El paper nunca enuncia una cifra de “diez veces”; solo dice “more potent”. La inflación es de ~45 % y sería defendible escribir “~7 veces” o “casi un orden de magnitud”.
+
+Omisión en la misma frase: el agonista más potente del MR de trucha en ese ensayo es la aldosterona (EC50 1,1 × 10⁻¹⁰ M), no el DOC. El documento presenta al DOC como el agonista extraordinario sin mencionar que hay uno mejor en la misma tabla — lo que además tensiona con su propia afirmación de que la aldosterona está “prácticamente ausente en peces”, que es cierta pero es un argumento de disponibilidad, no de potencia.
+
+3.5 Adhesión focal, citoesqueleto y matriz extracelular atribuidos al paper equivocado [confirmado]
+
+Afirmación: “…cortisol modula la adhesión focal, la organización del citoesqueleto de actina, y la interacción con la matriz extracelular en músculo esquelético a través de mecanismos epigenéticos coordinados”, citado a Zuloaga et al. 2025 (ATAC-seq + RNA-seq).
+
+Las tres vías pertenecen a Aravena-Canales et al. 2024 (RNA-seq + bisulfito, IJMS 25(14):7586), que reporta literalmente interacción ECM-receptor, regulación del citoesqueleto de actina y adhesión focal, además de los 126 genes con correlación negativa entre expresión y metilación — que es exactamente lo que “mecanismos epigenéticos coordinados” describe.
+
+Zuloaga et al. 2025 reporta vías completamente distintas: Fos, AP-1, FoxO1/3, Mef2, Klf5/10, ATF4, autofagia, mitofagia, señalización FoxO, espliceosoma y remodelación de cromatina. Ni adhesión focal, ni actina, ni MEC aparecen.
+
+Es curioso porque el documento sí cita a Aravena-Canales 2024 —es su referencia [14]— dos oraciones antes. La fuente correcta estaba en la lista.
+
+3.6 McCormick citado mientras se afirma lo contrario [confirmado]
+
+El documento sostiene que el DOC es “un agonista extraordinariamente potente del MR” con concentraciones fisiológicas relevantes. Y mantiene en su bibliografía a McCormick et al. 2008, cuya conclusión es:
+
+“The results provide support that cortisol, and not DOC or aldosterone, is involved in regulating the mineralocorticoid functions of ion uptake and salt secretion in teleost fish.”
+
+Ese paper además reporta que “DOC and aldosterone had no effect on either NKA activity or salinity tolerance” y que “the putative MR blocker spironolactone had no effect”.
+
+La referencia no se usa para respaldar la afirmación del DOC —se cita en la frase sobre diseño de antagonistas selectivos—, así que no es una atribución falsa. Es omitted_contradicting_evidence a nivel de documento: la evidencia que tensiona la narrativa está en la propia bibliografía y el texto no la reconoce.
+
+Matiz honesto que conviene incluir si se corrige: potencia in vitro sobre el MR y función mineralocorticoide osmorreguladora in vivo no son estrictamente incompatibles. El DOC puede ser potente en transactivación y aun así no tener rol osmorregulador, por concentración insuficiente —ver 3.1— o por distribución tisular. Pero eso hay que escribirlo, no dejarlo implícito.
+
+
+
+4. Verificado exacto
+
+Los cuatro elementos del contraste GR/MR de Aedo et al. 2023 son correctos, y es la afirmación mejor sostenida del documento:
+
+Bloqueo de MR (eplerenona) → contracción muscular y regulación del ciclo celular ✓
+
+myh2 como diana de MR ✓ — y no solo in silico: validada por qPCR en miotubos (“Pretreatment of skeletal myotubes with the eplerenone significantly inhibited the cortisol-induced down-regulation of myh2”)
+
+Bloqueo de GR (mifepristona) → proteólisis e inflamación ✓ (proteolysis p = 2,70E-02; inflammatory response p = 6,74E-03)
+
+Asignación correcta de antagonistas: mifepristona a GR, eplerenona a MR ✓
+
+Único matiz: el paper insiste en que son dianas potenciales, por limitación de especificidad de los antagonistas (“This is mainly due to the limitation in determining the specificity of mifepristone and eplerenone”). El documento lo enuncia con más firmeza que la fuente.
+
+Cinco referencias con metadata impecable: [2] Schreck & Tort, [4] Aluru & Vijayan, [7] Vijayan et al. 1997, [11] Sturm et al. 2005 y [19] Samaras et al. 2025 — revista, volumen, número, páginas, año y título, todos correctos.
+
+Sin citas huérfanas. Las diecinueve referencias están invocadas en el texto y todas las marcas del texto tienen entrada. Es el cuarto documento del set que logra esto.
+
+El encuadre conceptual general es sólido y está bien construido. La distinción GR1/GR2 frente a GRα/GRβ por empalme alternativo, la ausencia de aldosterona en peces, la lógica de la brecha —que el MR se infiere indirectamente de estudios con cortisol en vez de aislarse—, y la conexión con acuicultura, son correctas y bien articuladas. Los errores están en las cifras y en los contenedores bibliográficos, no en el razonamiento.
+
+Detalle menor de redacción: “ha permitido caractericar” — debería ser “caracterizar”. Y “hipotálamo-pituitaria-interrenal” es un anglicismo; en español se escribe “hipotalámico-hipofisario-interrenal”.
+
+
+
+5. Nota sobre los DOIs
+
+Ninguna de las diecinueve referencias trae DOI. Es el segundo documento del set en esa condición, después de SciSpace (Doc6).
+
+La correlación de la serie es difícil de ignorar. Los dos documentos sin DOIs son también los dos con mayor tasa de metadata rota:
+
+
+
+DOIs
+
+Referencias con error de metadata
+
+Claude (Doc5)
+
+31 de 31
+
+2 de 31 (6 %)
+
+Consensus (Doc8)
+
+14 de 14
+
+11 de 37 (30 %)
+
+Elicit (Doc7)
+
+sí
+
+1 de 10 (10 %)
+
+SciSpace (Doc6)
+
+ninguno
+
+10 de 19 (53 %)
+
+Perplexity (Doc10)
+
+ninguno
+
+14 de 19 (74 %)
+
+No es una relación causal demostrada —son cinco puntos y las plataformas difieren en muchas cosas—, pero es consistente con lo que se ve al revisar los errores uno por uno: sin DOI, el generador ensambla contenedores plausibles. Revista, volumen y páginas que existen, que son coherentes entre sí, y que corresponden a otro sitio.
+
+
+
+6. Qué se lleva el prompt
+
+El aporte de Perplexity es enteramente para el módulo estructural previo. La capa semántica no aportó ninguna familia nueva: los seis errores de contenido caen en familias que v10 ya tiene, y el caso “GR2” confirma que fabricated_specificity cubre bien la variante de identificador de receptor alterado.
+
+6.1 Chequeo nuevo (10): título sintetizado
+
+Buscar la referencia en Crossref por autor + año + revista, recuperar el título real y compararlo por similitud difusa con el declarado. Si el paper aparece pero la similitud cae por debajo del umbral, marcarla como título sintetizado — categoría distinta de “referencia fabricada”, porque el paper existe y está bien ubicado.
+
+Importa que sea una categoría propia: un chequeo que busque el título literal no encuentra nada y diagnosticaría “fabricada”, que manda a corregir lo que no corresponde.
+
+Señal de alerta adicional, barata: si el título declarado se parece más a una oración de conclusión que a un título —empieza con un hallazgo en vez de con el objeto de estudio, contiene “not”, “is involved in”, “reveals que”—, elevar la prioridad de revisión.
+
+6.2 Chequeo nuevo (11): sustitución de revista
+
+Cuando la referencia no trae DOI, resolver por título + primer autor y comparar la revista, el volumen y el rango de páginas contra el registro. Los contenedores fabricados de este documento son internamente coherentes —el volumen corresponde al año declarado, el rango de páginas es del orden correcto para esa revista— así que ninguna validación de consistencia interna los detecta. Solo los atrapa la comparación contra el registro real.
+
+Chequeo complementario, de coste cero: verificar que el volumen declarado exista en esa revista. El “Aquaculture 768” del Doc10 está fuera de rango por más de 140 volúmenes, y eso se comprueba con una consulta de rango a Crossref sin resolver nada más.
+
+6.3 Regla D de retrieval: errores de conversión que se propagan
+
+La Regla A cubre fuentes que se contradicen a sí mismas y la Regla B, fuentes falsamente independientes. El Doc10 aporta una tercera: un error de conversión de unidades publicado que se propaga aguas abajo. La cifra de DOC en nM nace como contenido de huevo entero en Kiilerich 2018, se reproduce con una conversión errónea a pg/mL en Zuloaga 2023, y llega al Doc10 como concentración plasmática.
+
+Cuando una afirmación cuantitativa lleve unidades de concentración y el pasaje recuperado cite a su vez a otra fuente para ese valor, el excerpt debería incluir la fuente primaria, no solo la que la cita. Es el mismo principio que la señal (n) sobre convenciones de línea base, aplicado a la cadena bibliográfica en vez de a un solo paper.
+
+Los tres son del módulo previo y ninguno exige tocar el prompt ni el balance de ejemplos.
+
+
+
+7. Comparación con los nueve documentos anteriores
+
+
+
+ChatGPT
+
+Gemini
+
+Humano
+
+Claude
+
+SciSpace
+
+Elicit
+
+Consensus
+
+Grok
+
+Perplexity
+
+Referencias
+
+12
+
+30
+
+30
+
+31
+
+19
+
+10
+
+37
+
+16
+
+19
+
+Con error de metadata
+
+9
+
+11
+
+1
+
+2
+
+10
+
+1
+
+11
+
+16
+
+14
+
+Tasa
+
+75 %
+
+37 %
+
+3 %
+
+6 %
+
+53 %
+
+10 %
+
+30 %
+
+—
+
+74 %
+
+Referencias fabricadas
+
+0
+
+0
+
+0
+
+0
+
+1
+
+0
+
+0
+
+0
+
+0
+
+Revista o contenedor fabricado
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+3
+
+Título sintetizado
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0
+
+3
+
+Identificador → otro paper
+
+—
+
+—
+
+0
+
+0
+
+—
+
+0
+
+0
+
+4
+
+n/a (sin DOIs)
+
+Autores inventados
+
+4
+
+3
+
+0
+
+1
+
+2
+
+0
+
+0
+
+9
+
+0
+
+Citas huérfanas
+
+5
+
+lista completa
+
+0
+
+2 + 3
+
+0
+
+0
+
+0
+
+0
+
+0
+
+DOIs
+
+mayoría
+
+mayoría
+
+—
+
+31/31
+
+ninguno
+
+sí
+
+14/14
+
+mezcla
+
+ninguno
+
+Tres lecturas:
+
+Perplexity no inventa autores ni papers, pero inventa dónde están y cómo se llaman. Cero autores fabricados —lo que lo alinea con Elicit, Consensus y el borrador humano— y cero referencias inexistentes. Todos los papers que cita son reales y los autores son los correctos. Lo que falla es el contenedor: tres revistas o volúmenes inventados y tres títulos sintetizados.
+
+Su tasa de metadata rota, 74 %, es la segunda peor del set, solo por detrás de ChatGPT en el Doc1+2. Pero la naturaleza del error es distinta: ChatGPT inventaba autores sobre DOIs correctos; Perplexity mantiene la autoría y reconstruye la ubicación.
+
+Y confirma, con el noveno caso, la relación entre ausencia de DOI y metadata rota. Los dos documentos sin ningún DOI —SciSpace y Perplexity— tienen 53 % y 74 % de referencias con error. Los tres con DOIs sistemáticos —Claude, Elicit, Consensus— tienen 6 %, 10 % y 30 %.
+
+En descargo: este es el único documento del set que es una introducción, no una revisión. La densidad de citas por oración es mucho mayor que la de los demás, y el razonamiento conceptual —la distinción GR1/GR2 frente a GRα/GRβ, la lógica de la brecha de conocimiento, la conexión con acuicultura— es sólido y está bien construido. Es un texto que se sostiene bien y cuya bibliografía hay que rehacer casi entera.
+
+Fuentes recuperadas de PubMed, PubMed Central, Crossref, Oxford Academic y el repositorio Archimer de IFREMER. Textos completos consultados: Sturm et al. 2005, Bury et al. 2003, McCormick et al. 2008, Milla et al. 2008 (PMC2430966), Kiilerich et al. 2018, Aedo et al. 2023 (PMC), Zuloaga et al. 2023 y Aravena-Canales et al. 2024.

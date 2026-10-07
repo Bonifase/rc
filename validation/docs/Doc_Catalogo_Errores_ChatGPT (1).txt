@@ -1,0 +1,154 @@
+﻿
+
+
+w14:paraId="14EE1F0A" w14:textId="440678DB" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Catálogo de errores detectados — ChatGPT \
+
+w14:paraId="5032FF8E" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">
+
+w14:paraId="4F82DCED" w14:textId="592ED6BC" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">ChatGPT
+
+w14:paraId="6A6250FA" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1. Doc1 — Distorsiones de contenido
+
+w14:paraId="58C981B4" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1.1 scope_distortion — generalización del campo atribuida a un estudio puntual [admitido]
+
+w14:paraId="4581AC09" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “estos hallazgos reafirman que IGF-1 funciona como un fuerte biomarcador de crecimiento asociado al estado nutricional” — atribuido a Khormi et al. (2026), un estudio de ayuno + probióticos en tilapia. Problema: es una conclusión ampliamente respaldada por la literatura del eje GH/IGF, pero no un hallazgo de ese estudio. Admisión textual de ChatGPT: “Extrapolé una conclusión… que no aparece explícitamente en ese artículo. Aunque esa idea está ampliamente respaldada por la literatura del eje GH/IGF, no debía atribuírsela a Khormi et al. (2026).”
+
+w14:paraId="1AB1A05A" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1.2 causal_overreach — mecanismo inferido presentado como resultado [admitido]
+
+w14:paraId="2B615053" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “aumentaron transcripcionalmente los igfbp1/3 hepáticos (bloqueando así la acción de IGF)” Fuente (Bersin 2023): reporta “increased hepatic mRNAs for Igf binding proteins igfbp1a, igfbp1b, and igfbp3a” — nunca dice que eso “bloquee” nada. Admisión: “El artículo NO dice literalmente que los IGFBP ‘bloqueen’ la acción del IGF. Eso fue una interpretación fisiológica… La palabra ‘bloqueando’ no aparece en el artículo.”
+
+w14:paraId="4F533966" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1.3 epistemic_inflation — síntesis del redactor presentada como resultado experimental [admitido]
+
+w14:paraId="46CDCF34" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “Estos estudios confirman que el eje GH–IGF es muy sensible a la nutrición” Admisión: “‘estos estudios confirman…’ (es una interpretación de conjunto, no un resultado experimental).”
+
+w14:paraId="6092CCDD" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1.4 misattribution — variable no medida en el estudio citado [admitido]
+
+w14:paraId="7ACA255B" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “la restricción alimentaria eleva GH e induce IGFBPs inhibidores” Admisión: “eso no fue medido en ese estudio específico; proviene de la literatura general sobre resistencia a GH y de otros trabajos del mismo grupo.”
+
+w14:paraId="3808038D" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1.5 misattribution — cita huérfana / citation swap silencioso [admitido] — el más grave del Doc1
+
+w14:paraId="267D1CDA" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “tras periodos de ayuno la reintroducción de alimento provoca un rápido repunte de igf-1 hepático y de genes promotores de crecimiento muscular” — con marcas 【7†L191-L199】【4†L7-L10】, que corresponden a Khurmi et al. 2026 (tilapia). Realidad: el contenido viene de un segundo paper de Bersin (Comp Biochem Physiol A 282:111444, “Insulin-like growth factor-1 (Igf1) signaling responses to food consumption after fasting in the Pacific rockfish”) que no está en la lista de referencias del documento. Por qué importa: la marca apunta a una fuente; el contenido sale de otra que no está citada en ninguna parte. Comparar contra la fuente declarada daría un falso “sostenida” o “incierta” — nunca detectaría el swap.
+
+w14:paraId="28C8AEDD" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A1.6 Error de identidad de autor [admitido]
+
+w14:paraId="35E91BB1" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “Khurmi, D. et al. (2026)” — el apellido correcto es Khormi. Consecuencia: rompe la trazabilidad; quien intente verificar con el nombre mal escrito no encuentra el paper. No encaja en ninguna de las 8 familias — es error de identidad, no de fidelidad.
+
+w14:paraId="4AD8331C" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2. Doc1 — Errores de identidad de cita y estructura
+
+w14:paraId="632DA2E5" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.1 Autor, año y volumen fabricados sobre un DOI real [verificado]
+
+w14:paraId="68CF1058" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “Pereira, B.F. et al. (2022) Transcriptomic profiling of GH/IGF system reveals tissue-specific differentiation in gilthead sea bream. Sci. Rep. 12:24326. DOI:10.1038/s41598-021-95408-6” Real: Naya-Català F, Simó-Mirabet P, Calduch-Giner J, Pérez-Sánchez J (2021), Sci Rep 11:16466. Mismo DOI. → Autor inventado, año equivocado, volumen y número de artículo inventados. El DOI resuelve perfecto.
+
+w14:paraId="6AB2E20C" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.2 Autor fabricado sobre un DOI real [verificado]
+
+w14:paraId="6B96DDA5" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “Weng, P.-C. et al. (2022). IGF-1 injection changes gene expression in tilapia stomach by RNA-seq. Front. Immunol. 13:959717” Real: Zhong H, Lou C, Ren B, Zhou Y (2022). Mismo DOI. (Nota: Gemini atribuyó este mismo paper correctamente.)
+
+w14:paraId="15C1E361" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.3 Último autor promovido a primero + título alterado [verificado]
+
+w14:paraId="4A3CAB06" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “Lema, S.C. et al. (2023) Nutritional status affects IGF1 regulation of skeletal muscle myogenesis in gopher rockfish” Real: Bersin TV, Cordova KL, Saenger EK, Journey ML, Beckman BR, Lema SC (último). Título completo: “…myogenesis, myostatin, and myofibrillar protein degradation pathways…” → Este mismo error lo cometió Gemini de forma independiente en el Doc3.
+
+w14:paraId="1479D428" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.4 Referencia duplicada con dos atribuciones contradictorias [estructural]
+
+w14:paraId="20CCC73E" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">El mismo paper (mismo título, mismo DOI 10.3390/ijms252413583, mismo volumen 25(24):13583) aparece dos veces con autores y años distintos: - “Duarte-Paternina, F. et al. (2024)” - “Zhao, K. et al. (2022)” Ambos no pueden ser correctos.
+
+w14:paraId="6B045EA7" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.5 Marcas de cita huérfanas [estructural]
+
+w14:paraId="21B0114D" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Marcas usadas en el cuerpo que no tienen entrada en la bibliografía: 【90】 (cortisol crónico eleva GH y suprime IGF-1) y 【47】 (mero manchado Epinephelus akaara, crecimiento rápido vs. lento).
+
+w14:paraId="7A946859" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.6 Colisión de marcas [estructural]
+
+w14:paraId="2A741312" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">La marca 【57】 está asignada a dos referencias distintas (Pereira 2022 y Yao 2024). La marca 【84】 también (Duarte-Paternina y Zhao).
+
+w14:paraId="420C7361" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A2.7 Inconsistencia entre documentos del mismo modelo [estructural]
+
+w14:paraId="72B321E8" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">La referencia de Ndandala aparece en Doc1 como Aquacult. Rep. 25:101339 y en Doc2 como 26:101289. Una de las dos está mal.
+
+w14:paraId="5D28C108" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">
+
+w14:paraId="7F824491" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3. Doc2 — Distorsiones de contenido [todas verificadas]
+
+w14:paraId="438D67C3" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.1 fabricated_specificity — cifra sin contraparte en la fuente
+
+w14:paraId="22D26BB3" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “Naya-Català et al. (2021) emplearon un PCR-array para 56 genes del eje GH/IGF” Fuente textual (Methods): “The 96-well PCR-array layout was designed for the simultaneous profiling of a panel of 28 genes, including markers of GH/IGF system (18), muscle cell growth and differentiation (5), and lipid and energy metabolism (5).” → Ni 56 totales (son 28) ni 56 del eje (son 18). El resto de la afirmación es correcto: patrón puro de la familia. Nota: solo detectable con texto completo. Invisible desde el abstract.
+
+w14:paraId="7D7A6CEB" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.2 misattribution — cita huérfana con contenido correcto
+
+w14:paraId="5CB16ABB" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “De hecho, en dorada la isoforma de GH-Receptor 2 (GHR2) resulta ser la más expresada en músculo y corazón, en contraste con GHR1” con marca 【75】. Fuente textual (Discusión de Naya-Català): “it is well recognized that [ghr2] is the highest expressed receptor in skeletal and cardiac muscle tissues of juveniles and adults of gilthead sea bream” → Dos problemas: (a) es una afirmación que ese paper cita de literatura previa, no un hallazgo propio; (b) la marca 【75】 no corresponde a ninguna referencia de la lista.
+
+w14:paraId="1D586F69" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.3 causal_overreach + epistemic_inflation — cadena causal construida sobre hedges
+
+w14:paraId="64B6E310" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “el músculo transgénico elevó igf2b e igfbp5a, lo que activó la vía PI3K/Akt e impulsó hipertrofia muscular” Fuente textual (Nörnberg 2016): “The presence of IGFBP5a may potentiate the IGF2 action” · “Western blotting analyses indicated an imbalance between the phosphorylation levels… in favor of the latter” · “the results of this study suggest that the hypertrophy… may be due to circulating IGFs” Y lo decisivo: “muscle hypertrophy previously observed in a line of GH-transgenic zebrafish” — la hipertrofia era un fenotipo preexistente que el estudio buscaba explicar, no un efecto que produjo. La afirmación invierte la lógica y convierte tres hedges en una cadena causal demostrada.
+
+w14:paraId="5731C76F" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.4 misattribution — resultado trasladado al tejido equivocado
+
+w14:paraId="2BBCD95F" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “En músculo se up-regularon significativamente ghr-1 e isoformas de igf1 e igf2, mientras que se disminuyeron los receptores igf1ra/igf1rb” Fuente textual (Sánchez-Moya, Discusión): “we observed a downregulation of the [igf-1rb] in white muscle and the [igf-1ra] and [igf-1rb] in stomach in fish fed with CSH-1.65” → En músculo bajó un solo receptor, y solo en la dosis 1.65. Los dos bajaron en estómago. Es el patrón exacto de tu par sintético C-P02: valores correctos, entidad equivocada.
+
+w14:paraId="06EBE882" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.5 directional_inversion — discordancia presentada como concordancia
+
+w14:paraId="23437249" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Dice: “cultivos de miotubos tratados con cisteamina replicaron estos cambios: …mayor transcripción de ghr1, igf1b, igf2 e igf1rb” Fuente textual: “However, in our in vitro experiment we found an upregulation of the [igf-1rb] instead its decrease, suggesting that the point of negative feedback had not yet been reached after 96 h” → El paper marca esto explícitamente como discordancia entre in vivo e in vitro. Y el documento queda internamente contradictorio: igf1rb baja en músculo (A3.4), sube en miotubos, y eso se llama “replicar”.
+
+w14:paraId="6D8410B1" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.6 causal_overreach — mecanismo nunca medido, con la mitad contradicha
+
+w14:paraId="7E813CA6" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Dice: “Estos hallazgos indican que disminuir la somatostatina estimula la vía GH/IGF” Realidad: la somatostatina nunca se midió en ese estudio. Y la GH bajó: “contrary to what most bibliography supports, we report here a CSH dose-dependent reduction of plasmatic GH levels”.
+
+w14:paraId="3F00B14E" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A3.7 Omisiones selectivas (no son distorsión, pero sesgan) [verificado]
+
+w14:paraId="189EC0B3" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Bersin: el ayuno también subió miogenina (un factor miogénico) y bajó miostatina2. El documento solo lista los que bajan, reforzando el relato “el ayuno suprime la miogénesis”.
+
+w14:paraId="1D5351D2" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Bersin: el efecto de Igf1 sobre myostatin1/fbxo32 ocurrió “under both feeding conditions” — no es estrictamente una reversión del ayuno, como sugiere el documento.
+
+w14:paraId="2076A102" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Sánchez-Moya: se omite que el efecto sobre GH fue solo en Fase 2 y el de IGF-1 solo significativo en CSH-1.65.
+
+w14:paraId="020B9AA7" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A4. Doc2 — Errores de identidad de cita [verificados]
+
+w14:paraId="1238B2BE" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Referencia
+
+w14:paraId="242DCDBD" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">En el documento
+
+w14:paraId="0C3A844F" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Real
+
+w14:paraId="62B6C0CF" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Naya-Català 2021
+
+w14:paraId="180FAD47" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Sci Rep 11, 22901; autor “Venús, M. I.”; Pérez-Sánchez 2º
+
+w14:paraId="2C773BBC" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Sci Rep 11:16466; Simó-Mirabet, Calduch-Giner; Pérez-Sánchez último
+
+w14:paraId="029CAD53" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Nörnberg 2016
+
+w14:paraId="4FB2041F" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">GCE 225, 48–56; “Marafon, M., Storozhenko, S., et al.”
+
+w14:paraId="7B54F13A" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">GCE 226, 36–41; solo 3 autores: Nornberg, Figueiredo, Marins
+
+w14:paraId="03F9BF52" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">García de la Serrana & Macqueen
+
+w14:paraId="1F2D727A" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">(2019), Front Endocrinol 10, 80
+
+w14:paraId="2D8D62F3" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">2018, vol 9, p 80
+
+w14:paraId="0EC15E34" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Sánchez-Moya 2023
+
+w14:paraId="2B47B0E2" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">listada dos veces, mismo DOI, dos listas de autores distintas (“Bermejo-Nogales”, “Kaufer”, “Sánchez, N.”)
+
+w14:paraId="78598638" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Sánchez-Moya, Balbuena-Pecino, Vélez, Perelló-Amorós… — ninguno de los tres nombres del documento existe
+
+w14:paraId="2F3F334D" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Duran 2022
+
+w14:paraId="269FD010" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">“Duran, G., Vinas, J., Fernández-Borràs, J.”
+
+w14:paraId="5BFDCD67" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Duran B.O.S., Zanella, Perez, Mareco, Blasco, Dal-Pai-Silva, Garcia de la Serrana
+
+w14:paraId="36C37947" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">Fuentes 2013
+
+w14:paraId="04105BC8" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">“…by the GH–IGF endocrine system”
+
+w14:paraId="029DC9F9" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRDefault="00000000">“…by the growth hormone–insulin-like growth factor system”
+
+w14:paraId="69A87AEC" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Detalle notable: en Duran 2022, “Fernández-Borràs” sí es autor — pero del paper de cisteamina (Sánchez-Moya), no de ese. Los nombres de autor sangraron de una referencia a otra.
+
+w14:paraId="7F809269" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">A5. Doc2 — Errores estructurales [estructural]
+
+w14:paraId="027DCED1" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Marca 【75】 en el cuerpo, sin entrada en la bibliografía.
+
+w14:paraId="2F73E764" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Marcas 【73】 (Duran 2021), 【10】 (Ndandala) y 【7】 (Pérez-Sánchez) en la bibliografía, nunca citadas en el cuerpo.
+
+w14:paraId="0C80BB67" w14:textId="77777777" w:rsidR="00F94A24" w:rsidRPr="004127AC" w:rsidRDefault="00000000">Auto-certificación falsa: el documento cierra afirmando “Todas las referencias listadas son reales y verificables, con DOI incluido.” Los DOIs mayormente resuelven, pero volumen, páginas, año o autores están mal en al menos 5 de 12 referencias.

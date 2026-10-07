@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
+import tempfile
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Optional
 
@@ -62,7 +65,26 @@ class OpenAIModelClient:
 
     def _save_state(self) -> None:
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
-        self.state_path.write_text(json.dumps(self._state, indent=2, sort_keys=True), encoding="utf-8")
+        fd, tmp_name = tempfile.mkstemp(prefix=f".{self.state_path.name}.", suffix=".tmp", dir=str(self.state_path.parent))
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+                json.dump(self._state, fh, indent=2, sort_keys=True)
+                fh.write("\n")
+            os.replace(tmp_name, self.state_path)
+        except Exception:
+            try:
+                os.unlink(tmp_name)
+            except OSError:
+                pass
+            raise
+
+    def _set_task_status(self, task_key: str, status: str, **extra: Any) -> None:
+        with self._lock:
+            record = dict(self._state.get(task_key) or {})
+            record["status"] = status
+            record.update(extra)
+            self._state[task_key] = record
+            self._save_state()
 
     def _log_call(self, *, task_key: str, attempt: int, status: str, **payload: Any) -> None:
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -79,7 +101,11 @@ class OpenAIModelClient:
 
     def _mark_completed(self, task_key: str, result: Any) -> None:
         with self._lock:
-            self._state[task_key] = {"status": "completed", "result": result}
+            self._state[task_key] = {
+                "status": "completed",
+                "result": result,
+                "completed_at": datetime.now(timezone.utc).isoformat(),
+            }
             self._save_state()
 
     def _is_completed(self, task_key: str) -> bool:
@@ -134,7 +160,12 @@ class OpenAIModelClient:
             with self._lock:
                 return self._state[task_key]["result"]
 
-        result = work()
+        self._set_task_status(task_key, "pending", started_at=datetime.now(timezone.utc).isoformat())
+        try:
+            result = work()
+        except Exception:
+            self._set_task_status(task_key, "failed", error="work failed")
+            raise
         self._mark_completed(task_key, result)
         return result
 
@@ -143,6 +174,11 @@ class OpenAIModelClient:
             with self._lock:
                 return self._state[task_key]["result"]
 
-        result = self._call_openai(task_key=task_key, payload=payload)
+        self._set_task_status(task_key, "pending", started_at=datetime.now(timezone.utc).isoformat())
+        try:
+            result = self._call_openai(task_key=task_key, payload=payload)
+        except Exception:
+            self._set_task_status(task_key, "failed", error="openai call failed")
+            raise
         self._mark_completed(task_key, result)
         return result

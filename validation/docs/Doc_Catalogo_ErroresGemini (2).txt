@@ -1,0 +1,410 @@
+﻿
+
+
+w14:paraId="0E2811DB" w14:textId="7F4ED396" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Catálogo de errores detectados — Gemini
+
+w14:paraId="449038DB" w14:textId="0E18248C" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Gemini (Doc3)
+
+w14:paraId="6BE20AD0" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B1. El error estructural mayor: bibliografía huérfana [estructural]
+
+w14:paraId="59C5C4EC" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">El documento trae dos listas: “Referencias Bibliográficas” (30 entradas APA con DOIs) y “Fuentes citadas” (39 títulos + URL cruda). Ninguna marca del texto resuelve contra la lista APA.
+
+w14:paraId="13207937" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Prueba 1 — aritmética: el texto usa marcas 31, 35, 37 y 38. La lista APA tiene 30 entradas.
+
+w14:paraId="5FD6E089" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Prueba 2 — autor nombrado vs. número: cuando el texto nombra al autor, el número nunca cae en ese autor dentro de la APA:
+
+w14:paraId="5170D264" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">El texto dice
+
+w14:paraId="7044325F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Marca
+
+w14:paraId="034D63DF" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Ese número en la APA es
+
+w14:paraId="4AFD1124" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">El autor nombrado está en la APA en el #
+
+w14:paraId="69877595" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Ese número en “Fuentes citadas”
+
+w14:paraId="5C179B94" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Elizur et al.”
+
+w14:paraId="10B855C9" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">6
+
+w14:paraId="0ABFAB68" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Doyle, claudinas
+
+w14:paraId="761F6EC6" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">7
+
+w14:paraId="2EE99266" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">zebrafish transgénico LH-GH ✓
+
+w14:paraId="5395F666" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Berishvili et al. (2010)”
+
+w14:paraId="3B1A9593" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">13
+
+w14:paraId="05E8FF2C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Link, blackchin tilapia
+
+w14:paraId="5691FB7F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">3
+
+w14:paraId="396A2009" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">IGF-3 en gónadas de tilapia ✓
+
+w14:paraId="5A73972F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Cleveland et al. (2020)”
+
+w14:paraId="1F7BD93E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">14
+
+w14:paraId="6D49D9F7" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Liu X, turbot
+
+w14:paraId="453BCCA5" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">5
+
+w14:paraId="2226AFC8" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">ficha KAKEN de Shimizu (coautor)
+
+w14:paraId="443338E8" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Lema et al. (2023)”
+
+w14:paraId="7C1AEA81" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">15
+
+w14:paraId="2FA348FB" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Liu Z, mandarín
+
+w14:paraId="2633913D" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">12
+
+w14:paraId="235792A6" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">cortisol e Igfbp ✓
+
+w14:paraId="64846168" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Zhong et al. (2022)”
+
+w14:paraId="4599C0B3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">23
+
+w14:paraId="36827EC6" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Shimizu & Dickhoff
+
+w14:paraId="47465369" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">29
+
+w14:paraId="6FFAC90B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">IGF-1 en estómago de tilapia ✓
+
+w14:paraId="25859335" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Bortoletti et al.”
+
+w14:paraId="106D1D0B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">27
+
+w14:paraId="44FFEFBC" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Xie, MRFs
+
+w14:paraId="299CD6BD" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">4
+
+w14:paraId="00E6E987" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">GHrec e IGF-I en parr-smolt ✓
+
+w14:paraId="622FCACB" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Seis casos, cero coincidencias con la APA, seis con “Fuentes citadas”.
+
+w14:paraId="5E83C8ED" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Prueba 3 — contenido: la marca 3 respalda un párrafo sobre tilapia del Nilo transferida a salinidad (sstr2b, ghrh, igfbp1/7). APA #3 = Berishvili, IGF-3 gonadal — mismo pez, tema distinto. Fuentes citadas #3 = “Effects of Different Salinity Conditions on Regulation of ghrh-sst-gh-igf Axis in Nile Tilapia”. Exacto.
+
+w14:paraId="00C01D9E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Por qué es peligroso: los números se alinean visualmente (el texto dice ¹, la APA tiene un 1, y ese 1 trae DOI). Y la lista fabricada es justo la que un investigador copiaría a su manuscrito — nadie pega URLs crudas en un paper.
+
+w14:paraId="653CF0FE" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B2. Contaminación del pool de fuentes [estructural + verificado]
+
+w14:paraId="6DF61BC2" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Entradas de “Fuentes citadas” que no son papers de peces, o no son papers:
+
+w14:paraId="1593E4D4" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">#
+
+w14:paraId="65BE5C86" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Qué es
+
+w14:paraId="52F073C5" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Respalda en el texto
+
+w14:paraId="344C3574" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">14
+
+w14:paraId="6AAB7CAD" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Ficha de investigador en KAKEN/NII (Shimizu Munetaka)
+
+w14:paraId="4FDAFB5F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">toda la sección CRISPR/IGFBP-2b
+
+w14:paraId="1EDA83B2" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">34
+
+w14:paraId="3FFAF724" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Libro de resúmenes de congreso con etiqueta corrupta (“naia welcome message”)
+
+w14:paraId="19E7F1C1" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">—
+
+w14:paraId="09D42F4F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">17
+
+w14:paraId="2C278F17" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Ionizing radiation: molecular mechanisms, biological effects…”
+
+w14:paraId="04A93156" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">—
+
+w14:paraId="61CA8F5B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">18
+
+w14:paraId="32EA9211" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Sarcopenia en enfermedad renal crónica (humano)
+
+w14:paraId="6BF26140" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">—
+
+w14:paraId="5EADF7A1" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">25
+
+w14:paraId="5301B39A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Retardo de crecimiento intrauterino (humano)
+
+w14:paraId="03540C2A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">—
+
+w14:paraId="63403194" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">31
+
+w14:paraId="30BAE1CB" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Sarcopenia and Muscle Aging” (envejecimiento humano)
+
+w14:paraId="0C74F939" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">células satélite en peces + carpas transgénicas cambiando de fibra rápida a lenta
+
+w14:paraId="04249E51" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">39
+
+w14:paraId="0BDA4F30" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Eje GH/IGF-1 y citoquinas en niños
+
+w14:paraId="511C9C09" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">—
+
+w14:paraId="3C265596" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">9, 11
+
+w14:paraId="25AE3E53" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Metabolismo lipídico e IGF en enfermedades humanas
+
+w14:paraId="2899C009" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">—
+
+w14:paraId="29134698" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">El caso ejemplar (off_target_relevance): la marca 31 respalda “ejemplares de carpa sobre-expresando IGF-1 exhibieron una mutación del espectro miofibrilar desde fibras de contracción rápida hacia un fenotipo… oxidativo y de contracción lenta”. La fuente 31 es una revisión de sarcopenia y envejecimiento muscular humano. Y en el mismo pool está la #33, “IGF-1 in carps”, que sería la fuente correcta — pero la marca no apunta ahí.
+
+w14:paraId="6388005F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3. Distorsiones de contenido [todas verificadas]
+
+w14:paraId="73831D77" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3.1 directional_inversion — el catch más limpio de los tres documentos
+
+w14:paraId="080E6016" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dice: “Ambos ligandos, no obstante, responden sinérgicamente a las oscilaciones de los niveles pituitarios de GH” Fuente textual (Berishvili et al. 2010): “IGF-3 did not respond to GH treatment neither in ovary nor in testis.” → Contradicción frontal, sin matiz posible.
+
+w14:paraId="2A88D73A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3.2 Sobre-restricción — no encaja en ninguna de las 8 familias
+
+w14:paraId="5EB59E7D" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dice: “el igf3 codifica un polipéptido cuyo ARN mensajero reside de forma exclusiva en el parénquima de ovarios y testículos” Fuente textual: “Low IGF-3 mRNA expression levels were detected in most organs studied, with the highest extra-gonadal amount in the pituitary.” → scope_distortion cubre presentar lo restringido como general; aquí ocurre lo inverso: presentar como exclusivo algo que la fuente dice que es amplio. Hueco de taxonomía. Agravante: el documento se contradice a sí mismo — en la pág. 2 dice “restringida casi en su totalidad al tejido gonadal” (defendible) y en la pág. 12 lo endurece a “de forma exclusiva” (falso).
+
+w14:paraId="788E1A1E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3.3 epistemic_inflation — hedge convertido en certeza + afirmación sobre lo que la fuente deja abierto
+
+w14:paraId="7E8CE2A3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dice: “Ejerce allí funciones localizadas e irremplazables en la progresión de la meiosis, el reclutamiento folicular asíncrono primario y la maduración espermatogénica” Fuente textual: “IGF-3 may be involved in reproduction of fishes most likely in the male gonad only” · “Whether IGF-3 also has some physiological significance in ovary or other organs should be the topic of further studies.” → “Irremplazables” sobre “may be involved”, y la parte ovárica se afirma cuando la fuente explícitamente la deja sin resolver.
+
+w14:paraId="7DDF7D39" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3.4 epistemic_inflation + causal_overreach — conclusión evolutiva desde un resultado nulo
+
+w14:paraId="01D3F736" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dice: las trayectorias son indiferentes a dieta y ploidía, “indicando que el control de IGF-1 sobre las adaptaciones pre-migratorias marinas es un mecanismo biológico ancestral, altamente resiliente y conservado”. Y “fluctuaciones temporales estacionales inmutables y predecibles correlacionadas exactamente con el avance del esmolte”. Fuente (Bortoletti et al., Animals 2026): “neither ploidy nor diet significantly affected gene expression during parr–smolt transformation” y “significant temporal changes… with peak expression occurring in November”. → El resultado nulo está bien reportado. La conclusión sobre conservación ancestral no está en la fuente. “Inmutables” y “exactamente” inflan “significant temporal changes”.
+
+w14:paraId="3BBF7DB4" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3.5 Error de identidad de gen + lista incompleta presentada como exhaustiva
+
+w14:paraId="3C4626E1" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dice: “específicamente los genes slc25a38, SLC43A2 y slc7a8a” Real (Zhong et al. 2022): cuatro genes — slc25a38a, SLC43A2, slc7a8a, slc3a2a. → Se cae la “a” final del primero (identificador de gen incorrecto) y se omite el cuarto, presentando 3 de 4 como si fuera la lista completa.
+
+w14:paraId="6A4E50F7" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B3.6 [no verificado] — tejidos y cifra del transcriptoma de pez mandarín
+
+w14:paraId="5984FBA8" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dice: “se secuenció el transcriptoma de tejidos musculares, hepáticos y cerebrales” y “más de 8,900 genes expresados diferencialmente”. Indicio: la fuente se titula “Characterization of the growth-related transcriptome in the Liver and Brain of mandarin fish” — hígado y cerebro, sin músculo. Tandfonline devolvió 403; no pude leer el paper ni confirmar la cifra. Queda como sospecha, no como error confirmado.
+
+w14:paraId="5DB73365" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">B4. Errores de identidad de cita en la lista APA [verificados]
+
+w14:paraId="583BA1F3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Limpias (3 de 30): #3 Berishvili ✓ · #5 Cleveland ✓ (autores, año, revista, volumen, número, página y DOI, todos correctos) · #29 Zhong ✓ (omite al 4º autor).
+
+w14:paraId="02C0D593" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Rotas (al menos 11):
+
+w14:paraId="3ACE2A44" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">#
+
+w14:paraId="12383F96" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">En el documento
+
+w14:paraId="12EC0F8C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Real
+
+w14:paraId="4B831BAB" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">7
+
+w14:paraId="7FC95C96" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Elizur, A., et al. (2023). Transgenic zebrafish expressing tilapia GH under the tilapia LH promoter”
+
+w14:paraId="6AF1F527" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Cohen-Rothschild, Mizrahi, Levavi-Sivan (2024), “Characterization of a novel fast-growing zebrafish: a new approach to growth hormone transgenesis”, DOI 10.3389/fendo.2024.1369043
+
+w14:paraId="20F7ED9B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">30
+
+w14:paraId="62632414" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Zohar, Y., et al. (2024). Polyploid breeding and GH/IGF axis regulation in allotriploid crucian carp hybrids”
+
+w14:paraId="106C0C21" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Qing, Ren, Lou, Zhong, Zhou, Liu (2024), “Gene expression analyses of GH/IGF axis in triploid crucian carp with growth heterosis” — DOI correcto, autor y título inventados
+
+w14:paraId="2CA2E4CF" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">12
+
+w14:paraId="0030A914" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Lema, S. C., et al. (2023). Igf1 regulates skeletal muscle growth in gopher rockfish”
+
+w14:paraId="65D30981" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Bersin TV et al. — último autor promovido a primero, título alterado. Mismo error que cometió ChatGPT en el Doc1.
+
+w14:paraId="3598EE37" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">4
+
+w14:paraId="46F78308" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">“Bortoletti, M. (2022)”, sin revista ni DOI
+
+w14:paraId="206A9596" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Bortoletti et al., Animals, 2026
+
+w14:paraId="00F7F382" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">9 y 15
+
+w14:paraId="43457002" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Dos referencias distintas (Guan & Qiu 2020; Liu Z et al. 2020) con la misma URL
+
+w14:paraId="59E6D5E4" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Un solo paper real de 2024 (DOI 10.1080/09712119.2024.2440045). Ambos años incorrectos.
+
+w14:paraId="64E924EB" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">6
+
+w14:paraId="5F3A2BE1" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Doyle, S. (2022)… GCE 163, DOI 10.1016/j.ygcen.2009.04.020”
+
+w14:paraId="55B22EC7" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">El DOI y el volumen dicen 2009; el año declarado dice 2022
+
+w14:paraId="786C07B3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">27
+
+w14:paraId="6370499F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">“Xie, Z., et al. (2001). J Exp Biol, 211, DOI 10.1242/jeb.006890”
+
+w14:paraId="65C552AB" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">J Exp Biol vol 211 es 2008 — año inconsistente con volumen y DOI
+
+w14:paraId="74A402FD" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">19
+
+w14:paraId="53139F64" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Picha et al. 2008, NAJA 70(2), 167–183
+
+w14:paraId="32D6A65B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">páginas reales 196–211
+
+w14:paraId="1DE55B65" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">11
+
+w14:paraId="02EFF535" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">“Lai, F., et al. (2025). Ghrelin is involved in voluntary anorexia in Atlantic salmon…”
+
+w14:paraId="4A9E989E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">La URL (PMC12380893) corresponde a “Influence of water temperature on feed intake, appetite control, and energy allocation in Atlantic salmon post-smolt”
+
+w14:paraId="78226FD5" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">18
+
+w14:paraId="5C293510" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Pérez-Sánchez & Calduch-Giner (2002), enlace a Sci-Hub
+
+w14:paraId="33E59C3A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">una bibliografía formal apuntando a un sitio pirata
+
+w14:paraId="49D312C2" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Nota: los casos #6, #9/#15, #27 se detectan sin recuperar nada — el año declarado contradice el año codificado en el propio DOI, o dos entradas comparten URL.
+
+w14:paraId="4183817B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">
+
+w14:paraId="6D0B1FD3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">PARTE C — Patrones transversales
+
+w14:paraId="5ED0E12E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">C1. Lo que NO apareció en ningún documento
+
+w14:paraId="0E5B818C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Cero citas fabricadas. Todos los DOIs listados resuelven a papers reales. El modo de falla que el mercado sí detecta (Citely, Trinka, GPTZero, scite) no ocurrió ni una vez en 3 documentos y ~70 referencias.
+
+w14:paraId="6785978C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">C2. Errores que ambos modelos cometieron de forma independiente
+
+w14:paraId="0B13BED6" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Promover al último autor a primero en el paper de Bersin et al. 2023 (Lema es el último autor). ChatGPT en Doc1, Gemini en Doc3, sin contacto entre ambos.
+
+w14:paraId="0F8CDD94" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Atribuir autores inventados a DOIs reales, con nombres plausibles del campo (Pereira, Weng, Venús, Marafon / Zohar, Elizur).
+
+w14:paraId="2A1D3555" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Marcas de cita huérfanas en ambos.
+
+w14:paraId="3D93CB0E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">C3. Diferencias de perfil
+
+w14:paraId="69E1B55F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00AD3FBB">
+
+w14:paraId="12F7DCD3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">ChatGPT (Doc1 + Doc2)
+
+w14:paraId="49DF3FED" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Gemini (Doc3)
+
+w14:paraId="7D339F28" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Citas fabricadas
+
+w14:paraId="406DBF1D" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="4D497F7F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="6231ED2C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Estructura de citación
+
+w14:paraId="3064AB45" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">una lista; marcas coherentes salvo huérfanas puntuales
+
+w14:paraId="210B3A54" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">dos listas; la formal completamente huérfana
+
+w14:paraId="38957185" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Modo de falla dominante
+
+w14:paraId="5830D0BC" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">interpretación: inflar hedges, extrapolar, atribuir al tejido/estudio equivocado
+
+w14:paraId="63C498D5" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">contradicción frontal: afirmar lo opuesto a la fuente
+
+w14:paraId="030A296C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Contradicción directa de la fuente
+
+w14:paraId="37E3C996" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">rara (≈1 caso claro en 12)
+
+w14:paraId="38B93F8F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">3 en un solo párrafo (Berishvili)
+
+w14:paraId="5A8E9F85" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Fuentes fuera de dominio
+
+w14:paraId="2C8A98F2" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">ninguna detectada
+
+w14:paraId="5C1A3768" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">9+ papers humanos / no relacionados
+
+w14:paraId="626AD8B0" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Errores de metadata
+
+w14:paraId="3807CE40" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">~8 en Doc1, ~9 en Doc2 (sobre 12 refs)
+
+w14:paraId="1E803FD3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">~11 sobre 30 refs + enlace a Sci-Hub
+
+w14:paraId="3183398A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Prosa
+
+w14:paraId="12433362" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">técnica, sobria
+
+w14:paraId="3716FEAF" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">superlativos (“monumental”, “vertiginosa”, “cristalina”, “asombrosamente”)
+
+w14:paraId="0032DA83" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">C4. Distribución por familia de distorsión
+
+w14:paraId="39F595C1" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Familia
+
+w14:paraId="1D7ECF81" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">ChatGPT
+
+w14:paraId="24EB472E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Gemini
+
+w14:paraId="711675D7" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Total
+
+w14:paraId="5AEFDC69" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">misattribution
+
+w14:paraId="3EE78DE6" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">4
+
+w14:paraId="543B7DA8" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="09506C5A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">4
+
+w14:paraId="1C07951B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">causal_overreach
+
+w14:paraId="69EFE993" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">3
+
+w14:paraId="33E09228" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1 (+1 compuesta)
+
+w14:paraId="4953D5A2" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">4
+
+w14:paraId="5BF01B0D" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">epistemic_inflation
+
+w14:paraId="254A9CFD" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">2 (+2 secundarias)
+
+w14:paraId="3A755287" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">2
+
+w14:paraId="41EBDCDC" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">4
+
+w14:paraId="4EC43B45" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">scope_distortion
+
+w14:paraId="5922B08A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="22DB7C3F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="593A35C2" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="4469F705" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">directional_inversion
+
+w14:paraId="30366404" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="31A7C831" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="0CB7D85F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">2
+
+w14:paraId="508B7A7F" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">fabricated_specificity
+
+w14:paraId="11E7485C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="70CFAC50" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1 (identidad de gen)
+
+w14:paraId="6A12706C" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">2
+
+w14:paraId="3B27080A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">off_target_relevance
+
+w14:paraId="636C2BE4" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="47DCB5E0" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="793A295D" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">1
+
+w14:paraId="28BB2737" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">pure_fabrication
+
+w14:paraId="2EDC28F8" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="4F1C9094" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="15E3597B" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">0
+
+w14:paraId="05871BD8" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Sin familia (identidad de cita, sobre-restricción, estructura)
+
+w14:paraId="2B43DEB3" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">8
+
+w14:paraId="65C33977" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">12
+
+w14:paraId="0D806C2A" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">20
+
+w14:paraId="42A71533" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Lo más relevante de esta tabla: casi la mitad de todos los errores detectados no encajan en las 8 familias. Son errores de identidad de cita y de estructura. La taxonomía cubre bien la fidelidad semántica, pero la mayor parte del daño real en estos documentos vino de otro lado.
+
+w14:paraId="1EE515DA" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">C5. Dos huecos confirmados en la taxonomía
+
+w14:paraId="55841B3E" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRDefault="00000000">Sobre-restricción — presentar como exclusivo/limitado algo que la fuente reporta como amplio. scope_distortion solo cubre la dirección contraria. (Caso B3.2.)
+
+w14:paraId="48160B90" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Errores de identidad de cita — autor inventado, año equivocado, volumen equivocado, nombre mal escrito, marca huérfana, referencia duplicada. Ninguno encaja en las 8 familias, y son 20 de los 41 errores detectados.
+
+w14:paraId="10C67EB0" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">C6. Qué exigió texto completo vs. abstract
+
+w14:paraId="29F6E494" w14:textId="77777777" w:rsidR="00AD3FBB" w:rsidRPr="007058D6" w:rsidRDefault="00000000">Detectables solo con texto completo: A3.1 (56 genes → Methods), A3.4 (músculo vs. estómago → Discusión), A3.5 (discordancia in vivo/in vitro → Discusión). Tres de los seis errores de contenido del Doc2. Detectables con abstract: A3.3, A3.6, B3.1, B3.2, B3.3, B3.4. Detectables sin recuperar nada (estructural o aritmético): A1.6, A2.4, A2.5, A2.6, A2.7, A5, B1, B4 parcial (#6, #9/#15, #27).

@@ -17,10 +17,12 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT_DIR))
 
-from flask import Flask, jsonify, request, send_file
+from flask import (Flask, jsonify, render_template, request, send_file,
+                   send_from_directory)
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from werkzeug.utils import secure_filename
 
 from orchestrator import runner as orchestrator_runner
 from src.aggregator import generate_report
@@ -34,7 +36,56 @@ from src.pipeline import process_sentences
 from src.progress import ProgressTracker
 from src.text_parser import parse_pasted_text
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=str(ROOT_DIR / "templates"), static_folder=str(ROOT_DIR / "static"))
+
+UPLOAD_DIR = ROOT_DIR / "output" / "uploads"
+JOB_DIR = ROOT_DIR / "output" / "jobs"
+UI_JOBS: dict[str, dict] = {}
+UI_JOBS_LOCK = threading.Lock()
+
+
+def _ui_job_status(job_id: str) -> dict | None:
+    with UI_JOBS_LOCK:
+        return UI_JOBS.get(job_id)
+
+
+def _set_ui_job(job_id: str, *, status: str, progress: list[dict] | None = None, report: dict | None = None, error: str | None = None) -> None:
+    with UI_JOBS_LOCK:
+        existing = UI_JOBS.get(job_id, {})
+        UI_JOBS[job_id] = {
+            "status": status,
+            "progress": progress if progress is not None else existing.get("progress", []),
+            "report": report if report is not None else existing.get("report"),
+            "error": error if error is not None else existing.get("error"),
+        }
+
+
+def _background_analysis(job_id: str, source_path: Path) -> None:
+    progress = [
+        {"stage": "upload", "message": "Manuscript uploaded and queued."},
+        {"stage": "parse", "message": "Extracting text and citations from the manuscript."},
+    ]
+    _set_ui_job(job_id, status="running", progress=progress)
+
+    try:
+        out_dir = JOB_DIR / job_id
+        result = orchestrator_runner.run_orchestrator(source_path, out_dir)
+        with open(result["report_json"], "r", encoding="utf-8") as fh:
+            report = json.load(fh)
+        run_record_path = Path(result["run_record"])
+        if run_record_path.exists():
+            with open(run_record_path, "r", encoding="utf-8") as fh:
+                report["run_record"] = json.load(fh)
+        report["output_files"] = {
+            "report_json": "report.json",
+            "excel_dataset": "dataset.xlsx",
+            "run_record": "run_record.json",
+        }
+        progress.append({"stage": "done", "message": "RefCheck analysis complete."})
+        _set_ui_job(job_id, status="done", progress=progress, report=report)
+    except Exception as exc:  # pragma: no cover - surfaced to the browser via API
+        progress.append({"stage": "error", "message": f"Analysis failed: {exc}"})
+        _set_ui_job(job_id, status="error", progress=progress, error=str(exc))
 
 # Locked down via env var in production (e.g. your Vercel frontend URL).
 # Supports a single origin or a comma-separated list:
@@ -223,11 +274,36 @@ def _start_analysis_job(
 
 @app.route("/", methods=["GET"])
 def root():
-    return jsonify({
-        "service": "citation-fidelity-checker-api",
-        "status": "ok",
-        "health_check": "/api/health",
-    })
+    return render_template("index.html")
+
+
+@app.post("/api/upload-manuscript")
+def upload_manuscript():
+    if "file" not in request.files:
+        return jsonify({"error": "No manuscript selected."}), 400
+
+    uploaded = request.files["file"]
+    if uploaded.filename == "":
+        return jsonify({"error": "No manuscript selected."}), 400
+
+    ext = Path(uploaded.filename).suffix.lower()
+    if ext not in {".docx", ".pdf"}:
+        return jsonify({"error": "Unsupported file type. Please upload a .docx or .pdf manuscript."}), 400
+
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    JOB_DIR.mkdir(parents=True, exist_ok=True)
+
+    safe_name = secure_filename(uploaded.filename)
+    source_path = UPLOAD_DIR / safe_name
+    uploaded.save(source_path)
+
+    job_id = uuid.uuid4().hex
+    _set_ui_job(job_id, status="running", progress=[{"stage": "upload", "message": "Manuscript saved. Analysis queued."}])
+
+    worker = threading.Thread(target=_background_analysis, args=(job_id, source_path), daemon=True)
+    worker.start()
+
+    return jsonify({"job_id": job_id, "status": "running"}), 202
 
 
 @app.route("/api/health", methods=["GET"])
@@ -576,21 +652,40 @@ def recheck():
 
 @app.route("/api/progress/<job_id>", methods=["GET"])
 def progress(job_id):
-    """
-    Returns the current state of an analysis job started via /api/analyze-text:
-    {
-      "status": "running" | "done" | "error",
-      "events": [{"t": ..., "stage": "...", "ref": 3, "message": "..."}, ...],
-      "report": {...} | null,   // present only when status == "done"
-      "error": "..." | null      // present only when status == "error"
-    }
-    """
+    """Return either the async text-analysis job progress or the file-upload job progress."""
+    with UI_JOBS_LOCK:
+        ui_job = UI_JOBS.get(job_id)
+    if ui_job is not None:
+        payload = {
+            "status": ui_job["status"],
+            "progress": ui_job.get("progress", []),
+        }
+        if ui_job.get("error") is not None:
+            payload["error"] = ui_job["error"]
+        if ui_job.get("report") is not None:
+            payload["report"] = ui_job["report"]
+        return jsonify(payload)
+
     with _JOBS_LOCK:
         job = _JOBS.get(job_id)
     if job is None:
         return jsonify({"error": "Unknown job."}), 404
     public_job = {k: v for k, v in job.items() if k != "created_at"}
     return jsonify(public_job)
+
+
+@app.get("/api/download/<job_id>/<path:filename>")
+def download_file(job_id: str, filename: str):
+    with UI_JOBS_LOCK:
+        ui_job = UI_JOBS.get(job_id)
+    if ui_job is not None:
+        safe_name = Path(filename).name
+        file_path = JOB_DIR / job_id / safe_name
+        if not file_path.exists():
+            return jsonify({"error": "File not found."}), 404
+        return send_from_directory(str(JOB_DIR / job_id), safe_name, as_attachment=True, download_name=safe_name)
+
+    return jsonify({"error": "Unknown job."}), 404
 
 
 # ---------------------------------------------------------------------------

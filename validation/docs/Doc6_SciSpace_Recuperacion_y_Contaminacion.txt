@@ -1,0 +1,145 @@
+﻿
+
+Doc6 (SciSpace) — recuperación de pasajes y hallazgo de contaminación
+
+5 de agosto de 2026. Fuentes recuperadas desde PubMed y PubMed Central. Este informe entrega dos casos limpios y documenta por qué los otros cinco del bloque HIGH no deben entrar al set de evaluación.
+
+Resultado en una línea
+
+De los 7 casos HIGH de Doc6, solo 2 son utilizables. Los otros 5 giran todos alrededor del mismo paper — Aravena-Canales et al. 2024 — cuyas tres cifras principales están dentro del EXAMPLE 14 del SYSTEM_PROMPT_v14. Además, dos de ellos ya viven en el set de evaluación desde el lote de Doc5.
+
+Estado caso por caso
+
+Caso
+
+Qué es
+
+Resultado
+
+BL-073
+
+MR loss abolishes insulin-stimulated glucose uptake
+
+RECUPERADO — limpio, listo para fusionar
+
+BL-074
+
+550 genes diferencialmente expresados
+
+NO USAR — duplicado de GS-076 + cifras en el prompt
+
+BL-075
+
+9.059 genes diferencialmente metilados
+
+NO USAR — duplicado de GS-077 + cifras en el prompt
+
+BL-076
+
+126 genes con correlación negativa
+
+NO USAR — la cifra 126 está dentro del EXAMPLE 14
+
+BL-077
+
+Tres vías atribuidas al análisis de metilación
+
+NO USAR — es literalmente el EXAMPLE 14 / ST-017
+
+BL-078
+
+Encadenamiento de las tres vías con los 126 genes
+
+NO USAR — misma oración que BL-076 y BL-077
+
+BL-079
+
+Método optogenético para elevación crónica de GC
+
+RECUPERADO — limpio, listo para fusionar
+
+
+
+El hallazgo que importa: contaminación de Aravena-Canales 2024
+
+El EXAMPLE 14 del SYSTEM_PROMPT_v14 lleva este excerpt, que el modelo ve en cada llamada:
+
+"RNA-seq identified 550 differentially expressed genes, whose KEGG enrichment returned ECM-receptor interaction and regulation of actin cytoskeleton. Whole-genome bisulfite sequencing identified 9,059 differentially methylated genes; KEGG enrichment of this set returned focal adhesion, adrenergic signalling in cardiomyocytes, and Wnt signalling pathway. Integration of both layers yielded 126 genes with upregulated expression and downregulated methylation."
+
+Las tres cifras de ese paper — 550, 9.059 y 126 — están ahí dentro. La nota de ST-017 en la hoja de smoke test lo dice de forma explícita: "this mirrors the Aravena-Canales 2024 figures".
+
+Consecuencia: cualquier caso del gold set construido sobre esas tres cifras mide, en parte, si el modelo recuerda su propio prompt, no si leyó el pasaje que se le entregó.
+
+Cifra
+
+Dónde está en el prompt
+
+Dónde está en el gold set
+
+550 DEGs
+
+EXAMPLE 14, dentro del excerpt
+
+GS-076 (fusionado desde Doc5 / BL-052)
+
+9.059 DMGs
+
+EXAMPLE 14, dentro del excerpt
+
+GS-077 (fusionado desde Doc5 / BL-053)
+
+126 genes
+
+EXAMPLE 14, dentro del excerpt
+
+BL-076, candidato de Doc6
+
+
+
+Esto alcanza al lote de Doc5 que ya fusionamos
+
+GS-076 y GS-077 salieron del lote de Doc5 (BL-052 y BL-053) y son las cifras 550 y 9.059 de ese mismo paper. En su momento no se detectó porque la comparación de contaminación se hizo sobre el par claim-excerpt completo, y esos dos casos usan el texto real del abstract y de los resultados, no la redacción estilizada del EXAMPLE 14. La coincidencia no es de redacción: es de hechos, que es lo que el modelo puede haber memorizado.
+
+Es una contaminación de grado menor que la de BL-104 y BL-105, donde el par claim-excerpt era idéntico al ejemplo. Aquí el modelo todavía tiene que hacer la comparación. Pero puede resolverla de memoria en lugar de leer el excerpt, que es justamente lo que la separación de casos contaminados existe para impedir.
+
+La decisión es tuya: dejarlos y anotar la salvedad, o sacarlos del set de evaluación y moverlos a la hoja de smoke test. Si los sacas, el lado correcto baja de 61 a 59.
+
+Los dos casos recuperados
+
+BL-073 — Faught & Vijayan 2022
+
+Referencia real: Endocrinology 163(11), bqac149. PMID 36041019. DOI 10.1210/endocr/bqac149.
+
+Afirmación de Doc6: "MR loss abolishes insulin-stimulated glucose uptake in skeletal muscle".
+
+Pasaje del abstract:
+
+"To determine if the anabolism-promoting nature of MR was due to an interaction with insulin, fish were co-injected with insulin and the fluorescent glucose analogue 2-NBDG. A loss of MR abolished insulin-stimulated glucose uptake in the skeletal muscle."
+
+Veredicto: sostenida. El abstract lo dice casi palabra por palabra, incluyendo el diseño experimental que lo produjo.
+
+BL-079 — Nagpal et al. 2024
+
+Referencia real: Eur J Neurosci 59(11), 3134-3146. PMID 38602078. DOI 10.1111/ejn.16301.
+
+Afirmación de Doc6: "The development of optogenetic methods for chronic glucocorticoid elevation in zebrafish larvae represents a novel tool for studying developmental programming effects".
+
+Pasaje del abstract, en dos partes no contiguas:
+
+"In this study, we established a method to chronically elevate endogenous GC levels during early life in larval zebrafish. To this end, we employed an optogenetic actuator, beggiatoa photoactivated adenylyl cyclase, specifically expressed in the interrenal cells of zebrafish..." [...] "Going forward, we propose that this model can be leveraged to tease apart the mechanisms underlying developmental programming of the HPA/I axis by early-life GC exposure..."
+
+Veredicto: sostenida. Es además un buen control de falso positivo para la señal (b): la fuente matiza la segunda mitad con "we propose that this model can be leveraged", y la afirmación la reformula como "represents a novel tool for studying", que es fiel a la propuesta y no la convierte en resultado demostrado. Un sistema que sobre-dispare con los hedges marcará esto mal.
+
+Una decisión pendiente en BL-073
+
+La oración completa en Doc6 es "MR loss abolishes insulin-stimulated glucose uptake in skeletal muscle, indicating critical involvement in glucose metabolism [3]". El reporte de verificación solo validó la primera mitad como literal. La segunda mitad corresponde a la conclusión del paper, que está formulada con cautela: "we postulate that MR acts as a key modulator of glucose metabolism in the musculature". Registré el caso con el alcance que verificó el reporte, es decir la primera mitad, siguiendo la misma práctica del lote de Doc5. Si prefieres la oración completa, el veredicto tendría que revisarse porque entra en juego la señal (b).
+
+Efecto en el conteo
+
+Con los dos casos limpios, el lado correcto pasa de 61 a 63. La meta son 75, así que faltarían 12. Si además decides sacar GS-076 y GS-077 por contaminación, el lado correcto queda en 61 y faltarían 14, es decir vuelve al punto de partida de hoy.
+
+Doc4 sigue siendo el bloque que cierra la meta: 31 casos HIGH, ninguno de ellos sobre Aravena-Canales 2024.
+
+Nota de método
+
+Ningún pasaje fue reconstruido de memoria. Los dos excerpts son subcadenas verbatim del abstract recuperado. Las fuentes se consultaron en PubMed y PubMed Central: PMC11276852 para Aravena-Canales et al. 2024 (DOI 10.3390/ijms25147586), PMID 36041019 para Faught y Vijayan 2022, y PMID 38602078 para Nagpal et al. 2024.
