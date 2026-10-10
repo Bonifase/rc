@@ -1,0 +1,31 @@
+{
+  "id": "pp01_stage14_fixture",
+  "call_log": [
+    {
+      "case_id": "PP01-CASE",
+      "model": "gpt-5.6-luna",
+      "stage": "judge_stage",
+      "call_index": 1,
+      "call_key": "PP01-CASE::gpt-5.6-luna::judge_stage::1",
+      "verdict": "supported",
+      "raw_reply": "{\"verdict\": \"supported\"}",
+      "prompt_tokens": 1024,
+      "completion_tokens": 128,
+      "cost_usd": 0.0,
+      "paid": false
+    },
+    {
+      "case_id": "PP01-CASE",
+      "model": "gpt-5.6-sol",
+      "stage": "judge_stage",
+      "call_index": 1,
+      "call_key": "PP01-CASE::gpt-5.6-sol::judge_stage::1",
+      "verdict": "unsupported",
+      "raw_reply": "{\"verdict\": \"unsupported\"}",
+      "prompt_tokens": 2048,
+      "completion_tokens": 256,
+      "cost_usd": 0.0,
+      "paid": false
+    }
+  ]
+}

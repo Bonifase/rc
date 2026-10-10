@@ -1,0 +1,25 @@
+{
+  "id": "pp01_stage10_fixture",
+  "case_id": "PP01-CASE",
+  "claim_text": "Cortisol stress signaling is conserved in teleosts.",
+  "evidence_text": "This abstract describes conserved stress signaling in teleosts.",
+  "source_type": "abstract",
+  "citation_context": "sole",
+  "luna_votes": ["supported", "supported", "supported", "supported", "supported", "supported"],
+  "sol_votes": [],
+  "call_log": [
+    {
+      "case_id": "PP01-CASE",
+      "model": "gpt-5.6-luna",
+      "stage": "judge_stage",
+      "call_index": 1,
+      "call_key": "PP01-CASE::gpt-5.6-luna::judge_stage::1",
+      "verdict": "supported",
+      "raw_reply": "{\"verdict\": \"supported\"}",
+      "prompt_tokens": 2048,
+      "completion_tokens": 256,
+      "cost_usd": 0.0,
+      "paid": false
+    }
+  ]
+}
