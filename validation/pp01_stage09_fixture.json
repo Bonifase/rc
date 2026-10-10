@@ -1,0 +1,12 @@
+{
+  "id": "pp01_stage09_fixture",
+  "claim_text": "Cortisol stress signaling is conserved in teleosts.",
+  "evidence_text": "This abstract describes conserved stress signaling in teleosts.",
+  "source_type": "abstract",
+  "citation_context": "sole",
+  "expected": {
+    "verdict": "supported",
+    "source_type": "abstract",
+    "citation_context": "sole"
+  }
+}

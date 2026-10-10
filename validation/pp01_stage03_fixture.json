@@ -1,0 +1,9 @@
+{
+  "id": "PP-01-stage03",
+  "case_id": "PP-01",
+  "journal": [
+    {"case_id": "PP-01", "stage": "fetch", "paid_call": true, "call_id": "c1"},
+    {"case_id": "PP-01", "stage": "judge", "paid_call": false, "call_id": "c2"},
+    {"case_id": "PP-01", "stage": "finalize", "paid_call": false, "call_id": "c3"}
+  ]
+}
