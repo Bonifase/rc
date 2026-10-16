@@ -212,6 +212,96 @@ def test_run_orchestrator_keeps_local_matches_when_library_report_is_empty(tmp_p
     assert report["citation_count"] == len(report["citation_matches"])
 
 
+def test_local_matches_keep_sentence_and_reference_context_for_rendering():
+    from orchestrator import runner
+
+    sentences = [{
+        "sentence_id": "s1",
+        "id": "s1",
+        "text": "Smith et al. (2020) showed this effect.",
+        "sentence_text": "Smith et al. (2020) showed this effect.",
+    }]
+    references = [{
+        "number": 1,
+        "raw": "Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+        "doi": "10.1000/example",
+        "source_url": "https://doi.org/10.1000/example",
+    }]
+
+    matches = runner._match_citations_to_references(sentences, references)
+    enriched = runner._enrich_local_matches(matches, sentences, references)
+
+    assert enriched[0]["sentence_text"] == "Smith et al. (2020) showed this effect."
+    assert enriched[0]["claim"] == "Smith et al. (2020) showed this effect."
+    assert enriched[0]["reference_text"] == "Smith A. Example Paper. 2020. https://doi.org/10.1000/example"
+    assert enriched[0].get("source_excerpt") is None
+
+
+def test_local_matches_keep_actual_source_excerpt_separate_from_reference_entry():
+    from orchestrator import runner
+
+    matches = [{
+        "sentence_id": "s1",
+        "citation": "[1]",
+        "matched_reference": 1,
+        "source_excerpt": "This is the actual source passage from the cited paper.",
+        "status": "issue",
+    }]
+    sentences = [{"sentence_id": "s1", "text": "This claim cites a study [1]."}]
+    references = [{
+        "number": 1,
+        "raw": "Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+        "doi": "10.1000/example",
+        "source_url": "https://doi.org/10.1000/example",
+    }]
+
+    enriched = runner._enrich_local_matches(matches, sentences, references)
+
+    assert enriched[0]["reference_text"] == "Smith A. Example Paper. 2020. https://doi.org/10.1000/example"
+    assert enriched[0]["source_excerpt"] == "This is the actual source passage from the cited paper."
+
+
+def test_local_matches_use_specific_issue_reason_instead_of_generic_match_text():
+    from orchestrator import runner
+
+    matches = [{
+        "sentence_id": "s1",
+        "citation": "[1]",
+        "matched_reference": 1,
+        "status": "issue",
+        "error_type": "source_says_opposite",
+        "match_rule": "source_says_opposite",
+    }]
+    sentences = [{"sentence_id": "s1", "text": "This claim contradicts the source [1]."}]
+    references = [{"number": 1, "raw": "Smith A. Example Paper. 2020."}]
+
+    enriched = runner._enrich_local_matches(matches, sentences, references)
+
+    assert enriched[0]["reason"] == "The source says the opposite"
+    assert enriched[0]["reason"] != "The manuscript citation was matched to the corresponding reference entry."
+
+
+def test_local_matches_ignore_generic_default_reason_when_specific_issue_exists():
+    from orchestrator import runner
+
+    matches = [{
+        "sentence_id": "s1",
+        "citation": "[1]",
+        "matched_reference": 1,
+        "status": "issue",
+        "reason": "The citation was checked against the corresponding reference entry.",
+        "error_type": "source_says_opposite",
+        "match_rule": "source_says_opposite",
+    }]
+    sentences = [{"sentence_id": "s1", "text": "This claim contradicts the source [1]."}]
+    references = [{"number": 1, "raw": "Smith A. Example Paper. 2020."}]
+
+    enriched = runner._enrich_local_matches(matches, sentences, references)
+
+    assert enriched[0]["reason"] == "The source says the opposite"
+    assert enriched[0]["reason"] != "The citation was checked against the corresponding reference entry."
+
+
 def test_normalize_library_report_uses_the_real_manuscript_citation_token():
     from orchestrator import runner
 
@@ -237,8 +327,11 @@ def test_normalize_library_report_uses_the_real_manuscript_citation_token():
     }
 
     normalized = runner._normalize_library_report(report)
-    assert normalized["citation_matches"][0]["citation"] == "Johnston et al. (2011)"
-    assert normalized["citation_matches"][0]["matched_reference"] == 1109473
+    match = normalized["citation_matches"][0]
+    assert match["citation"] == "Johnston et al. (2011)"
+    assert match["matched_reference"] == 1109473
+    assert match["sentence_text"] == "Johnston et al. (2011) reported a similar signal."
+    assert match["claim"] == "Johnston et al. (2011) reported a similar signal."
 
 
 def test_normalize_library_report_keeps_llm_verdict_and_issue_rows():
@@ -279,6 +372,37 @@ def test_normalize_library_report_keeps_llm_verdict_and_issue_rows():
     assert any(item["matched_reference"] == 2 and item["status"] == "technical_failure" for item in normalized["citation_matches"])
 
 
+def test_normalize_library_report_copies_real_evidence_into_source_excerpt():
+    from orchestrator import runner
+
+    report = {
+        "sentences": [
+            {
+                "sentence_id": "s1",
+                "sentence_text": "Smith et al. (2020) showed this.",
+                "pairs": [
+                    {
+                        "sentence_id": "s1",
+                        "sentence_text": "Smith et al. (2020) showed this.",
+                        "ref_number": 1,
+                        "status": "verdict",
+                        "verdict": "unsupported",
+                        "explanation": "The claim is not supported by the cited source.",
+                        "source_type": "full_text",
+                        "evidence_quote": "This is the actual source passage from the cited paper.",
+                    }
+                ],
+            }
+        ],
+        "summary": {"total_sentences": 1},
+    }
+
+    normalized = runner._normalize_library_report(report)
+    match = normalized["citation_matches"][0]
+    assert match["source_excerpt"] == "This is the actual source passage from the cited paper."
+    assert match["evidence_quote"] == "This is the actual source passage from the cited paper."
+
+
 def test_normalize_library_report_preserves_specific_source_failure_statuses():
     from orchestrator import runner
 
@@ -317,6 +441,45 @@ def test_template_prefers_specific_reason_over_generic_issue_label():
     assert "match && match.match_rule" in reason_block
     assert reason_block.index("match && match.status") < reason_block.index("match && match.match_rule")
     assert reason_block.index("match && match.match_rule") < reason_block.index("match && match.primary_family")
+
+
+def test_template_uses_view_source_anchor_without_arrow_suffix():
+    html = Path("templates/index.html").read_text(encoding="utf-8")
+
+    assert 'View source</a>' in html
+    assert 'View source ↗' not in html
+
+
+def test_template_counts_unique_affected_references_for_content_summary():
+    html = Path("templates/index.html").read_text(encoding="utf-8")
+
+    assert 'const uniqueContentRefs = new Set(contentMatches.map(function (match) { return String(match.matched_reference ?? match.reference_id); }));' in html
+    assert 'const errorCount = uniqueContentRefs.size;' in html
+    assert 'errorText = \'<strong>\' + errorCount + \' contain errors.</strong>\';' in html
+
+
+def test_template_deduplicates_visible_cases_for_match_status_lists():
+    html = Path("templates/index.html").read_text(encoding="utf-8")
+
+    assert 'function dedupeVisibleCases(matches)' in html
+    assert 'const visibleMatches = dedupeVisibleCases(matches);' in html
+    assert 'const rows = visibleMatches.length ? visibleMatches.map(function (match) {' in html
+
+
+def test_template_keeps_source_passage_and_reference_entry_separate():
+    html = Path("templates/index.html").read_text(encoding="utf-8")
+
+    assert 'getSourcePassage(match)' in html
+    assert 'getReferenceText(match)' in html
+    assert 'What the source says' in html
+    assert 'Cited source' in html
+
+
+def test_template_ignores_generic_match_rule_when_rendering_error_labels():
+    html = Path("templates/index.html").read_text(encoding="utf-8")
+    assert "isGenericMatchRule" in html
+    assert "match_rule" in html
+    assert "!isGenericMatchRule(match.match_rule)" in html
 
 
 def test_template_contains_exact_error_type_taxonomy_and_bibliography_language():

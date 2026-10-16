@@ -12,12 +12,13 @@ start blocking on miscited.
 from dataclasses import dataclass
 from typing import Optional
 
+from src.metadata.checks import phase_a, phase_b, phase_c
+from src.metadata.crossref_metadata import ActualReference
 from src.metadata.document import MetadataDoc
 from src.metadata.extraction import DeclaredReference, expand_citation_markers
-from src.metadata.crossref_metadata import ActualReference
-from src.metadata.resolution import resolve_reference, BLOCKING_STATUSES
 from src.metadata.findings import Finding
-from src.metadata.checks import phase_a, phase_b, phase_c
+from src.metadata.official_provenance import records_from_resolution
+from src.metadata.resolution import BLOCKING_STATUSES, resolve_reference
 
 # Check IDs whose findings (when present for a reference already routed to
 # "_needs_field_comparison") mean that reference is miscited, not well_cited.
@@ -155,7 +156,9 @@ def build_report(
             blocks_phase_2=blocks,
         ).to_dict())
 
+    from src.metadata.crossref_metadata import title_similarity
     return {
+        "official_records": records_from_resolution(references, resolved_by_id, title_similarity),
         "bibliography_status": bibliography_status,
         "document_level_findings": [f.to_dict() for f in document_level_findings],
         "not_evaluated_checks": NOT_EVALUATED_CHECKS,

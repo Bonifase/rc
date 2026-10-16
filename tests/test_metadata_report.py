@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
-from src.metadata.document import MetadataDoc
-from src.metadata.extraction import DeclaredReference, Author
 from src.metadata.crossref_metadata import ActualReference
-from src.metadata.resolution import ResolvedReference
+from src.metadata.document import MetadataDoc
+from src.metadata.extraction import Author, DeclaredReference
 from src.metadata.report import build_report
+from src.metadata.resolution import ResolvedReference
 
 TEST_EMAIL = "test@example.com"
 
@@ -165,3 +165,27 @@ def test_not_evaluated_checks_always_present(mock_resolve):
     report = build_report(doc, [ref], contact_email=TEST_EMAIL)
 
     assert any(c["check_id"] == 14 and c["component"] == "screening_criterion" for c in report["not_evaluated_checks"])
+
+
+@patch("src.metadata.report.resolve_reference")
+def test_build_report_includes_official_records(mock_resolve):
+    actual = ActualReference(
+        doi="10.1/1",
+        status="resolved",
+        title="Exact Title",
+        year=2020,
+        journal="Nature",
+        volume="5",
+        pages="1-10",
+        authors=[Author(family="Smith", given="J.")],
+    )
+    mock_resolve.return_value = _resolved_ok(1, actual)
+    ref = _ref(1, title="Exact Title", year=2020, journal="Nature", volume="5", pages="1-10",
+               authors=[Author(family="Smith", given="J.")])
+    doc = MetadataDoc(sentences=[{"id": "s1", "text": "A claim [1]."}])
+
+    report = build_report(doc, [ref], contact_email=TEST_EMAIL)
+
+    assert "official_records" in report
+    assert report["official_records"]["1"]["official_ref_text"] is not None
+    assert report["official_records"]["1"]["verified_title_match"] is True

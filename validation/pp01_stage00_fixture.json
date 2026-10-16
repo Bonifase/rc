@@ -1,0 +1,19 @@
+{
+  "id": "PP01-T00",
+  "artifact_hashes": {
+    "prompt_01": "14f38816618c0c940cb77dcf9e1186eecc694000fdaeb1bb79101e4ba8b99cf4",
+    "prompt_02": "cd478c749bc09f0e587d26f5d2de06bbe74b90a5818b633848c2bbb046001e7c",
+    "prompt_03_txt": "ee18854b45781baba158eedd7bd33ebd4eb5e79a9d7ac8e749591baf95d6ae38",
+    "prompt_04": "49dd7d6e6107603a9e687db4270b6220de3caeccd745e7d5cb0aaab8df526bbe",
+    "prompt_04_addendum": "54fec4dd0ba65c28af89ae31fa979d8890b9903a9a54fdc4e473a12de62b4ec4",
+    "mensaje_chat2": "c6e0e65c36bcb4f1ace8ebc1158a6e7646a9de269c0568bd427c2cccaf83f285",
+    "mensaje_chat3": "d90548f89f77e02a34c1b5f779ae0553c4fc138967a164587b3ace77d41c9ad6",
+    "template_aprobada_20260908": "850d1e05a4e331fd41ecbeecd5743cef8550cff10068f46d310dec2f4a5523f4",
+    "verificar_js": "d981f5e0241be9d8ec859301ca6b13baa4e10251b6cc82553466e9e745089e42",
+    "ensamblar_master_dataset_py": "950c3c71a2224c277bb58bec689fd7c4cbfca02008aae85b3dcb91e85ae760cf",
+    "pp01_master": "37e1871521178a56d8d4dd21538f637a0cdbd4ad7e577140f2450eef054b139e",
+    "pp01_qa": "2fd44806e304a22cb4474824699fd302dbb3fd92e9af3f703dcd619857e61cec",
+    "pp01_payloads_outputs": "21520037ae784adf4634a5a3cd659bd013ea939695deb7884685bc77153d35dc",
+    "zablon_updated_bundle": "91780d69be3b6ff5628b762233c275d483a732c264fe314a7788a25287071469"
+  }
+}

@@ -149,6 +149,142 @@ def _match_citations_to_references(sentences: list[dict[str, Any]], references: 
     return matches
 
 
+def _is_generic_match_rule(value: Any) -> bool:
+    if value is None:
+        return True
+    normalized = str(value).strip().lower().replace("-", "_").replace(" ", "_")
+    return normalized in {
+        "author_year_lead_author_and_year",
+        "numbered_reference_number",
+        "local_match",
+        "citation_match",
+        "reference_number_match",
+    }
+
+
+def _is_generic_default_reason(value: Any) -> bool:
+    if value is None:
+        return True
+    text = str(value).strip()
+    generic_phrases = {
+        "The manuscript citation was matched to the corresponding reference entry.",
+        "The citation was checked against the corresponding reference entry.",
+        "The manuscript citation was matched to the corresponding reference entry",
+        "The citation was checked against the corresponding reference entry",
+    }
+    return text in generic_phrases
+
+
+def _humanize_issue_reason(value: Any) -> str:
+    """Convert internal issue keys into the user-facing explanation text."""
+    if value is None:
+        return ""
+    text = str(value).strip()
+    if not text:
+        return ""
+    if _is_generic_match_rule(text):
+        return ""
+
+    normalized = text.lower().replace("-", "_").replace(" ", "_")
+    lookup = {
+        "source_says_opposite": "The source says the opposite",
+        "the_source_says_the_opposite": "The source says the opposite",
+        "the_study_did_not_do_that": "The study did not do that",
+        "study_did_not_do_that": "The study did not do that",
+        "data_does_not_match_the_study": "Data does not match the study",
+        "inflated_figure": "Inflated figure",
+        "incorrect_reference_details": "Incorrect reference details",
+        "wrong_reference_details": "Incorrect reference details",
+        "fabricated_reference": "Fabricated reference",
+        "reference_list_bibliography": "reference list/bibliography",
+        "citation_without_reference": "No corresponding bibliography entry was found",
+    }
+    return lookup.get(normalized, text)
+
+
+def _enrich_local_matches(matches: list[dict[str, Any]], sentences: list[dict[str, Any]], references: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Attach the exact manuscript sentence and matched bibliography entry to each local match."""
+    sentence_lookup: dict[str | None, dict[str, Any]] = {}
+    for sentence in sentences:
+        sentence_id = sentence.get("sentence_id") or sentence.get("id")
+        if sentence_id is not None:
+            sentence_lookup[sentence_id] = sentence
+
+    ref_by_number: dict[int, dict[str, Any]] = {}
+    for ref in references:
+        number = ref.get("number")
+        try:
+            ref_key = int(number)
+        except (TypeError, ValueError):
+            continue
+        ref_by_number[ref_key] = ref
+
+    enriched: list[dict[str, Any]] = []
+    for match in matches:
+        item = dict(match)
+        sentence_id = item.get("sentence_id")
+        sentence = sentence_lookup.get(sentence_id) or {}
+        sentence_text = item.get("sentence_text") or sentence.get("sentence_text") or sentence.get("text") or ""
+        if sentence_text:
+            item["sentence_text"] = sentence_text
+            item["claim"] = item.get("claim") or sentence_text
+
+        ref_number = item.get("matched_reference")
+        try:
+            ref_number_int = int(ref_number)
+        except (TypeError, ValueError):
+            ref_number_int = None
+
+        ref_entry = ref_by_number.get(ref_number_int) if ref_number_int is not None else None
+        ref_text = ""
+        if ref_entry is not None:
+            ref_text = (
+                ref_entry.get("reference_text")
+                or ref_entry.get("raw")
+                or ref_entry.get("text")
+                or ref_entry.get("title")
+                or ""
+            )
+            item["matched_reference"] = ref_number_int
+            if ref_text:
+                item["reference_text"] = ref_text
+            item["source_url"] = item.get("source_url") or (ref_entry.get("source_url") or ref_entry.get("url"))
+            item["doi"] = item.get("doi") or ref_entry.get("doi")
+
+        status_text = str(item.get("status") or "").lower()
+        reason_candidates = [
+            item.get("reason"),
+            item.get("explanation"),
+            item.get("observation"),
+            item.get("error_type"),
+            item.get("primary_family"),
+            item.get("secondary_family"),
+            item.get("match_rule"),
+        ]
+
+        selected_reason = ""
+        for candidate in reason_candidates:
+            if not candidate:
+                continue
+            humanized = _humanize_issue_reason(candidate)
+            if _is_generic_default_reason(humanized):
+                continue
+            if humanized and humanized not in {"matched", "supported", "ok", "pass"}:
+                selected_reason = humanized
+                break
+
+        if not selected_reason:
+            if status_text in {"matched", "supported", "ok", "pass"}:
+                selected_reason = "The manuscript citation was matched to the corresponding reference entry."
+            else:
+                selected_reason = "The citation was checked against the corresponding reference entry."
+
+        item["reason"] = selected_reason
+        enriched.append(item)
+
+    return enriched
+
+
 def _extract_docx_text(path: Path) -> str:
     with zipfile.ZipFile(path, "r") as zf:
         xml_bytes = zf.read("word/document.xml")
@@ -361,8 +497,13 @@ def _normalize_library_report(report: dict[str, Any]) -> dict[str, Any]:
             )
             match_rule = str(raw_match_rule).strip().rstrip(".") if raw_match_rule is not None else "llm_verdict"
 
+            source_excerpt = pair.get("source_excerpt") or pair.get("evidence_quote") or pair.get("excerpt")
+            reference_text = pair.get("reference_text") or pair.get("reference") or pair.get("reference_entry")
+
             matches.append({
                 "sentence_id": sentence_id,
+                "sentence_text": sentence_text,
+                "claim": sentence_text,
                 "citation": _infer_citation_token(sentence_text, ref_number),
                 "status": status,
                 "matched_reference": ref_number,
@@ -373,7 +514,10 @@ def _normalize_library_report(report: dict[str, Any]) -> dict[str, Any]:
                 "secondary_family": pair.get("secondary_family"),
                 "source_type": pair.get("source_type"),
                 "explanation": pair.get("explanation"),
-                "evidence_quote": pair.get("evidence_quote"),
+                "reason": pair.get("explanation"),
+                "source_excerpt": source_excerpt,
+                "evidence_quote": pair.get("evidence_quote") or source_excerpt,
+                "reference_text": reference_text,
                 "assertions_checked": pair.get("assertions_checked"),
             })
 
@@ -473,7 +617,7 @@ def run_orchestrator(source_path: str | Path, out_dir: str | Path | None = None)
             }
         )
 
-    citation_matches = _match_citations_to_references(sentences, reference_list)
+    citation_matches = _enrich_local_matches(_match_citations_to_references(sentences, reference_list), sentences, reference_list)
     unique_citation_keys = {
         (match.get("sentence_id"), match.get("matched_reference"), match.get("citation"))
         for match in citation_matches

@@ -1,0 +1,6 @@
+{
+  "id": "PP01-T15",
+  "target_modes": ["replay", "live"],
+  "manuscript_path": null,
+  "expected_status": "accepted"
+}

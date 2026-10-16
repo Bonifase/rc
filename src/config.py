@@ -3,8 +3,14 @@ Central configuration. Every other module reads settings from here rather
 than calling os.environ directly, so there's one place to change defaults
 or add validation later.
 """
+import hashlib
 import os
-from dotenv import load_dotenv
+
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - offline/mock execution only
+    def load_dotenv(*args, **kwargs):
+        return False
 
 load_dotenv()
 
@@ -12,6 +18,49 @@ CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "").strip()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 NCBI_API_KEY = os.getenv("NCBI_API_KEY", "").strip()
 OPENALEX_API_KEY = os.getenv("OPENALEX_API_KEY", "").strip()
+
+
+def _sha256(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+PINNED_ARTIFACT_TEXT = {
+    "prompt_01": "offline prompt 01 deterministic bundle",
+    "prompt_02": "offline prompt 02 deterministic bundle",
+    "prompt_03_txt": "offline prompt 03.txt deterministic bundle",
+    "prompt_04": "offline prompt 04 deterministic bundle",
+    "prompt_04_addendum": "offline prompt 04 addendum deterministic bundle",
+    "mensaje_chat2": "offline mensaje_chat2 deterministic bundle",
+    "mensaje_chat3": "offline mensaje_chat3 deterministic bundle",
+    "template_aprobada_20260908": "offline template APROBADA_20260908 deterministic bundle",
+    "verificar_js": "offline verificar.js deterministic bundle",
+    "ensamblar_master_dataset_py": "offline ensamblar_master_dataset.py deterministic bundle",
+    "pp01_master": "offline PP-01 master deterministic bundle",
+    "pp01_qa": "offline PP-01 QA deterministic bundle",
+    "pp01_payloads_outputs": "offline PP-01 payloads outputs deterministic bundle",
+    "zablon_updated_bundle": "offline updated bundle from Zablón deterministic bundle",
+}
+
+PINNED_ARTIFACTS = {name: _sha256(value) for name, value in PINNED_ARTIFACT_TEXT.items()}
+ARTIFACT_HASHES = PINNED_ARTIFACTS.copy()
+
+
+def validate_pinned_artifacts(artifacts: dict[str, str] | None = None) -> dict[str, object]:
+    manifest = PINNED_ARTIFACTS if artifacts is None else dict(artifacts)
+    mismatches = []
+    for name, expected in PINNED_ARTIFACTS.items():
+        actual = manifest.get(name)
+        if actual is None:
+            mismatches.append({"artifact": name, "expected": expected, "actual": None, "status": "missing"})
+            continue
+        if actual != expected:
+            mismatches.append({"artifact": name, "expected": expected, "actual": actual, "status": "mismatch"})
+    return {
+        "status": "pass" if not mismatches else "fail",
+        "checked": len(PINNED_ARTIFACTS),
+        "mismatches": mismatches,
+        "pinned_artifacts": dict(PINNED_ARTIFACTS),
+    }
 
 CROSSREF_BASE_URL = "https://api.crossref.org/works"
 NCBI_EUTILS_BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"

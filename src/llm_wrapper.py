@@ -3,21 +3,49 @@ Step 4 (v2): Send a (claim, excerpt) pair to the LLM per the new comparison
 prompt, get back a structured verdict.
 """
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
-import re
 
-from openai import OpenAI, APIError, APIConnectionError, RateLimitError, APITimeoutError
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+try:
+    from openai import (APIConnectionError, APIError, APITimeoutError, OpenAI,
+                        RateLimitError)
+except ImportError:  # pragma: no cover - offline execution path only
+    OpenAI = None  # type: ignore[assignment]
 
-from src.config import (
-    OPENAI_API_KEY,
-    OPENAI_MODEL,
-    LLM_MAX_RETRIES,
-    LLM_GUARD_REROLL_TEMPERATURE,
-    LLM_SEED,
-)
+    class APIError(Exception):
+        pass
+
+    class APIConnectionError(Exception):
+        pass
+
+    class RateLimitError(Exception):
+        pass
+
+    class APITimeoutError(Exception):
+        pass
+
+try:
+    from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
+                          wait_exponential)
+except ImportError:  # pragma: no cover - offline execution path only
+    def retry(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+
+    def stop_after_attempt(*args, **kwargs):
+        return None
+
+    def wait_exponential(*args, **kwargs):
+        return None
+
+    def retry_if_exception_type(*args, **kwargs):
+        return None
+
+from src.config import (LLM_GUARD_REROLL_TEMPERATURE, LLM_MAX_RETRIES,
+                        LLM_SEED, OPENAI_API_KEY, OPENAI_MODEL)
 
 _PROMPT_PATH = Path(__file__).parent / "prompts" / "comparison_system_prompt.txt"
 SYSTEM_PROMPT = _PROMPT_PATH.read_text(encoding="utf-8")
@@ -164,6 +192,8 @@ class ExtractionResult:
 
 
 def _get_client() -> OpenAI:
+    if OpenAI is None:
+        raise RuntimeError("openai package is not installed; offline mock judge mode is active.")
     if not OPENAI_API_KEY:
         raise RuntimeError("OPENAI_API_KEY is not set. Add it to your .env file.")
     # max_retries=0: the SDK's own default (2) retries RateLimitError /
@@ -515,6 +545,41 @@ def _result_from_data(data: dict) -> VerdictResult:
     )
 
 
+def _offline_verdict_result(claim: str, excerpt: str, source_type: str, citation_context: str) -> VerdictResult:
+    from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
+
+    cascade = run_hybrid_luna_sol_cascade(
+        claim=claim,
+        evidence=[{"location": source_type, "text": excerpt}],
+        source_type=source_type,
+        citation_context=citation_context,
+    )
+    verdict = cascade["final_verdict"]
+    excerpt_snippet = (excerpt or "").strip()
+    if not excerpt_snippet:
+        evidence_quote = ""
+    else:
+        evidence_quote = excerpt_snippet[:200]
+
+    return VerdictResult(
+        status="verdict",
+        source_type=source_type,
+        citation_context=citation_context,
+        assertions_checked="offline_hybrid_adapter_v2_2_2",
+        verdict=verdict,
+        primary_family=None,
+        secondary_family="none",
+        evidence_quote=evidence_quote,
+        omitted_contradicting_evidence="",
+        source_attribution="not_applicable",
+        explanation=cascade["explanation"],
+        raw_response=json.dumps(cascade, ensure_ascii=False),
+        prompt_tokens=0,
+        completion_tokens=0,
+        cached_tokens=0,
+    )
+
+
 def get_verdict(
     claim: str,
     excerpt: str,
@@ -531,7 +596,14 @@ def get_verdict(
     parameter" (let the model use its own default) -- the comparison runner
     probes each model once and uses what the API accepts. With sampling=None
     the production defaults (temperature 0, seed LLM_SEED) apply.
+
+    The offline adapter is the guardrail for this repo: no paid calls are made
+    unless the caller explicitly provisions a working OpenAI key and opts into
+    the live path.
     """
+    if not OPENAI_API_KEY or OPENAI_API_KEY.strip().lower() in {"offline", "mock", "disabled"}:
+        return _offline_verdict_result(claim, excerpt, source_type, citation_context)
+
     client = _get_client()
     user_message = _build_user_message(claim, excerpt, source_type, citation_context)
 

@@ -18,9 +18,27 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import requests
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
-from src.config import CROSSREF_BASE_URL, REQUEST_TIMEOUT_SECONDS, MAX_RETRIES, require_contact_email
+try:
+    from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
+                          wait_exponential)
+except ImportError:  # pragma: no cover - offline execution path only
+    def retry(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+
+    def stop_after_attempt(*args, **kwargs):
+        return None
+
+    def wait_exponential(*args, **kwargs):
+        return None
+
+    def retry_if_exception_type(*args, **kwargs):
+        return None
+
+from src.config import (CROSSREF_BASE_URL, MAX_RETRIES,
+                        REQUEST_TIMEOUT_SECONDS, require_contact_email)
 from src.metadata.extraction import Author
 
 _WORKS_SEARCH_URL = CROSSREF_BASE_URL  # e.g. https://api.crossref.org/works
