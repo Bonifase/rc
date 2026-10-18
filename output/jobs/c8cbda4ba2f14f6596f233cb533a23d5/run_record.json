@@ -1,0 +1,11 @@
+{
+  "status": "ok",
+  "source_file": "author_year_demo.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/author_year_demo.docx",
+  "generated_at": "2026-10-17T13:39:13.089528+00:00",
+  "output_files": {
+    "report_json": "report.json",
+    "excel_dataset": "dataset.xlsx",
+    "run_record": "run_record.json"
+  }
+}

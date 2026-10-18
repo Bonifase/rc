@@ -2,8 +2,11 @@
 import json
 import pathlib
 import unittest
-from validate_report_text import validate, report_text_status
-from metadata_status_mapping import classify_reference, orphan_citation_cards, build_metadata_plan
+
+from metadata_status_mapping import (build_metadata_plan, classify_reference,
+                                     orphan_citation_cards)
+from validate_report_text import report_text_status, validate
+
 ROOT = pathlib.Path(__file__).resolve().parents[1] / "fixtures"
 def load(n): return json.loads((ROOT/n).read_text(encoding="utf-8"))
 def entry(status="well_cited", findings=None, reference_id=1):
@@ -70,6 +73,9 @@ class MetadataTests(unittest.TestCase):
     d=classify_reference(entry("miscited",[finding(10,"journal","Mol Cell Endocrinol","Gen Comp Endocrinol"),
         finding(16,"year","2008","2007"),finding(10,"volume","289","153")]))
     self.assertEqual(types(d),["wrong_reference_details"]); self.assertEqual(len(d.cards[0].findings),3)
+ def test_dash_style_and_spacing_are_not_a_field_mismatch(self):
+    d=classify_reference(entry("miscited",[finding(10,"pages","1841-1851","1841\u20131851")]))
+    self.assertEqual(types(d),[]); self.assertTrue(d.show_content); self.assertEqual(len(d.internal_findings),1)
  def test_well_cited_author_omission_shown(self):
     self.assertEqual(types(classify_reference(entry("well_cited",[finding(14,"authors","2","4")]))),["wrong_reference_details"])
  def test_retraction_shown_as_own_card(self):

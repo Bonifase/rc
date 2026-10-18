@@ -22,8 +22,9 @@ from src.metadata.resolution import BLOCKING_STATUSES, resolve_reference
 
 # Check IDs whose findings (when present for a reference already routed to
 # "_needs_field_comparison") mean that reference is miscited, not well_cited.
-# 15 = retracted paper (critical, non-blocking), 16 = declared-vs-actual year.
-_FIELD_COMPARISON_CHECK_IDS = {7, 9, 10, 11, 15, 16}
+# 15 = retracted paper (critical, non-blocking), 16 = declared-vs-actual year,
+# 17 = DOI written with whitespace inside it.
+_FIELD_COMPARISON_CHECK_IDS = {7, 9, 10, 11, 15, 16, 17}
 
 
 @dataclass
@@ -111,6 +112,7 @@ def build_report(
     all_findings += phase_a.check_05(doc, references, crossref_records)
     all_findings += phase_a.check_13(doc, references, crossref_records)
     all_findings += phase_a.check_14(doc, references, crossref_records)
+    all_findings += phase_a.check_17_doi_whitespace(doc, references, crossref_records)
 
     all_findings += phase_b.check_07(doc, references, crossref_records)
     all_findings += phase_b.check_09(doc, references, crossref_records)

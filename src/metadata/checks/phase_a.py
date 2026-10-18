@@ -338,3 +338,35 @@ def check_14(doc: MetadataDoc, references: list[DeclaredReference], crossref_rec
                 ),
             ))
     return findings
+
+
+def check_17_doi_whitespace(doc: MetadataDoc, references: list[DeclaredReference], crossref_records: dict) -> list[Finding]:
+    """
+    DOI written with whitespace inside it ("10.1016/j.ygcen. 2008.04.009").
+
+    Added 2026-10-21, outside the 14 canonical checks. The extractor re-joins
+    the split DOI so resolution and retrieval use the real identifier; this
+    check keeps the defect visible, because the DOI as written does not work
+    as a link. Before this check existed the split DOI was truncated at the
+    space and reported as "the correct DOI is X, not <truncated DOI>", which
+    misdescribed the defect.
+
+    Zero API: compares the written form with the re-joined form only.
+    """
+    findings = []
+    for ref in references:
+        written = getattr(ref, "doi_as_written", None)
+        if written and ref.doi and written != ref.doi:
+            findings.append(Finding(
+                check_id=17,
+                severity="warning",
+                reference_id=ref.reference_id,
+                field="doi",
+                declared=written,
+                actual=ref.doi,
+                message=(
+                    f"Reference [{ref.reference_id}] writes its DOI with a space inside it "
+                    f"('{written}'); the DOI is {ref.doi}."
+                ),
+            ))
+    return findings

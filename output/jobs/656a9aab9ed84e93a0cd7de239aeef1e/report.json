@@ -1,0 +1,54 @@
+{
+  "source_file": "sample.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/sample.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "generated_at": "2026-10-17T13:07:04.118035+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "id": "s1",
+      "text": "This claim is supported by prior work [1].",
+      "sentence_text": "This claim is supported by prior work [1]."
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "[1] Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "doi": "10.1000/example"
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "citation": "[1]",
+      "matched_reference": 1,
+      "match_rule": "numbered_reference_number",
+      "status": "matched",
+      "sentence_text": "This claim is supported by prior work [1].",
+      "claim": "This claim is supported by prior work [1].",
+      "reference_text": "[1] Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "source_url": null,
+      "doi": "10.1000/example",
+      "reason": "The manuscript citation was matched to the corresponding reference entry."
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "This claim is supported by prior work [1].",
+      "cited_numbers": "1",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "sample.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/sample.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck"
+  }
+}

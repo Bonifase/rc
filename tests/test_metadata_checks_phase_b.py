@@ -1,9 +1,12 @@
 from unittest.mock import patch
 
-from src.metadata.document import MetadataDoc
-from src.metadata.extraction import DeclaredReference, Author
+import pytest
+
+from src.metadata.checks.phase_b import (check_07, check_09, check_10,
+                                         check_11, check_15, check_16)
 from src.metadata.crossref_metadata import ActualReference
-from src.metadata.checks.phase_b import check_07, check_09, check_10, check_11, check_15, check_16
+from src.metadata.document import MetadataDoc
+from src.metadata.extraction import Author, DeclaredReference
 
 
 def _ref(reference_id, **overrides):
@@ -116,6 +119,21 @@ def test_check_10_tolerates_minor_journal_formatting_differences():
     ref = _ref(1, journal="Nature")
     actual = _actual(journal="nature ")
     assert check_10(_doc(), [ref], {1: actual}) == []
+
+
+@pytest.mark.parametrize("declared,actual", [
+    ("1841-1851", "1841\u20131851"),
+    ("1841\u20141851", "1841-1851"),
+    ("1841 - 1851", "1841-1851"),
+    ("1841-51", "1841-1851"),
+])
+def test_check_10_ignores_dash_style_and_abbreviated_page_ranges(declared, actual):
+    assert check_10(_doc(), [_ref(1, pages=declared)], {1: _actual(pages=actual)}) == []
+
+
+def test_check_10_still_flags_a_real_page_difference_across_dash_styles():
+    findings = check_10(_doc(), [_ref(1, pages="1841-1851")], {1: _actual(pages="1842\u20131851")})
+    assert [f.field for f in findings] == ["pages"]
 
 
 # ---------------------------------------------------------------------------

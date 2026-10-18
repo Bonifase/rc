@@ -33,8 +33,8 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional
 
-from src.doi_utils import extract_doi
 from src.citation_parser import parse_citation_markers as _expand_markers
+from src.doi_utils import find_doi
 
 # "Faught, E." / "Vijayan, M. M." / "van der Berg, J.-P." -- a family name
 # (allowing internal hyphens/apostrophes and a lowercase-particle prefix like
@@ -45,14 +45,27 @@ _AUTHOR = re.compile(
 )
 
 # "(2018)" or "(2018a)" -- the year, immediately after the author list.
-_YEAR = re.compile(r"\((\d{4})[a-z]?\)")
+# Stray spaces inside the parentheses ("(2010 )", "( 2016)") are tolerated:
+# they are typing noise, not a different year.
+_YEAR = re.compile(r"\(\s*(\d{4})[a-z]?\s*\)")
+
+# Name-first author lists ("M. Codina, D. Garcia de la Serrana, et al" or
+# "Emilio J. Velez, Esmail Lutfi"): the entry number that some lists keep in
+# front of the first author, the "et al." / "&" / "and" connectors, the
+# initials-only chunk that marks APA style, and the lowercase particles that
+# belong to the family name.
+_LEADING_NUMBER = re.compile(r"^\s*(?:\[\d+\]|\d+[.)])\s+")
+_INITIALS_ONLY = re.compile(r"^(?:[A-Z\u00C0-\u00DE]\.(?:\s*-?\s*[A-Z\u00C0-\u00DE]\.)*\s*)+$")
+_CONNECTOR = re.compile(r"^(?:&|and)\s+", re.IGNORECASE)
+_ET_AL = re.compile(r"^et\s+al\.?$|^\.\.\.$|^\u2026$", re.IGNORECASE)
+_PARTICLES = {"van", "von", "der", "den", "de", "la", "le", "el", "del", "della", "da", "das", "do", "dos", "du", "di", "y"}
 
 # The tail pattern: "Journal Name, Volume(Issue), Pages." possibly followed
 # by a DOI/URL. Volume is required; issue and pages are optional so entries
 # missing one still match on the rest.
 _JOURNAL_TAIL = re.compile(
     r"([A-Z][^.]*?),\s*"           # journal name (up to the next period)
-    r"(\d+)"                        # volume
+    r"(\d+)\s*"                     # volume (a space before "(issue)" is common)
     r"(?:\((\d+[A-Za-z]?)\))?"     # optional (issue)
     r"(?:,\s*([\d]+\s*[\u2013\u2014-]\s*[\d]+|[\d]+))?"  # optional pages (range or single)
     r"\.?\s*$"
@@ -86,6 +99,7 @@ class DeclaredReference:
     doi: Optional[str] = None
     issn: Optional[str] = None  # essentially always None from raw text; kept for schema symmetry with ActualReference
     authors_truncated: bool = False  # raw text contained "..." or "et al." near the author list
+    doi_as_written: Optional[str] = None  # set only when the written DOI is split by whitespace
 
 
 def _strip_doi_and_urls(text: str) -> str:
@@ -95,12 +109,79 @@ def _strip_doi_and_urls(text: str) -> str:
     return text.strip()
 
 
+def _author_chunks(authors_segment: str) -> list[str]:
+    """Comma-separated pieces of the author list, connectors and 'et al.' removed."""
+    segment = _LEADING_NUMBER.sub("", authors_segment).strip().rstrip(",").strip()
+    chunks = []
+    for chunk in re.split(r",\s*", segment):
+        chunk = _CONNECTOR.sub("", chunk.strip()).strip()
+        chunk = re.sub(r"\s+et\s+al\.?$", "", chunk, flags=re.IGNORECASE).strip()
+        if chunk and not _ET_AL.match(chunk):
+            chunks.append(chunk)
+    return chunks
+
+
+def _is_apa_style(chunks: list[str]) -> bool:
+    """APA lists alternate 'Family' and 'I. I.': the second piece is initials only."""
+    return len(chunks) >= 2 and bool(_INITIALS_ONLY.match(chunks[1]))
+
+
+def _split_name_first(name: str) -> Optional[Author]:
+    """'G. M. Weber' -> Weber / G. M.; 'Emilio J. Velez' -> Velez / Emilio J.;
+    'D. Garcia de la Serrana' -> Garcia de la Serrana / D."""
+    tokens = name.split()
+    if len(tokens) < 2:
+        return None
+    # The family name starts at the first token that is neither an initial
+    # nor a given name: walk back from the last token over lowercase particles
+    # and capitalised words that follow a particle.
+    family_start = len(tokens) - 1
+    while family_start > 1 and tokens[family_start - 1].lower() in _PARTICLES:
+        family_start -= 1
+    # "D. Garcia de la Serrana": when the given name is written as initials,
+    # the capitalised word right before the particles is part of the family
+    # name. With a full given name ("Juan Carlos de la Cruz") it is not.
+    if (family_start < len(tokens) - 1 and family_start > 1
+            and not tokens[family_start - 1].endswith(".")
+            and tokens[family_start - 2].endswith(".")):
+        family_start -= 1
+    given = " ".join(tokens[:family_start]).strip()
+    family = " ".join(tokens[family_start:]).strip()
+    if not given or not family or family.endswith("."):
+        return None
+    return Author(family=family, given=given)
+
+
 def _parse_authors(authors_segment: str) -> list[Author]:
+    """
+    Two author-list shapes are read:
+
+    - APA, family first: "Cleveland, B. M., & Weber, G. M." (the original
+      pattern of this module, unchanged);
+    - name first, as Elicit and several journals write them:
+      "B. Cleveland, G. M. Weber" or "Emilio J. Velez, Esmail Lutfi, et al".
+
+    The shape is decided once per list, from the second comma-separated
+    piece: initials only means APA. Reading a name-first list with the APA
+    pattern pairs each family name with the next author's initials and loses
+    authors, which produced false "author count" findings.
+    """
+    chunks = _author_chunks(authors_segment)
+    if not chunks:
+        return []
+    if _is_apa_style(chunks):
+        authors = []
+        for match in _AUTHOR.finditer(_LEADING_NUMBER.sub("", authors_segment)):
+            family = match.group(1).strip()
+            given = match.group(2).strip()
+            authors.append(Author(family=family, given=given))
+        return authors
+
     authors = []
-    for match in _AUTHOR.finditer(authors_segment):
-        family = match.group(1).strip()
-        given = match.group(2).strip()
-        authors.append(Author(family=family, given=given))
+    for chunk in chunks:
+        author = _split_name_first(chunk)
+        if author is not None:
+            authors.append(author)
     return authors
 
 
@@ -111,7 +192,7 @@ def parse_reference_entry(reference_id: int, raw: str) -> DeclaredReference:
     doi is None, and the raw string is always preserved so nothing is lost.
     """
     raw = raw.strip()
-    doi = extract_doi(raw)
+    doi, doi_as_written = find_doi(raw)
     body = _strip_doi_and_urls(raw)
 
     year_match = _YEAR.search(body)
@@ -164,6 +245,7 @@ def parse_reference_entry(reference_id: int, raw: str) -> DeclaredReference:
         doi=doi,
         issn=None,
         authors_truncated=authors_truncated,
+        doi_as_written=doi_as_written,
     )
 
 

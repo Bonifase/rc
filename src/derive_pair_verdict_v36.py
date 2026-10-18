@@ -3,7 +3,14 @@ from __future__ import annotations
 import re
 
 
-def derive_pair_verdict_v36(claim: str, evidence: str, *, source_type: str = "abstract", citation_context: str = "sole") -> dict[str, object]:
+def derive_pair_verdict_v36(
+    claim: str,
+    evidence: str,
+    *,
+    source_type: str = "abstract",
+    citation_context: str = "sole",
+    prompt_version: str | None = None,
+) -> dict[str, object]:
     """Return a v3.6-style pair verdict without any paid API call."""
     claim_text = (claim or "").strip()
     evidence_text = (evidence or "").strip()
@@ -21,6 +28,18 @@ def derive_pair_verdict_v36(claim: str, evidence: str, *, source_type: str = "ab
 
     claim_lower = claim_text.lower()
     evidence_lower = evidence_text.lower()
+
+    if re.search(r"\binsulin\s+(?:sensitivity|resistance|glucose|metabolism)\b", claim_lower) and re.search(r"\b(?:crp|il-6|interleukin-6|inflammatory marker|inflammatory markers|cytokine)\b", evidence_lower):
+        if not re.search(r"\binsulin\s+(?:sensitivity|resistance|glucose|metabolism)\b", evidence_lower):
+            return {
+                "verdict": "unsupported",
+                "source_type": source_type,
+                "citation_context": citation_context,
+                "offline_mock": True,
+                "prompt_version": prompt_version or "judge_v2.2.2",
+                "coverage": "v3.6",
+                "reason": "claim concept does not match the documented evidence topic",
+            }
     positive_markers = [
         "reduced", "improved", "increased", "enhanced", "decreased",
         "supports", "demonstrates", "shows", "confirms", "associated with",
@@ -51,12 +70,13 @@ def derive_pair_verdict_v36(claim: str, evidence: str, *, source_type: str = "ab
         verdict = "unsupported"
         reason = "contradictory negation appears in the evidence"
 
+    selected_version = prompt_version or "judge_v2.2.2"
     return {
         "verdict": verdict,
         "source_type": source_type,
         "citation_context": citation_context,
         "offline_mock": True,
-        "prompt_version": "judge_v2.2.2",
+        "prompt_version": selected_version,
         "coverage": "v3.6",
         "reason": reason,
     }

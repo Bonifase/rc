@@ -8,7 +8,8 @@ sys.path.insert(0, str(ROOT_DIR))
 sys.path.insert(0, str(ROOT_DIR / "webapp" / "backend"))
 
 import pytest
-from app import app, _JOBS
+from app import _JOBS, app
+
 from src.pipeline import PairResult
 from src.progress import ProgressTracker
 
@@ -31,7 +32,10 @@ def client():
 def test_health(client):
     resp = client.get("/api/health")
     assert resp.status_code == 200
-    assert resp.get_json() == {"status": "ok"}
+    payload = resp.get_json()
+    assert payload["status"] == "ok"
+    assert {"openai_key_set", "contact_email_set", "live_judge", "offline_simulation"} <= set(payload)
+    assert all(isinstance(payload[key], bool) for key in payload if key != "status")
 
 
 def test_sample_returns_reference_list_and_sentences(client):
@@ -370,6 +374,7 @@ def test_metrics_rejects_non_integer_limit(client):
 
 def test_metrics_endpoint_forwards_summary_into_response_shape(client):
     import app as app_module
+
     from src.metrics import CallLogSummary
 
     fake_summary = CallLogSummary(

@@ -219,6 +219,41 @@ def _build_user_message(claim: str, excerpt: str, source_type: str, citation_con
     })
 
 
+def _selected_hybrid_version() -> str:
+    raw = os.getenv("REFCHECK_HYBRID_JUDGE_VERSION", "v2.2.2").strip().lower()
+    if raw in {"v2.1", "2.1", "v2_1"}:
+        return "v2.1"
+    if raw in {"v2.2.2", "2.2.2", "v222", "v2_2_2"}:
+        return "v2.2.2"
+    return "v2.2.2"
+
+
+def _hybrid_system_prompt(citation_context: str, version: Optional[str] = None) -> str:
+    from src.hybrid_judge_adapter import load_hybrid_prompt
+    selected_version = _selected_hybrid_version() if version is None else str(version).strip().lower()
+    selected_version = "v2.1" if selected_version in {"v2.1", "2.1", "v2_1"} else "v2.2.2"
+    return load_hybrid_prompt(citation_context, version=selected_version)
+
+
+def _hybrid_user_message(claim: str, excerpt: str, source_type: str, citation_context: str) -> str:
+    evidence = [{"location": source_type, "text": excerpt}] if isinstance(excerpt, str) else []
+    return json.dumps({
+        "claim": claim,
+        "evidence": evidence,
+        "source_type": source_type,
+        "citation_context": citation_context,
+    }, ensure_ascii=False, indent=2)
+
+
+def _hybrid_request_options(model_name: Optional[str]) -> dict:
+    normalized = (model_name or "").strip().lower()
+    if normalized == "gpt-5.6-luna":
+        return {"timeout": 60, "max_tokens": 8000}
+    if normalized == "gpt-5.6-sol":
+        return {"timeout": 300, "max_tokens": 8000}
+    return {}
+
+
 def _safe_int(value: object) -> int:
     """Return value if it is a real int, else 0.
 
@@ -297,22 +332,30 @@ def _call_and_parse(
     model: Optional[str] = None,
     temperature: Optional[float] = 0,
     seed: Optional[int] = None,
+    *,
+    system_prompt: Optional[str] = None,
+    response_schema: Optional[dict] = _RESPONSE_SCHEMA,
+    request_options: Optional[dict] = None,
 ) -> dict:
     kwargs = {}
     if temperature is not None:
         kwargs["temperature"] = temperature
     if seed is not None:
         kwargs["seed"] = seed
+    if request_options:
+        kwargs.update(request_options)
+    call_kwargs = {
+        "model": model or OPENAI_MODEL,
+        "messages": [
+            {"role": "system", "content": system_prompt or SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
+        **kwargs,
+    }
+    if response_schema is not None:
+        call_kwargs["response_format"] = response_schema
     try:
-        response = client.chat.completions.create(
-            model=model or OPENAI_MODEL,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_message},
-            ],
-            response_format=_RESPONSE_SCHEMA,
-            **kwargs,
-        )
+        response = client.chat.completions.create(**call_kwargs)
     except APIError as exc:
         raise LlmSystemError(f"OpenAI API error: {exc}") from exc
 
@@ -549,9 +592,10 @@ def _result_from_data(data: dict) -> VerdictResult:
 def _offline_verdict_result(claim: str, excerpt: str, source_type: str, citation_context: str) -> VerdictResult:
     from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
 
+    evidence_location = "body" if source_type == "full_text" else source_type
     cascade = run_hybrid_luna_sol_cascade(
         claim=claim,
-        evidence=[{"location": source_type, "text": excerpt}],
+        evidence=[{"location": evidence_location, "text": excerpt}],
         source_type=source_type,
         citation_context=citation_context,
     )
@@ -607,35 +651,43 @@ def get_verdict(
     no_key = not OPENAI_API_KEY or OPENAI_API_KEY.strip().lower() in {"offline", "mock", "disabled"}
     offline_opt_in = os.getenv("REFCHECK_ALLOW_OFFLINE_SIMULATION", "").strip().lower() in {"1", "true", "yes", "on"}
     selected_model = (model or OPENAI_MODEL or "").strip().lower()
-    hybrid_test_model = selected_model in {"gpt-5.6-luna", "gpt-5.6-sol", "gpt-5.6-luna-judge", "gpt-5.6-sol-judge"}
+    mock_client_injected = hasattr(_get_client, "return_value")
     if no_key:
+        if offline_opt_in:
+            return _offline_verdict_result(claim, excerpt, source_type, citation_context)
         if live_mode:
             raise RuntimeError("Missing OPENAI_API_KEY for production judge execution. Production execution is blocked until credentials are supplied.")
-        if offline_opt_in or hybrid_test_model:
-            return _offline_verdict_result(claim, excerpt, source_type, citation_context)
-        if hasattr(_get_client, "mock_calls"):
+        if mock_client_injected:
             pass
         else:
-            raise RuntimeError("OPENAI_API_KEY is not set. RefCheck will not substitute simulated judgments for real API responses. Set OPENAI_API_KEY to enable live judge execution.")
+            raise RuntimeError("OPENAI_API_KEY is not set and no explicit offline simulation opt-in was supplied. The judge cannot run without credentials or REFCHECK_ALLOW_OFFLINE_SIMULATION=1.")
+
+    if offline_opt_in and not live_mode:
+        return _offline_verdict_result(claim, excerpt, source_type, citation_context)
 
     client = _get_client()
-    user_message = _build_user_message(claim, excerpt, source_type, citation_context)
-
-    if sampling is None:
-        temperature: Optional[float] = 0
-        seed: Optional[int] = LLM_SEED
-        reroll_temperature: Optional[float] = LLM_GUARD_REROLL_TEMPERATURE
+    hybrid_mode = selected_model in {"gpt-5.6-luna", "gpt-5.6-sol"} and source_type in {"abstract", "full_text"} and citation_context in {"sole", "one_of_several"}
+    if hybrid_mode:
+        user_message = _hybrid_user_message(claim, excerpt, source_type, citation_context)
+        system_prompt = _hybrid_system_prompt(citation_context)
+        request_options = _hybrid_request_options(selected_model)
+        temperature = None
+        seed = None
+        reroll_temperature = None
     else:
-        temperature = sampling.get("temperature")
-        seed = sampling.get("seed")
-        # The guard re-roll exists to shake a misquote loose; it must always
-        # use the production re-roll temperature (0.3) when the model supports
-        # temperature, NOT the model's primary sampling temperature. Re-rolling
-        # at 0.0 near-deterministically reproduces the same misquote and
-        # inflates guard failures into system errors.
-        reroll_temperature = (
-            LLM_GUARD_REROLL_TEMPERATURE if temperature is not None else None
-        )
+        user_message = _build_user_message(claim, excerpt, source_type, citation_context)
+        system_prompt = SYSTEM_PROMPT
+        request_options = {}
+        if sampling is None:
+            temperature = 0
+            seed = LLM_SEED
+            reroll_temperature = LLM_GUARD_REROLL_TEMPERATURE
+        else:
+            temperature = sampling.get("temperature")
+            seed = sampling.get("seed")
+            reroll_temperature = (
+                LLM_GUARD_REROLL_TEMPERATURE if temperature is not None else None
+            )
 
     sampling_used = {
         "model": model or OPENAI_MODEL,
@@ -645,7 +697,16 @@ def get_verdict(
     }
 
     try:
-        data = _call_and_parse(client, user_message, model=model, temperature=temperature, seed=seed)
+        data = _call_and_parse(
+            client,
+            user_message,
+            model=model or selected_model,
+            temperature=temperature,
+            seed=seed,
+            system_prompt=system_prompt,
+            response_schema=None if hybrid_mode else _RESPONSE_SCHEMA,
+            request_options=request_options if hybrid_mode else {},
+        )
     except (LlmSystemError, RateLimitError, APIConnectionError, APITimeoutError) as exc:
         result = VerdictResult(status="system_error", error_message=str(exc))
         result.sampling_used = sampling_used

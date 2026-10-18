@@ -79,7 +79,7 @@ def get_adapter_config() -> dict[str, Any]:
         ],
         "supported_versions": version_names,
         "swap_policy": {
-            "replay": "judge_v2.1",
+            "replay": "judge_v2.2.2",
             "live": "judge_v2.2.2",
             "definitive": "judge_v2.2.2",
         },

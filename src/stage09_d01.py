@@ -75,6 +75,13 @@ def _build_judgment(
     source_type: str = "full_text",
     citation_context: str = "sole",
 ) -> dict[str, Any]:
+    """Legacy fixture-only judgment helper.
+
+    This is intentionally not the scientific judge. It is used to validate the
+    deterministic Stage 09 fixture contract and must not be used to decide a real
+    citation-fidelity verdict. Opposite-direction wording is therefore rejected
+    before any token-overlap heuristic can mark the match as supported.
+    """
     claim = (claim_text or "").strip()
     evidence = (evidence_text or "").strip()
 
@@ -105,7 +112,34 @@ def _build_judgment(
         evidence.lower(),
     )
 
-    if negated_evidence and not positive_support_terms:
+    claim_direction = 0
+    evidence_direction = 0
+    direction_terms = {
+        "increase": 1,
+        "increased": 1,
+        "improved": 1,
+        "higher": 1,
+        "enhanced": 1,
+        "upregulated": 1,
+        "decrease": -1,
+        "decreased": -1,
+        "reduced": -1,
+        "lower": -1,
+        "downregulated": -1,
+    }
+    for term, direction in direction_terms.items():
+        if re.search(rf"\b{re.escape(term)}\b", claim.lower()):
+            claim_direction = direction
+        if re.search(rf"\b{re.escape(term)}\b", evidence.lower()):
+            evidence_direction = direction
+
+    if claim_direction and evidence_direction and claim_direction != evidence_direction:
+        verdict = "unsupported"
+        primary_family = "directional_inversion"
+        secondary_family = "none"
+        source_attribution = "not_applicable"
+        explanation = "The claim and evidence express opposite directional effects; lexical overlap alone cannot make a contradictory direction scientifically supported."
+    elif negated_evidence and not positive_support_terms:
         verdict = "unsupported"
         primary_family = "off_target_relevance"
         secondary_family = "none"

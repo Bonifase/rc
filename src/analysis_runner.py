@@ -15,7 +15,7 @@ from typing import Optional
 from src.metadata.document import MetadataDoc
 from src.metadata.extraction import build_declared_references
 from src.metadata.report import build_report as build_metadata_report
-from src.pipeline import PairResult, process_sentences
+from src.pipeline import PairResult, _apply_report_text_gate, process_sentences
 from src.progress import ProgressTracker
 
 EMPTY_METADATA_REPORT = {
@@ -62,5 +62,7 @@ def run_content_and_metadata(
             metadata_report = metadata_future.result()
         except Exception as exc:  # noqa: BLE001 -- metadata is additive; don't take down content results
             metadata_report = {**EMPTY_METADATA_REPORT, "error": f"Metadata module failed: {exc}"}
+
+        pair_results = _apply_report_text_gate(pair_results, metadata_report, reference_entries)
 
     return pair_results, metadata_report

@@ -9,6 +9,7 @@ import hmac
 import json
 import sys
 import threading
+import traceback
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -32,14 +33,15 @@ from src.metadata.document import MetadataDoc
 from src.metadata.extraction import build_declared_references
 from src.metadata.report import build_report as build_metadata_report
 from src.metrics import summarize_call_log
-from src.pipeline import process_sentences
+from src.pipeline import _apply_report_text_gate, process_sentences
 from src.progress import ProgressTracker
+from src.storage import atomic_write_text, data_dir
 from src.text_parser import parse_pasted_text
 
 app = Flask(__name__, template_folder=str(ROOT_DIR / "templates"), static_folder=str(ROOT_DIR / "static"))
 
-UPLOAD_DIR = ROOT_DIR / "output" / "uploads"
-JOB_DIR = ROOT_DIR / "output" / "jobs"
+UPLOAD_DIR = data_dir() / "uploads"
+JOB_DIR = data_dir() / "jobs"
 UI_JOBS: dict[str, dict] = {}
 UI_JOBS_LOCK = threading.Lock()
 
@@ -60,15 +62,25 @@ def _set_ui_job(job_id: str, *, status: str, progress: list[dict] | None = None,
         }
 
 
+def _write_job_state(out_dir: Path, status: str, **extra) -> None:
+    atomic_write_text(out_dir / "job.json", json.dumps({"status": status, **extra}))
+
+
+JOB_FILES = ("report.json", "run_record.json", "judge_log.jsonl", "dataset.xlsx", "report.html")
+
+
 def _background_analysis(job_id: str, source_path: Path) -> None:
     progress = [
         {"stage": "upload", "message": "Manuscript uploaded and queued."},
         {"stage": "parse", "message": "Extracting text and citations from the manuscript."},
     ]
     _set_ui_job(job_id, status="running", progress=progress)
+    out_dir = JOB_DIR / job_id
 
     try:
-        out_dir = JOB_DIR / job_id
+        out_dir.mkdir(parents=True, exist_ok=True)
+        # Lets /api/progress tell a restarted server apart from a job id that never existed.
+        _write_job_state(out_dir, "running")
         result = orchestrator_runner.run_orchestrator(source_path, out_dir)
         with open(result["report_json"], "r", encoding="utf-8") as fh:
             report = json.load(fh)
@@ -76,14 +88,19 @@ def _background_analysis(job_id: str, source_path: Path) -> None:
         if run_record_path.exists():
             with open(run_record_path, "r", encoding="utf-8") as fh:
                 report["run_record"] = json.load(fh)
-        report["output_files"] = {
-            "report_json": "report.json",
-            "excel_dataset": "dataset.xlsx",
-            "run_record": "run_record.json",
-        }
+        report["output_files"] = {name: name for name in JOB_FILES if (out_dir / name).exists()}
+        _write_job_state(out_dir, "done")
         progress.append({"stage": "done", "message": "RefCheck analysis complete."})
         _set_ui_job(job_id, status="done", progress=progress, report=report)
     except Exception as exc:  # pragma: no cover - surfaced to the browser via API
+        traceback.print_exc()
+        try:
+            _write_job_state(out_dir, "failed", error=str(exc))
+            atomic_write_text(out_dir / "run_record.json", json.dumps(
+                {"status": "failed", "error": str(exc), "traceback": traceback.format_exc()}, ensure_ascii=False, indent=2,
+            ))
+        except OSError:
+            traceback.print_exc()
         progress.append({"stage": "error", "message": f"Analysis failed: {exc}"})
         _set_ui_job(job_id, status="error", progress=progress, error=str(exc))
 
@@ -226,6 +243,8 @@ def _run_content_and_metadata(
                 "error": f"Metadata module failed: {exc}",
             }
 
+        pair_results = _apply_report_text_gate(pair_results, metadata_report, reference_entries)
+
     return pair_results, metadata_report
 
 
@@ -280,8 +299,24 @@ def root():
     return render_template("index.html")
 
 
+def _storage_blocker() -> str | None:
+    """On Render the default ./output is ephemeral, so a live run there would lose every record."""
+    on_render = os.getenv("RENDER", "").strip().lower() == "true"
+    live = os.getenv("REFCHECK_LIVE_JUDGE", "").strip().lower() in {"1", "true", "yes", "on"}
+    if on_render and live and not os.getenv("REFCHECK_DATA_DIR", "").strip():
+        return (
+            "Persistent storage is not configured: set REFCHECK_DATA_DIR to a mounted Render disk path "
+            "before running live analyses, otherwise results are lost on restart."
+        )
+    return None
+
+
 @app.post("/api/upload-manuscript")
 def upload_manuscript():
+    blocker = _storage_blocker()
+    if blocker:
+        return jsonify({"error": blocker}), 503
+
     if "file" not in request.files:
         return jsonify({"error": "No manuscript selected."}), 400
 
@@ -311,7 +346,20 @@ def upload_manuscript():
 
 @app.route("/api/health", methods=["GET"])
 def health():
-    return jsonify({"status": "ok"})
+    """Non-secret readiness flags, so a misconfigured deploy is visible without reading logs."""
+    from src import config
+
+    def flag(name: str) -> bool:
+        return os.getenv(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+    return jsonify({
+        "status": "ok",
+        "openai_key_set": bool(config.OPENAI_API_KEY) and config.OPENAI_API_KEY.lower() not in {"offline", "mock", "disabled"},
+        "contact_email_set": bool(config.CONTACT_EMAIL),
+        "live_judge": flag("REFCHECK_LIVE_JUDGE"),
+        "offline_simulation": flag("REFCHECK_ALLOW_OFFLINE_SIMULATION"),
+        "persistent_storage_configured": bool(os.getenv("REFCHECK_DATA_DIR", "").strip()),
+    })
 
 
 @app.route("/api/metrics", methods=["GET"])
@@ -656,6 +704,31 @@ def recheck():
     return jsonify(report)
 
 
+def _recover_job_from_disk(job_id: str) -> dict | None:
+    """After a restart the in-memory job table is empty; finished jobs are still on disk."""
+    if not re.fullmatch(r"[0-9a-f]{32}", job_id):
+        return None
+    job_dir = JOB_DIR / job_id
+    report_path = job_dir / "report.json"
+    if report_path.exists():
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        run_record_path = job_dir / "run_record.json"
+        if run_record_path.exists():
+            report["run_record"] = json.loads(run_record_path.read_text(encoding="utf-8"))
+        report["output_files"] = {name: name for name in JOB_FILES if (job_dir / name).exists()}
+        return {"status": "done", "progress": [], "report": report}
+    if (job_dir / "job.json").exists():
+        state = json.loads((job_dir / "job.json").read_text(encoding="utf-8"))
+        if state.get("status") == "failed":
+            return {"status": "error", "progress": [], "error": state.get("error") or "The analysis failed."}
+        return {
+            "status": "error",
+            "progress": [],
+            "error": "The server restarted while this analysis was running. Please upload the manuscript again.",
+        }
+    return None
+
+
 @app.route("/api/progress/<job_id>", methods=["GET"])
 def progress(job_id):
     """Return either the async text-analysis job progress or the file-upload job progress."""
@@ -675,6 +748,9 @@ def progress(job_id):
     with _JOBS_LOCK:
         job = _JOBS.get(job_id)
     if job is None:
+        recovered = _recover_job_from_disk(job_id)
+        if recovered is not None:
+            return jsonify(recovered)
         return jsonify({"error": "Unknown job."}), 404
     public_job = {k: v for k, v in job.items() if k != "created_at"}
     return jsonify(public_job)
@@ -682,16 +758,27 @@ def progress(job_id):
 
 @app.get("/api/download/<job_id>/<path:filename>")
 def download_file(job_id: str, filename: str):
-    with UI_JOBS_LOCK:
-        ui_job = UI_JOBS.get(job_id)
-    if ui_job is not None:
-        safe_name = Path(filename).name
-        file_path = JOB_DIR / job_id / safe_name
-        if not file_path.exists():
-            return jsonify({"error": "File not found."}), 404
-        return send_from_directory(str(JOB_DIR / job_id), safe_name, as_attachment=True, download_name=safe_name)
+    """Serve a job's saved files from disk, so downloads survive a server restart."""
+    if not re.fullmatch(r"[0-9a-f]{32}", job_id) or filename not in JOB_FILES:
+        return jsonify({"error": "File not found."}), 404
+    if not (JOB_DIR / job_id / filename).exists():
+        return jsonify({"error": "File not found."}), 404
+    return send_from_directory(str(JOB_DIR / job_id), filename, as_attachment=True, download_name=filename)
 
-    return jsonify({"error": "Unknown job."}), 404
+
+@app.route("/api/download-call-ledger", methods=["GET"])
+def download_call_ledger():
+    """Every model call ever made (live or replayed), with token counts."""
+    auth_error = _require_api_key()
+    if auth_error is not None:
+        return auth_error
+
+    from src.model_call_store import store_dir
+
+    ledger = store_dir() / "ledger.jsonl"
+    if not ledger.exists():
+        return jsonify({"error": "No model calls have been recorded yet."}), 404
+    return send_file(ledger, mimetype="application/x-ndjson", as_attachment=True, download_name="model_call_ledger.jsonl")
 
 
 # ---------------------------------------------------------------------------

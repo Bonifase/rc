@@ -13,6 +13,8 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
+from src.doi_utils import extract_doi
+
 # Matches a reference line: starts with [N] and contains a DOI anywhere
 _REF_LINE = re.compile(
     r"^\s*\[(\d+)\]\s+.+?"            # [N] followed by some text
@@ -60,6 +62,13 @@ _CITATION_MARKER = re.compile(r"\[[\d,\s\u2013\u2014\-]+\]")
 _AUTHOR_YEAR_MARKER = re.compile(
     r"([A-Z][A-Za-z'’.-]+(?:,\s*[A-Z]\.)*(?:\s+(?:et\s+al\.?|and|&)\s*(?:[A-Z][A-Za-z'’.-]+)?)?)\s*\((\d{4})\)"
 )
+# Parenthetical author-year citations, e.g. "(Johnston et al., 2011)" or "(Smith, 2020; Lee, 2019)".
+_PAREN_AUTHOR_YEAR_MARKER = re.compile(r"\([^()]*[A-Za-z][^()]*,\s*(?:19|20)\d{2}[a-z]?(?:\s*[;,][^()]*)?\)")
+# A wrapped line starts a new author-led entry only when it reads "Surname, I.".
+_SURNAME_INITIAL_START = re.compile(
+    r"^\s*(?:[a-z]{2,3}\s+){0,2}[A-ZÀ-ÖØ-Þ][^\s,.;:()\[\]]*(?:\s+[^\s,.;:()\[\]]+){0,2},\s*[A-ZÀ-ÖØ-Þ]\."
+)
+_YEAR = re.compile(r"\b(?:19|20)\d{2}\b")
 
 
 @dataclass
@@ -75,20 +84,13 @@ class ParseResult:
 
 def _extract_doi_from_line(line: str) -> Optional[str]:
     """Pull a DOI out of a reference line, preferring https://doi.org/ URLs.
-    Returns a bare DOI (e.g. '10.1056/NEJMoa1800389') suitable for Crossref/NCBI APIs."""
-    match = _REF_LINE.search(line)
-    if match:
-        raw = (match.group(2) or match.group(4)).strip()
-        # Strip https://doi.org/ or http://doi.org/ prefix to get the bare DOI
-        raw = re.sub(r"^https?://doi\.org/", "", raw)
-        return raw
+    Returns a bare DOI (e.g. '10.1056/NEJMoa1800389') suitable for Crossref/NCBI APIs.
 
-    # Fallback: look for a bare DOI pattern anywhere in the line
-    bare = re.search(r"(10\.\d{4,9}/[^\s,;]+)", line)
-    if bare:
-        return bare.group(1).strip().rstrip(".,;")
-
-    return None
+    Delegates to src.doi_utils.extract_doi so the content pipeline and the
+    metadata module read the same DOI from the same line, including a DOI
+    that the manuscript splits with a space ('10.1016/j.ygcen. 2008.04.009').
+    """
+    return extract_doi(line)
 
 
 def _has_citation_markers(text: str) -> bool:
@@ -180,6 +182,26 @@ def _split_into_sentences(text: str) -> list[str]:
     return sentences
 
 
+def _has_author_year_citation(text: str) -> bool:
+    return bool(_AUTHOR_YEAR_MARKER.search(text) or _PAREN_AUTHOR_YEAR_MARKER.search(text))
+
+
+def _can_start_entry(line: str, current_block: list[str]) -> bool:
+    """Reject wrapped continuation lines (page numbers, journal tails, author-list tails) as new entries."""
+    stripped = line.strip()
+    if _REF_LINE_START.match(stripped):
+        return True
+    numbered = _REF_NUMBERED_LINE_START.match(stripped)
+    if numbered:
+        return len(numbered.group(1)) <= 3
+    if _REF_ROMAN_LINE_START.match(stripped):
+        return True
+    # An author-led entry can only start once the previous one has its year.
+    if current_block and not _YEAR.search(" ".join(current_block)):
+        return False
+    return bool(_SURNAME_INITIAL_START.match(stripped) or re.match(r"^\s*[A-Z][^\s,]+\s+et\s+al\.", stripped))
+
+
 def parse_pasted_text(text: str) -> ParseResult:
     """
     Parse the user's pasted text into reference_list + sentences.
@@ -215,7 +237,7 @@ def parse_pasted_text(text: str) -> ParseResult:
         raw_sentences = _split_into_sentences(body_text)
         sentences: list[dict] = []
         for s in raw_sentences:
-            if _has_citation_markers(s) or _AUTHOR_YEAR_MARKER.search(s):
+            if _has_citation_markers(s) or _has_author_year_citation(s):
                 sentences.append({"id": f"s{len(sentences) + 1}", "text": s})
         return ParseResult(
             reference_list=[],
@@ -234,7 +256,7 @@ def parse_pasted_text(text: str) -> ParseResult:
     next_auto_number = 1
 
     for line in ref_lines:
-        if _looks_like_reference_entry_start(line):
+        if _looks_like_reference_entry_start(line) and _can_start_entry(line, current_block):
             if current_block:
                 blocks.append((current_num if current_num is not None else next_auto_number - 1, current_block))
             current_num = _extract_reference_number(line)
@@ -271,7 +293,7 @@ def parse_pasted_text(text: str) -> ParseResult:
     sentences: list[dict] = []
     sid = 0
     for s in raw_sentences:
-        if _has_citation_markers(s) or _AUTHOR_YEAR_MARKER.search(s):
+        if _has_citation_markers(s) or _has_author_year_citation(s):
             sid += 1
             sentences.append({"id": f"s{sid}", "text": s})
 

@@ -13,6 +13,7 @@ recreate the coupling the spec is explicitly designing around, even though
 some of this logic (retry policy, 404-vs-5xx handling) rhymes with
 src/crossref.py by necessity, since it's the same external API.
 """
+import html
 import re
 from dataclasses import dataclass, field
 from typing import Optional
@@ -119,15 +120,35 @@ def _extract_retraction(message: dict) -> tuple[bool, Optional[str], Optional[st
     return False, None, None
 
 
+_MARKUP_TAG = re.compile(r"<[^>]+>")
+
+
+def clean_crossref_text(value: Optional[str]) -> Optional[str]:
+    """
+    Crossref titles often carry JATS/HTML markup and layout whitespace, e.g.
+    "turbot (\n <i>Scophthalmus maximus</i>\n )". The markup is not part of
+    the title: strip tags, unescape entities, collapse whitespace and drop
+    spaces just inside brackets, so a title written correctly is not reported
+    as different from the record (added 2026-10-21).
+    """
+    if value is None:
+        return None
+    text = html.unescape(_MARKUP_TAG.sub("", str(value)))
+    text = " ".join(text.split())
+    text = re.sub(r"([(\[])\s+", r"\1", text)
+    text = re.sub(r"\s+([)\]])", r"\1", text)
+    return text or None
+
+
 def _parse_message(doi: str, message: dict) -> ActualReference:
     retracted, retraction_notice, retraction_source = _extract_retraction(message)
     return ActualReference(
         doi=doi,
         status="resolved",
-        title=(message.get("title") or [None])[0],
+        title=clean_crossref_text((message.get("title") or [None])[0]),
         authors=_extract_authors(message),
         year=_extract_year(message),
-        journal=(message.get("container-title") or [None])[0],
+        journal=clean_crossref_text((message.get("container-title") or [None])[0]),
         volume=message.get("volume"),
         issue=message.get("issue"),
         pages=message.get("page"),
@@ -217,8 +238,9 @@ def fetch_journal_volume_samples(issn: str, contact_email: Optional[str] = None,
 
 
 def _normalize_title(title: str) -> str:
-    """Lowercase, strip punctuation -- for fuzzy comparison, not display."""
-    return re.sub(r"[^\w\s]", "", title.lower()).strip()
+    """Lowercase, strip markup and punctuation, collapse whitespace -- for fuzzy comparison, not display."""
+    cleaned = clean_crossref_text(title) or ""
+    return " ".join(re.sub(r"[^\w\s]", "", cleaned.lower()).split())
 
 
 def title_similarity(a: str, b: str) -> float:

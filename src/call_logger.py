@@ -13,7 +13,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-DEFAULT_LOG_PATH = Path(__file__).resolve().parents[1] / "output" / "llm_call_log.jsonl"
+from src.storage import data_dir
+
+DEFAULT_LOG_PATH = data_dir() / "llm_call_log.jsonl"
 
 
 def log_llm_call(

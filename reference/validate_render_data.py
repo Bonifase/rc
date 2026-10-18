@@ -2,9 +2,10 @@
 
 The integration must call validate_render_data before publishing a FINAL report.
 """
+import hashlib
+import importlib.util
 import json
 import re
-import hashlib
 from pathlib import Path
 
 CONTENT = frozenset({
@@ -14,6 +15,30 @@ CONTENT = frozenset({
 METADATA = frozenset({
     'wrong_reference_details', 'retracted_article',
     'doi_leads_elsewhere', 'citation_without_reference'})
+
+
+def _normalize_evidence_text(value):
+    """Accept either the legacy single-string evidence or the structured list used by the report-text stage."""
+    if isinstance(value, str):
+        return value.strip() or None
+    if not isinstance(value, list):
+        return None
+
+    texts = []
+    for item in value:
+        if isinstance(item, str):
+            item_text = item.strip()
+        elif isinstance(item, dict):
+            text = item.get('text') if isinstance(item, dict) else None
+            if not isinstance(text, str):
+                return None
+            item_text = text.strip()
+        else:
+            return None
+        if not item_text:
+            return None
+        texts.append(item_text)
+    return '\n'.join(texts) if texts else None
 
 
 def validate_render_data(data, catalog, manifest=None):
@@ -62,9 +87,11 @@ def validate_render_data(data, catalog, manifest=None):
         kind=c.get('kind')
         if kind == 'content':
             if not isinstance(cat,str) or cat not in CONTENT:errors.append(pre+': invalid content category')
-            for field in ('claim','evidence','observation','source_label','reference'):
+            for field in ('claim','observation','source_label','reference'):
                 if not isinstance(c.get(field), str) or not c[field].strip():
                     errors.append(pre+': missing '+field)
+            if _normalize_evidence_text(c.get('evidence')) is None:
+                errors.append(pre+': missing evidence')
             if c.get('passage_origin') not in ('abstract','full_text'):
                 errors.append(pre+': missing or invalid passage_origin')
         elif kind == 'metadata':
@@ -156,6 +183,27 @@ def validate_manifest_provenance(data, manifest):
     return errors
 
 
+def _load_official_provenance_module():
+    """Import the same-directory official_provenance helper regardless of cwd."""
+    try:
+        import official_provenance  # type: ignore
+        return official_provenance
+    except ModuleNotFoundError:
+        pass
+
+    module_path = Path(__file__).resolve().with_name('official_provenance.py')
+    if not module_path.exists():
+        return None
+
+    spec = importlib.util.spec_from_file_location('official_provenance', module_path)
+    if spec is None or spec.loader is None:
+        return None
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def validate_for_publication(data, catalog, manifest, official_records, expected_manifest_sha256=None):
     """The mandatory, fail-closed FINAL gate; all provenance comes from actual upstream modules.
 
@@ -175,6 +223,10 @@ def validate_for_publication(data, catalog, manifest, official_records, expected
     errors.extend(validate_render_data(data, catalog, manifest))
     if not isinstance(official_records,dict):
         return errors+['official_records must be a mapping']
+
+    provenance_module = _load_official_provenance_module()
+    format_official_reference = getattr(provenance_module, 'format_official_reference', None) if provenance_module else None
+
     for i,c in enumerate(data.get('cases',[]) if isinstance(data,dict) and isinstance(data.get('cases'),list) else []):
         if not isinstance(c,dict) or c.get('kind')!='metadata': continue
         rid=str(c.get('reference_id'))
@@ -186,11 +238,12 @@ def validate_for_publication(data, catalog, manifest, official_records, expected
                 continue
             if record.get('verified_title_match') is not True or record.get('verified_first_author_match') is not True:
                 errors.append(f'cases[{i}]: cited-article identity not established')
-            try:
-                from official_provenance import format_official_reference
-                reconstructed=format_official_reference(record.get('actual_fields'))
-            except (TypeError,ValueError,KeyError):
-                reconstructed=None
+            reconstructed = None
+            if callable(format_official_reference):
+                try:
+                    reconstructed = format_official_reference(record.get('actual_fields'))
+                except (TypeError,ValueError,KeyError):
+                    reconstructed = None
             if not reconstructed or reconstructed!=record.get('official_ref_text'):
                 errors.append(f'cases[{i}]: Crossref record fields do not reproduce official citation')
             if (not isinstance(record.get('official_ref_text'),str) or

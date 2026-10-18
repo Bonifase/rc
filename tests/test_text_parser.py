@@ -134,3 +134,37 @@ def test_full_bibliography_entry_without_numbering_is_preserved():
     assert entry["raw"].startswith("Manneken, J. D.")
     assert "Experimental Cell Research" in entry["raw"]
     assert entry["doi"] == "10.1016/j.yexcr.2021.112991"
+
+
+def test_wrapped_reference_lines_stay_in_one_entry():
+    text = (
+        "Muscle growth is plastic (Ali et al., 2022).\n\n"
+        "References\n"
+        "Ali, A., Shaalan, W. M., Al-Tobasei, R., & Salem, M. (2022). Coding and noncoding genes in\n"
+        "Nile tilapia. Cells, 11(16), 2504. https://doi.org/10.3390/cells11162504\n"
+        "Canosa, L. F., & Bertucci, J. I. (2023). The effect of stressors. Frontiers in Endocrinology, 14,\n"
+        "1109461. https://doi.org/10.3389/fendo.2023.1109461\n"
+        "Duran, B. O. da S., Zanella, B. T. T., Perez, E. S., Mareco, E. A., Blasco, J., Dal-\n"
+        "Pai-Silva, M., & Garcia de la Serrana, D. (2022). Amino acids and IGF1. https://doi.org/10.3390/ijms23031180\n"
+    )
+
+    result = parse_pasted_text(text)
+
+    assert [entry["number"] for entry in result.reference_list] == [1, 2, 3]
+    assert result.reference_list[0]["doi"] == "10.3390/cells11162504"
+    assert result.reference_list[1]["raw"].endswith("fendo.2023.1109461")
+    assert result.reference_list[2]["raw"].startswith("Duran, B. O. da S.")
+
+
+def test_parenthetical_author_year_citations_are_detected_as_cited_sentences():
+    text = (
+        "Fibers grow by hypertrophy and hyperplasia (Johnston et al., 2011). "
+        "This sentence cites nothing.\n\n"
+        "References\n"
+        "Johnston, I. A., Bower, N. I., & Macqueen, D. J. (2011). Growth. https://doi.org/10.1242/jeb.038620"
+    )
+
+    result = parse_pasted_text(text)
+
+    assert len(result.sentences) == 1
+    assert "Johnston et al., 2011" in result.sentences[0]["text"]

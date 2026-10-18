@@ -12,12 +12,15 @@ determined the actual record is the right paper (status was
 "_needs_field_comparison" in resolution.py) -- these checks decide whether
 it's well_cited or miscited, and why.
 """
+import re
 from difflib import SequenceMatcher
 from typing import Optional
 
+from src.metadata.crossref_metadata import (ActualReference,
+                                            fetch_journal_volume_samples,
+                                            title_similarity)
 from src.metadata.document import MetadataDoc
 from src.metadata.extraction import DeclaredReference
-from src.metadata.crossref_metadata import ActualReference, title_similarity, fetch_journal_volume_samples
 from src.metadata.findings import Finding
 
 # Stricter than resolution's 0.85 gate -- resolution only needs "probably
@@ -32,6 +35,17 @@ JOURNAL_SIMILARITY_THRESHOLD = 0.80
 
 def _normalize_journal(name: str) -> str:
     return " ".join(name.lower().replace("&", "and").split())
+
+
+_DASHES = re.compile(r"\s*[\u2010-\u2015\u2212-]\s*")
+
+
+def _normalize_pages(value: object) -> str:
+    """Hyphen, en dash and em dash are the same range separator; "1841-51" equals "1841-1851"."""
+    parts = _DASHES.sub("-", str(value).strip()).split("-")
+    if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit() and len(parts[1]) < len(parts[0]):
+        parts[1] = parts[0][: len(parts[0]) - len(parts[1])] + parts[1]
+    return "-".join(parts)
 
 
 def check_07(
@@ -153,7 +167,7 @@ def check_10(
                 message=f"Reference [{ref.reference_id}] declares volume {ref.volume} but the record shows {actual.volume}.",
             ))
 
-        if ref.pages and actual.pages and ref.pages.strip() != str(actual.pages).strip():
+        if ref.pages and actual.pages and _normalize_pages(ref.pages) != _normalize_pages(actual.pages):
             findings.append(Finding(
                 check_id=10, severity="warning", reference_id=ref.reference_id,
                 field="pages", declared=ref.pages, actual=str(actual.pages),

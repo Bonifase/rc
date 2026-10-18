@@ -21,7 +21,22 @@ from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
 from src.llm_wrapper import get_verdict as _get_verdict
 from src.pmc_id_converter import PmcIdResult, convert_doi
 from src.progress import ProgressTracker
-from src.report_text_stage import maybe_run_report_text_stage
+from src.report_text_stage import (final_vote_quotes,
+                                   maybe_run_report_text_stage,
+                                   sol_not_established_votes,
+                                   unsupported_sol_votes_from_judge_payload)
+
+_CALL_LOG_KEYS = (
+    "case_id", "call_key", "model", "vote_slot", "attempt_number", "validation_status", "failure_category",
+    "result", "paid", "offline_mock", "prompt_tokens", "completion_tokens", "raw_reply",
+)
+
+
+def compact_call_log(call_log: object) -> list[dict]:
+    """The judge call ledger without the repeated prompt and input text, so it stays small enough to store."""
+    if not isinstance(call_log, list):
+        return []
+    return [{key: entry[key] for key in _CALL_LOG_KEYS if key in entry} for entry in call_log if isinstance(entry, dict)]
 
 AUTHOR_YEAR_RE = re.compile(r"\(([^()]+?),\s*(\d{4})\)")
 AUTHOR_YEAR_PAREN_RE = re.compile(
@@ -36,6 +51,26 @@ _VERDICT_LABELS = {
     "unsupported": "Not supported",
     "uncertain": "Unclear",
 }
+
+
+def _is_internal_vote_summary(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    compact = value.strip().lower()
+    if not compact:
+        return False
+    markers = (
+        "luna cleared",
+        "sol did not reach",
+        "sol reached at least four valid",
+        "vote slots",
+        "sol was not invoked",
+        "final decision is supported",
+        "final decision is unsupported",
+        "final decision is uncertain",
+        "four-vote majority",
+    )
+    return any(marker in compact for marker in markers)
 
 
 def get_verdict(
@@ -62,44 +97,44 @@ def get_verdict(
     if key_is_missing:
         if live_mode:
             raise RuntimeError("Missing OPENAI_API_KEY for production judge execution. Production execution is blocked until credentials are supplied.")
-        if offline_opt_in:
-            from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
-            cascade = run_hybrid_luna_sol_cascade(
-                claim=claim,
-                evidence=[{"location": source_type, "text": excerpt}],
-                source_type=source_type,
-                citation_context=citation_context,
-            )
-            verdict = cascade.get("final_verdict", "uncertain")
-            excerpt_snippet = (excerpt or "").strip()
-            return VerdictResult(
-                status="verdict",
-                source_type=source_type,
-                citation_context=citation_context,
-                assertions_checked="offline_hybrid_adapter_v2_2_2",
-                verdict=verdict,
-                primary_family=None,
-                secondary_family="none",
-                evidence_quote=excerpt_snippet[:200] if excerpt_snippet else "",
-                omitted_contradicting_evidence="",
-                source_attribution="not_applicable",
-                explanation=cascade.get("explanation", "Offline hybrid judge returned a verdict."),
-                raw_response=json.dumps(cascade, ensure_ascii=False),
-                prompt_tokens=0,
-                completion_tokens=0,
-                cached_tokens=0,
-            )
-        raise RuntimeError("OPENAI_API_KEY is not set. RefCheck will not substitute simulated judgments for real API responses. Set OPENAI_API_KEY to enable live judge execution.")
+        if not offline_opt_in and not live_mode:
+            raise RuntimeError("OPENAI_API_KEY is not set and REFCHECK_ALLOW_OFFLINE_SIMULATION is not enabled. The judge cannot run without explicit opt-in or credentials.")
+        from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
+        cascade = run_hybrid_luna_sol_cascade(
+            claim=claim,
+            evidence=[{"location": "body" if source_type == "full_text" else "abstract", "text": excerpt}],
+            source_type=source_type,
+            citation_context=citation_context,
+        )
+        verdict = cascade.get("final_verdict", "uncertain")
+        judge_quotes = final_vote_quotes(cascade)
+        return VerdictResult(
+            status="verdict",
+            source_type=source_type,
+            citation_context=citation_context,
+            assertions_checked="offline_hybrid_adapter_v2_2_2",
+            verdict=verdict,
+            primary_family=None,
+            secondary_family="none",
+            evidence_quote=judge_quotes[0] if judge_quotes else "",
+            omitted_contradicting_evidence="",
+            source_attribution="not_applicable",
+            explanation=cascade.get("explanation", "Offline hybrid judge returned a verdict."),
+            raw_response=json.dumps({**cascade, "simulation": True}, ensure_ascii=False),
+            prompt_tokens=0,
+            completion_tokens=0,
+            cached_tokens=0,
+        )
 
     from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
     cascade = run_hybrid_luna_sol_cascade(
         claim=claim,
-        evidence=[{"location": source_type, "text": excerpt}],
+        evidence=[{"location": "body" if source_type == "full_text" else "abstract", "text": excerpt}],
         source_type=source_type,
         citation_context=citation_context,
     )
     verdict = cascade.get("final_verdict", "uncertain")
-    excerpt_snippet = (excerpt or "").strip()
+    judge_quotes = final_vote_quotes(cascade)
     return VerdictResult(
         status="verdict",
         source_type=source_type,
@@ -108,7 +143,7 @@ def get_verdict(
         verdict=verdict,
         primary_family=None,
         secondary_family="none",
-        evidence_quote=excerpt_snippet[:200] if excerpt_snippet else "",
+        evidence_quote=judge_quotes[0] if judge_quotes else "",
         omitted_contradicting_evidence="",
         source_attribution="not_applicable",
         explanation=cascade.get("explanation", "Hybrid judge returned a verdict."),
@@ -320,13 +355,219 @@ class PairResult:
     primary_family: Optional[str] = None
     secondary_family: Optional[str] = None
     evidence_quote: Optional[str] = None
+    evidence_quotes: Optional[list[str]] = None
     omitted_contradicting_evidence: Optional[str] = None
     source_attribution: Optional[str] = None
     explanation: Optional[str] = None
+    observation: Optional[str] = None
+    reason: Optional[str] = None
     quote_guard_triggered: bool = False
     llm_call_attempted: bool = False
     error_message: Optional[str] = None
     report_text_result: Optional[dict] = None
+    show_content: bool = False
+    show_verification: bool = False
+    sol_not_established_votes: int = 0
+    sol_valid_votes: int = 0
+    evidence_blocks: Optional[list[dict]] = None
+    judge_quotes: Optional[list[str]] = None
+    judge_explanations: Optional[list[str]] = None
+    judge_call_log: Optional[list[dict]] = None
+
+    def __post_init__(self):
+        reply = None
+        if isinstance(self.report_text_result, dict):
+            reply = self.report_text_result.get("reply")
+
+        if self.evidence_quotes is None:
+            if isinstance(self.evidence_quote, str) and self.evidence_quote.strip():
+                self.evidence_quotes = [self.evidence_quote.strip()]
+            else:
+                self.evidence_quotes = []
+        else:
+            self.evidence_quotes = [str(item).strip() for item in self.evidence_quotes if isinstance(item, str) and str(item).strip()]
+
+        report_evidence = None
+        if isinstance(reply, dict):
+            report_evidence = reply.get("evidence_passage") or reply.get("evidence_quote") or reply.get("source_excerpt")
+            if isinstance(report_evidence, str) and report_evidence.strip():
+                self.evidence_quotes = [report_evidence.strip()]
+                if self.evidence_quote is None or not str(self.evidence_quote).strip():
+                    self.evidence_quote = report_evidence.strip()
+
+        if self.evidence_quote is None and self.evidence_quotes:
+            self.evidence_quote = self.evidence_quotes[0]
+
+        if isinstance(self.explanation, str):
+            cleaned = self.explanation.strip()
+            if not cleaned or _is_internal_vote_summary(cleaned):
+                self.explanation = None
+
+        report_observation = None
+        report_reason = None
+        if isinstance(reply, dict):
+            report_observation = reply.get("observation") or reply.get("reason") or reply.get("explanation")
+            if _is_internal_vote_summary(report_observation or ""):
+                report_observation = None
+            report_reason = report_observation
+
+        if report_observation:
+            self.observation = report_observation
+            self.reason = report_reason or report_observation
+            return
+
+        if isinstance(reply, dict):
+            detailed = reply.get("observation") or reply.get("explanation") or reply.get("reason")
+            if _is_internal_vote_summary(detailed):
+                detailed = None
+            if detailed:
+                if not self.observation or self.observation == self.explanation:
+                    self.observation = detailed
+                if not self.reason or self.reason == self.explanation:
+                    self.reason = detailed
+
+        if self.explanation:
+            if not self.observation:
+                self.observation = self.explanation
+            if not self.reason:
+                self.reason = self.explanation
+            return
+
+        if not self.observation and isinstance(reply, dict):
+            detailed = reply.get("observation") or reply.get("explanation") or reply.get("reason")
+            if detailed and not _is_internal_vote_summary(detailed):
+                self.observation = detailed
+                self.reason = detailed
+
+
+def _extract_evidence_quotes(raw_response: object, fallback_quote: Optional[str]) -> list[str]:
+    candidates: list[str] = []
+
+    def _add_if_text(value: object) -> None:
+        if isinstance(value, str):
+            cleaned = value.strip()
+            if cleaned:
+                candidates.append(cleaned)
+
+    if isinstance(raw_response, dict):
+        for key in ("evidence_quotes", "evidence_quote"):
+            value = raw_response.get(key)
+            if isinstance(value, list):
+                for item in value:
+                    _add_if_text(item)
+            else:
+                _add_if_text(value)
+    elif isinstance(raw_response, list):
+        for item in raw_response:
+            _add_if_text(item)
+    elif isinstance(raw_response, str):
+        _add_if_text(raw_response)
+
+    if fallback_quote is not None:
+        _add_if_text(fallback_quote)
+
+    deduped: list[str] = []
+    seen: set[str] = set()
+    for quote in candidates:
+        if quote not in seen:
+            seen.add(quote)
+            deduped.append(quote)
+    return deduped
+
+
+def _apply_report_text_gate(
+    pair_results: list[PairResult],
+    metadata_report: Optional[dict] = None,
+    reference_entries: Optional[list[dict]] = None,
+    provider=None,
+) -> list[PairResult]:
+    """Gate report-text generation by judge verdict and metadata visibility.
+
+    The judge verdict stays authoritative. Report text is only created for
+    unsupported claim-source pairs whose reference is allowed to show content.
+    """
+    if not pair_results:
+        return pair_results
+
+    show_by_reference: dict[int, bool] = {}
+    if isinstance(metadata_report, dict):
+        declared_dois: dict[int, str | None] = {}
+        if isinstance(reference_entries, list):
+            for ref in reference_entries:
+                if not isinstance(ref, dict):
+                    continue
+                number = ref.get("number")
+                if number is None:
+                    number = ref.get("reference_id")
+                try:
+                    key = int(number)
+                except (TypeError, ValueError):
+                    continue
+                doi = ref.get("doi")
+                declared_dois[key] = doi if isinstance(doi, str) and doi.strip() else None
+
+        try:
+            from reference.metadata_status_mapping import build_metadata_plan
+
+            plan = build_metadata_plan(
+                metadata_report,
+                declared_dois=declared_dois or None,
+                official_records=metadata_report.get("official_records") if isinstance(metadata_report.get("official_records"), dict) else None,
+            )
+            for decision in plan.get("decisions", []):
+                try:
+                    reference_id = int(decision.reference_id)
+                except (TypeError, ValueError):
+                    continue
+                show_by_reference[reference_id] = bool(getattr(decision, "show_content", True))
+        except Exception:
+            show_by_reference = {}
+
+    for pair in pair_results:
+        if not isinstance(pair, PairResult):
+            continue
+
+        if pair.status != "verdict" or pair.verdict != "unsupported":
+            pair.show_content = False
+            # Uncertain pairs get a verification card (no model text) under the same reference visibility rule.
+            pair.show_verification = bool(pair.status == "verdict" and pair.verdict == "uncertain" and show_by_reference.get(pair.ref_number, True))
+            continue
+
+        allowed = show_by_reference.get(pair.ref_number, True)
+        pair.show_content = bool(allowed)
+        if pair.show_content and pair.report_text_result is None:
+            if not pair.evidence_blocks:
+                # Never validate against anything but the evidence the judge saw.
+                pair.report_text_result = {
+                    "status": "report_text_failed",
+                    "report_complete": False,
+                    "verdict_preserved": pair.verdict,
+                    "reason": "frozen judge evidence is unavailable for this pair",
+                    "reply": {},
+                    "errors": ["frozen judge evidence is unavailable for this pair"],
+                }
+                continue
+            pair.report_text_result = maybe_run_report_text_stage(
+                claim=pair.sentence_text,
+                marker=f"[{pair.ref_number}]" if pair.ref_number is not None else "[unknown]",
+                evidence=pair.evidence_blocks,
+                source_type=pair.source_type or "abstract",
+                citation_context=pair.citation_context or "sole",
+                final_verdict=pair.verdict,
+                judge_quotes=list(pair.judge_quotes or []),
+                judge_explanations=list(pair.judge_explanations or []),
+                show_content=True,
+                provider=provider,
+                case_id=f"{pair.sentence_id}::ref{pair.ref_number}",
+            )
+        elif not pair.show_content:
+            pair.report_text_result = pair.report_text_result or {
+                "status": "skipped",
+                "reply": {},
+                "reason": "show_content is false for this reference",
+            }
+
+    return pair_results
 
 
 def process_pair(
@@ -338,7 +579,25 @@ def process_pair(
     contact_email: str,
     progress: Optional[ProgressTracker] = None,
     source_cache: Optional[SourceCache] = None,
+    show_content: bool = True,
 ) -> PairResult:
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    api_key_missing = not api_key or api_key.lower() in {"offline", "mock", "disabled"}
+    if api_key_missing:
+        if progress is not None:
+            progress.emit("system", ref_number, "Reference [1] — OPENAI_API_KEY is not set; falling back to local parsing logic.")
+        return PairResult(
+            sentence_id,
+            sentence_text,
+            ref_number,
+            reference.doi if isinstance(reference, _Reference) else None,
+            status="source_could_not_be_opened",
+            source_type="abstract",
+            citation_context=citation_context,
+            llm_call_attempted=False,
+            error_message="OPENAI_API_KEY is not set; local parsing fallback was used instead of running a live judge.",
+        )
+
     reference = _refine_reference(_reference_from(reference))
     cache = source_cache if source_cache is not None else SourceCache()
     chain = cache.get(reference, contact_email)
@@ -445,6 +704,23 @@ def process_pair(
             error_message="Abstract was too short or a placeholder; not sent to the model.",
         )
 
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    api_key_missing = not api_key or api_key.lower() in {"offline", "mock", "disabled"}
+    if api_key_missing:
+        if progress is not None:
+            progress.emit("system", ref_number, "Reference [1] — OPENAI_API_KEY is not set; falling back to local parsing logic.")
+        return PairResult(
+            sentence_id,
+            sentence_text,
+            ref_number,
+            doi,
+            status="source_could_not_be_opened",
+            source_type="full_text" if content_result.status == "full_text" else "abstract",
+            citation_context=citation_context,
+            llm_call_attempted=False,
+            error_message="OPENAI_API_KEY is not set; local parsing fallback was used instead of running a live judge.",
+        )
+
     source_type = "full_text" if content_result.status == "full_text" else "abstract"
     if progress is not None:
         progress.emit(
@@ -497,19 +773,17 @@ def process_pair(
     if progress is not None:
         progress.emit("verdict", ref_number, f"Reference [{ref_number}] — {_VERDICT_LABELS.get(llm_result.verdict, 'Unclear')}")
 
-    report_text_result = maybe_run_report_text_stage(
-        claim=sentence_text,
-        marker=f"[{ref_number}]",
-        evidence=[{"location": source_type, "text": content_result.text}],
-        source_type=source_type,
-        citation_context=citation_context,
-        final_verdict=llm_result.verdict,
-        judge_quotes=[(judge_payload.get("sol_votes") or [{}])[0].get("quote") if isinstance((judge_payload.get("sol_votes") or [{}])[0], dict) else ""],
-        judge_explanations=[llm_result.explanation],
-        show_content=True,
-    )
+    # The report-text call is made later by _apply_report_text_gate, once metadata decides show_content.
+    evidence_blocks = [{"location": "body" if source_type == "full_text" else "abstract", "text": content_result.text}]
+    judge_quotes, judge_explanations = unsupported_sol_votes_from_judge_payload(judge_payload)
+    detailed_explanation = llm_result.explanation
+    evidence_quotes = final_vote_quotes(judge_payload) or _extract_evidence_quotes(judge_payload, llm_result.evidence_quote)
+    if not evidence_quotes:
+        evidence_quotes = [llm_result.evidence_quote] if llm_result.evidence_quote else []
+    selected_evidence_quote = evidence_quotes[0] if evidence_quotes else llm_result.evidence_quote
+    not_established_votes, valid_sol_votes = sol_not_established_votes(judge_payload)
 
-    return PairResult(
+    pair = PairResult(
         sentence_id, sentence_text, ref_number, doi,
         status="verdict",
         source_type=source_type,
@@ -518,14 +792,30 @@ def process_pair(
         assertions_checked=llm_result.assertions_checked,
         primary_family=llm_result.primary_family,
         secondary_family=llm_result.secondary_family,
-        evidence_quote=llm_result.evidence_quote,
+        evidence_quote=selected_evidence_quote,
+        evidence_quotes=evidence_quotes,
         omitted_contradicting_evidence=llm_result.omitted_contradicting_evidence,
         source_attribution=llm_result.source_attribution,
         explanation=llm_result.explanation,
+        observation=detailed_explanation,
+        reason=detailed_explanation,
         quote_guard_triggered=llm_result.quote_guard_triggered,
         llm_call_attempted=True,
-        report_text_result=report_text_result,
+        show_content=bool(show_content and llm_result.verdict == "unsupported"),
+        evidence_blocks=evidence_blocks,
+        judge_quotes=judge_quotes,
+        judge_explanations=judge_explanations,
+        judge_call_log=compact_call_log(judge_payload.get("call_log")),
+        sol_not_established_votes=not_established_votes,
+        sol_valid_votes=valid_sol_votes,
     )
+    if pair.verdict != "unsupported" or not pair.show_content:
+        pair.report_text_result = pair.report_text_result or {
+            "status": "skipped",
+            "reply": {},
+            "reason": "report-text is not eligible for this verdict",
+        }
+    return pair
 
 
 def _leading_author_surname(author_text: str) -> str | None:

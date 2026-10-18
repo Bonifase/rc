@@ -2,10 +2,20 @@ services:
   - type: web
     name: citation-fidelity-checker-api
     runtime: python
-    plan: free
+    plan: starter  # persistent disks are not available on the free plan
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn --timeout 600 --chdir webapp/backend app:app"
+    startCommand: "gunicorn --timeout 600 --workers 1 --threads 4 --chdir webapp/backend app:app"
+    disk:
+      name: refcheck-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
+      - key: REFCHECK_LIVE_JUDGE
+        value: "1"  # without this the judge never calls OpenAI
+      - key: REFCHECK_ALLOW_OFFLINE_SIMULATION
+        value: "0"
+      - key: REFCHECK_DATA_DIR
+        value: /var/data/refcheck  # must sit under the disk mountPath so jobs, uploads and the call store survive restarts and deploys
       - key: CONTACT_EMAIL
         sync: false
       - key: OPENAI_API_KEY

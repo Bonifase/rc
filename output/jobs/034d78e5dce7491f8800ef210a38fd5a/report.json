@@ -1,0 +1,125 @@
+{
+  "source_file": "plain_author_year.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "generated_at": "2026-10-18T12:49:16.547930+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "id": "s1",
+      "text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism."
+    },
+    {
+      "sentence_id": "s2",
+      "id": "s2",
+      "text": "This interpretation is consistent with prior work.",
+      "sentence_text": "This interpretation is consistent with prior work."
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "The findings of Smith et al. (2020) align with the proposed mechanism.  This interpretation is consistent with prior work."
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "citation": "Smith et al. (2020)",
+      "matched_reference": null,
+      "match_rule": "author_year_lead_author_and_year",
+      "status": "unmatched",
+      "case_key": "s1|smith et al. (2020)|none",
+      "id": "s1|smith et al. (2020)|none",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "claim": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "reason": "The citation was checked against the corresponding reference entry."
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "plain_author_year.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+      "status": "parsed"
+    },
+    {
+      "sentence_id": "s2",
+      "sentence_text": "This interpretation is consistent with prior work.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "plain_author_year.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck"
+  },
+  "bibliography_status": [
+    {
+      "reference_id": 1,
+      "status": "synthesized_title",
+      "usable_identifier": "10.7717/peerj-cs.3348/fig-1",
+      "findings": [
+        {
+          "check_id": 13,
+          "severity": "warning",
+          "message": "Reference [1] is listed in the bibliography but never cited in the text.",
+          "reference_id": 1,
+          "field": "citation_marker",
+          "declared": null,
+          "actual": null
+        },
+        {
+          "check_id": 14,
+          "severity": "warning",
+          "message": "Reference [1] uses a truncation marker ('...' or 'et al.') but no author is named before it.",
+          "reference_id": 1,
+          "field": "authors",
+          "declared": "The findings of Smith et al. (2020) align with the proposed mechanism.  This interpretation is consistent with prior work.",
+          "actual": null
+        }
+      ],
+      "used_in_sentences": [],
+      "blocks_phase_2": false
+    }
+  ],
+  "document_level_findings": [],
+  "not_evaluated_checks": [
+    {
+      "check_id": 14,
+      "component": "screening_criterion",
+      "reason": "Requires semantic judgment (comparing the declared inclusion/exclusion criteria against how they were actually applied) -- not implemented in this zero-LLM build. The rule-based half of check 14 (authors omitted without 'et al.') IS implemented."
+    }
+  ],
+  "official_records": {
+    "1": {
+      "official_ref_text": null,
+      "actual_fields": {
+        "doi": "10.7717/peerj-cs.3348/fig-1",
+        "title": "Figure 1: The proposed mechanism.",
+        "year": null,
+        "journal": null,
+        "volume": null,
+        "issue": null,
+        "pages": null,
+        "authors": []
+      },
+      "verified_title_match": false,
+      "verified_first_author_match": false,
+      "resolved_doi": "10.7717/peerj-cs.3348/fig-1",
+      "declared_first_author": null,
+      "official_first_author": null
+    }
+  }
+}

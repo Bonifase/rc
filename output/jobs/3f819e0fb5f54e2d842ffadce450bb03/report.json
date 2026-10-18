@@ -1,0 +1,68 @@
+{
+  "source_file": "plain_author_year.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "generated_at": "2026-10-18T09:44:02.010076+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "id": "s1",
+      "text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism."
+    },
+    {
+      "sentence_id": "s2",
+      "id": "s2",
+      "text": "This interpretation is consistent with prior work.",
+      "sentence_text": "This interpretation is consistent with prior work."
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "The findings of Smith et al. (2020) align with the proposed mechanism.  This interpretation is consistent with prior work."
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "citation": "Smith et al. (2020)",
+      "matched_reference": null,
+      "match_rule": "author_year_lead_author_and_year",
+      "status": "unmatched",
+      "case_key": "s1|Smith et al. (2020)|none|0",
+      "id": "s1|Smith et al. (2020)|none|0",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "claim": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "reason": "The citation was checked against the corresponding reference entry."
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "plain_author_year.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+      "status": "parsed"
+    },
+    {
+      "sentence_id": "s2",
+      "sentence_text": "This interpretation is consistent with prior work.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "plain_author_year.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck"
+  }
+}

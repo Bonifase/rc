@@ -1,6 +1,7 @@
 import json
-import pytest
 from pathlib import Path
+
+import pytest
 
 from run import load_input
 
@@ -95,6 +96,56 @@ def test_load_input_real_sample_file_is_valid():
         assert "id" in sentence and "text" in sentence
 
 
+def test_orchestrator_keeps_distinct_sentences_with_same_citation_separate():
+    from orchestrator import runner
+
+    sentences = [
+        {"sentence_id": "s1", "id": "s1", "text": "Wang et al. (2023) reported this finding."},
+        {"sentence_id": "s2", "id": "s2", "text": "Wang et al. (2023) also reported a different finding."},
+    ]
+    references = [
+        {"number": 1, "raw": "Wang L. Example Paper. 2023."},
+    ]
+
+    matches = runner._match_citations_to_references(sentences, references)
+    assert len(matches) == 2
+    assert {match.get("sentence_id") for match in matches} == {"s1", "s2"}
+
+
+def test_orchestrator_normalizes_equivalent_author_year_citation_tokens():
+    from orchestrator import runner
+
+    sentences = [
+        {"sentence_id": "s1", "id": "s1", "text": "This study found a large effect (Wang et al., 2023) and again Wang et al., 2023 in the same sentence."},
+    ]
+    references = [
+        {"number": 1, "raw": "Wang L. Example Paper. 2023."},
+    ]
+
+    matches = runner._match_citations_to_references(sentences, references)
+    deduped = runner._dedupe_matches_by_identity(matches)
+    assert len(deduped) == 1
+    assert deduped[0]["matched_reference"] == 1
+
+
+def test_orchestrator_uses_metadata_report_and_keeps_report_deduped(tmp_path):
+    from orchestrator import runner
+
+    sentences = [
+        {"sentence_id": "s1", "id": "s1", "text": "This claim cites Wang et al. (2023) and again Wang et al. (2023)."},
+    ]
+    references = [{"number": 1, "raw": "Wang L. Example Paper. 2023."}]
+
+    metadata_report = runner._build_metadata_report(sentences, references, "This claim cites Wang et al. (2023).")
+    assert "bibliography_status" in metadata_report
+    assert len(metadata_report["bibliography_status"]) == 1
+
+    matches = runner._dedupe_matches_by_identity(
+        runner._enrich_local_matches(runner._match_citations_to_references(sentences, references), sentences, references)
+    )
+    assert len(matches) == 1
+
+
 # ---------------------------------------------------------------------------
 # main() end-to-end -- confirms the metadata module's output is merged into
 # the written report, not just the content-pipeline's sentences/summary.
@@ -102,6 +153,7 @@ def test_load_input_real_sample_file_is_valid():
 
 def test_main_writes_report_including_metadata(tmp_path, monkeypatch, capsys):
     import sys
+
     import run as run_module
     from src.pipeline import PairResult
 
@@ -147,6 +199,7 @@ def test_main_writes_report_including_metadata(tmp_path, monkeypatch, capsys):
 
 def test_main_surfaces_metadata_error_as_warning_without_failing(tmp_path, monkeypatch, capsys):
     import sys
+
     import run as run_module
     from src.pipeline import PairResult
 

@@ -1,10 +1,15 @@
+import os
 from unittest.mock import patch
 
-from src.pipeline import process_pair, process_sentence, process_sentences
-from src.crossref import CrossrefResult
-from src.pmc_id_converter import PmcIdResult
+os.environ.setdefault("OPENAI_API_KEY", "test-key")
+
+from src.analysis_runner import run_content_and_metadata
 from src.content_fetcher import ContentResult
+from src.crossref import CrossrefResult
 from src.llm_wrapper import VerdictResult
+from src.pipeline import (PairResult, process_pair, process_sentence,
+                          process_sentences)
+from src.pmc_id_converter import PmcIdResult
 from src.progress import ProgressTracker
 
 TEST_EMAIL = "test@example.com"
@@ -97,6 +102,30 @@ def test_llm_system_error_is_technical_failure(mock_resolve, mock_convert, mock_
     assert result.llm_call_attempted is True  # it DID reach the LLM, just failed there
 
 
+@patch.dict(os.environ, {"OPENAI_API_KEY": ""}, clear=False)
+@patch("src.pipeline.log_llm_call")
+@patch("src.pipeline.get_verdict")
+@patch("src.pipeline.fetch_source_content")
+@patch("src.pipeline.convert_doi")
+@patch("src.pipeline.resolve_doi")
+def test_no_api_key_uses_local_fallback_before_the_llm_step(
+    mock_resolve, mock_convert, mock_fetch, mock_llm, mock_log
+):
+    mock_resolve.return_value = CrossrefResult(doi="10.1/x", status="resolved", title="A Paper")
+    mock_convert.return_value = PmcIdResult(doi="10.1/x", status="converted", pmid="123", pmcid="PMC456")
+    mock_fetch.return_value = ContentResult(status="full_text", source="pmc", text="the body text")
+
+    result = process_pair("s1", "A claim [1].", 1, "10.1/x", "sole", TEST_EMAIL)
+
+    assert result.status == "source_could_not_be_opened"
+    assert result.llm_call_attempted is False
+    assert "local parsing fallback" in result.error_message
+    mock_llm.assert_not_called()
+    mock_resolve.assert_not_called()
+    mock_convert.assert_not_called()
+    mock_fetch.assert_not_called()
+
+
 @patch("src.pipeline.log_llm_call")
 @patch("src.pipeline.get_verdict")
 @patch("src.pipeline.fetch_source_content")
@@ -155,6 +184,72 @@ def test_llm_call_duration_is_logged(mock_resolve, mock_convert, mock_fetch, moc
     _, kwargs = mock_log.call_args
     assert "duration_seconds" in kwargs
     assert kwargs["duration_seconds"] >= 0.05
+
+
+@patch("src.pipeline.maybe_run_report_text_stage")
+@patch("src.pipeline.log_llm_call")
+@patch("src.pipeline.get_verdict")
+@patch("src.pipeline.fetch_source_content")
+@patch("src.pipeline.convert_doi")
+@patch("src.pipeline.resolve_doi")
+def test_report_text_input_uses_frozen_evidence_and_unsupported_sol_votes(
+    mock_resolve, mock_convert, mock_fetch, mock_llm, mock_log, mock_stage
+):
+    import json
+
+    body = "Alpha was measured. GR mutants were hypercortisolemic. Beta was not measured."
+    mock_resolve.return_value = CrossrefResult(doi="10.1/x", status="resolved", title="A Paper")
+    mock_convert.return_value = PmcIdResult(doi="10.1/x", status="converted", pmid="1", pmcid="PMC1")
+    mock_fetch.return_value = ContentResult(status="full_text", source="pmc", text=body)
+
+    def sol(slot, model, verdict, quotes, explanation, valid=True):
+        return {
+            "model": model, "vote_slot": slot, "verdict": verdict,
+            "validation_status": "valid" if valid else "failed",
+            "vote_response": {"evidence_quotes": quotes, "explanation": explanation},
+        }
+
+    cascade = {
+        "final_verdict": "unsupported",
+        "explanation": "final",
+        "call_log": [
+            sol(1, "gpt-5.6-luna", "unsupported", ["Luna quote"], "luna says"),
+            sol(1, "gpt-5.6-sol", "unsupported", ["Alpha was measured."], "first"),
+            sol(2, "gpt-5.6-sol", "supported", ["Beta was not measured."], "dissent"),
+            sol(3, "gpt-5.6-sol", "unsupported", ["Alpha was measured.", "GR mutants were hypercortisolemic."], "second"),
+            sol(4, "gpt-5.6-sol", "unsupported", ["bad"], "invalid", valid=False),
+        ],
+    }
+    mock_llm.return_value = VerdictResult(
+        status="verdict", verdict="unsupported", assertions_checked="x",
+        primary_family=None, secondary_family="none", evidence_quote="Alpha was measured.",
+        omitted_contradicting_evidence="", source_attribution="own_finding",
+        explanation="final", quote_guard_triggered=False, raw_response=json.dumps(cascade),
+    )
+    mock_stage.return_value = {"status": "ready", "reply": {}}
+
+    pair = process_pair("s1", "A claim [1].", 1, "10.1/x", "sole", TEST_EMAIL)
+    mock_stage.assert_not_called()
+
+    from src.pipeline import _apply_report_text_gate
+    _apply_report_text_gate([pair])
+
+    kwargs = mock_stage.call_args.kwargs
+    assert kwargs["evidence"] == [{"location": "body", "text": body}]
+    assert kwargs["judge_quotes"] == ["Alpha was measured.", "GR mutants were hypercortisolemic."]
+    assert kwargs["judge_explanations"] == ["first", "second"]
+
+
+def test_gate_fails_closed_without_frozen_evidence():
+    from src.pipeline import _apply_report_text_gate
+
+    pair = PairResult(
+        sentence_id="s1", sentence_text="A claim [1].", ref_number=1, status="verdict",
+        verdict="unsupported", source_type="full_text", citation_context="sole", show_content=True,
+    )
+    _apply_report_text_gate([pair])
+
+    assert pair.report_text_result["status"] == "report_text_failed"
 
 
 # ---------------------------------------------------------------------------
@@ -253,6 +348,65 @@ def test_process_sentences_calls_process_sentence_per_sentence(mock_process_sent
     process_sentences(sentences, {1: "10.1/a", 2: "10.1/b"}, TEST_EMAIL)
 
     assert mock_process_sentence.call_count == 2
+
+
+@patch("src.analysis_runner.build_metadata_report")
+@patch("src.analysis_runner.process_sentences")
+def test_run_content_and_metadata_uses_metadata_gate_for_report_text(mock_process_sentences, mock_build_metadata_report):
+    mock_process_sentences.return_value = [
+        PairResult(
+            sentence_id="s1",
+            sentence_text="Sentence with unsupported claim [1].",
+            ref_number=1,
+            status="verdict",
+            verdict="unsupported",
+            source_type="full_text",
+            citation_context="sole",
+            evidence_quote="The paper says the opposite.",
+            explanation="The source says the opposite.",
+            llm_call_attempted=True,
+            show_content=True,
+        ),
+        PairResult(
+            sentence_id="s2",
+            sentence_text="Sentence with supported claim [2].",
+            ref_number=2,
+            status="verdict",
+            verdict="supported",
+            source_type="full_text",
+            citation_context="sole",
+            evidence_quote="The paper says this.",
+            explanation="The source supports it.",
+            llm_call_attempted=True,
+            show_content=True,
+        ),
+    ]
+    mock_build_metadata_report.return_value = {
+        "bibliography_status": [
+            {"reference_id": 1, "status": "well_cited", "findings": [{"check_id": 9, "field": "title", "declared": "Old title", "actual": "New title"}]},
+            {"reference_id": 2, "status": "well_cited", "findings": []},
+        ],
+        "document_level_findings": [],
+        "not_evaluated_checks": [],
+        "official_records": {
+            "1": {"verified_title_match": True, "verified_first_author_match": True, "official_ref_text": "Old title. Example. 2019.", "actual_fields": {"title": "Old title", "authors": ["Example"], "year": 2019}},
+            "2": {"verified_title_match": True, "verified_first_author_match": True, "official_ref_text": "Second title. Example. 2020.", "actual_fields": {"title": "Second title", "authors": ["Example"], "year": 2020}},
+        },
+    }
+
+    pair_results, _ = run_content_and_metadata(
+        [{"id": "s1", "text": "Sentence with unsupported claim [1]."}, {"id": "s2", "text": "Sentence with supported claim [2]."}],
+        {1: {"number": 1, "doi": "10.1/a"}, 2: {"number": 2, "doi": "10.1/b"}},
+        [{"number": 1, "doi": "10.1/a"}, {"number": 2, "doi": "10.1/b"}],
+        "body text",
+        TEST_EMAIL,
+    )
+
+    assert len(pair_results) == 2
+    assert pair_results[0].show_content is True
+    assert pair_results[0].report_text_result is not None
+    assert pair_results[1].show_content is False
+    assert pair_results[1].report_text_result is None
 
 
 # ---------------------------------------------------------------------------

@@ -58,6 +58,7 @@ def build_cards_from_metadata(metadata_output, manuscript_manifest):
     doi_by_id={r['reference_id']:r.get('doi') for r in refs}
     plan=build_metadata_plan(metadata_output,doi_by_id,records)
     cards=[]
+    skipped=[]
     for dec in plan['decisions']:
         if not dec.cards:continue
         rid=str(dec.reference_id)
@@ -68,7 +69,9 @@ def build_cards_from_metadata(metadata_output, manuscript_manifest):
         if not isinstance(raw,str) or not raw.strip():raise ValueError('missing original reference '+rid)
         citations_for_ref=by_ref.get(rid)
         if not citations_for_ref:
-            raise ValueError('no cited sentence for metadata '+rid)
+            # A card needs the citing sentence; report it instead of dropping every other card.
+            skipped.append(rid)
+            continue
         citation=citations_for_ref[0]
         record=records.get(rid)
         for metadata_card in dec.cards:
@@ -118,4 +121,4 @@ def build_cards_from_metadata(metadata_output, manuscript_manifest):
             'reference_official':None,'count_as_reference':False,
             'findings':[marker+' is cited in '+str(len(occurrences))+' sentence(s) and does not appear in the reference list.']})
     return {'cards':cards,'references_reviewed':plan['references_reviewed'],
-            'blocks_final':plan['blocks_final'],'decisions':plan['decisions']}
+            'blocks_final':plan['blocks_final'],'decisions':plan['decisions'],'skipped':skipped}

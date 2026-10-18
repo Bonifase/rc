@@ -1,0 +1,72 @@
+{
+  "source_file": "author_year_demo.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/author_year_demo.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "file_status": "ok",
+  "judge_executed": false,
+  "judge_status": "not_executed",
+  "judge_blocker": "missing_credentials",
+  "judge_prompt_version": "not_applicable",
+  "judge_prompt_hash": "not_applicable",
+  "provider_attempts": 0,
+  "metadata_status": "not_evaluated",
+  "final_verdict_status": "not_applicable",
+  "final_verdict": null,
+  "scientific_verdict": false,
+  "judgment_provenance": "local_parse_only",
+  "simulation": true,
+  "simulation_mode": "offline_mock",
+  "generated_at": "2026-10-19T16:32:55.401718+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "id": "s1",
+      "text": "Smith et al. (2020) showed this effect in teleost fish.",
+      "sentence_text": "Smith et al. (2020) showed this effect in teleost fish."
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "doi": "10.1000/example"
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "citation": "Smith et al. (2020)",
+      "matched_reference": 1,
+      "match_rule": "author_year_lead_author_and_year",
+      "status": "matched",
+      "case_key": "s1|smith et al. (2020)|1",
+      "id": "s1|smith et al. (2020)|1",
+      "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+      "claim": "Smith et al. (2020) showed this effect in teleost fish.",
+      "reference_text": "Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "source_url": null,
+      "doi": "10.1000/example",
+      "observation": "The manuscript citation was matched to the corresponding reference entry.",
+      "reason": "The manuscript citation was matched to the corresponding reference entry."
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "author_year_demo.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/author_year_demo.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck",
+    "simulation": true
+  }
+}

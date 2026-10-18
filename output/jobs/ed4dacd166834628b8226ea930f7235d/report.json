@@ -1,0 +1,233 @@
+{
+  "source_file": "plain_author_year.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "generated_at": "2026-10-18T09:55:59.644509+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "verdict": null,
+      "aggregation_level": 2,
+      "has_incomplete_pairs": true,
+      "pairs": [
+        {
+          "sentence_id": "s1",
+          "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+          "ref_number": null,
+          "doi": null,
+          "status": "no_citations_found",
+          "source_type": null,
+          "citation_context": null,
+          "verdict": null,
+          "assertions_checked": null,
+          "primary_family": null,
+          "secondary_family": null,
+          "evidence_quote": null,
+          "omitted_contradicting_evidence": null,
+          "source_attribution": null,
+          "explanation": null,
+          "quote_guard_triggered": false,
+          "llm_call_attempted": false,
+          "error_message": null,
+          "report_text_result": null
+        }
+      ]
+    },
+    {
+      "sentence_id": "s2",
+      "sentence_text": "This interpretation is consistent with prior work.",
+      "verdict": null,
+      "aggregation_level": 2,
+      "has_incomplete_pairs": true,
+      "pairs": [
+        {
+          "sentence_id": "s2",
+          "sentence_text": "This interpretation is consistent with prior work.",
+          "ref_number": null,
+          "doi": null,
+          "status": "no_citations_found",
+          "source_type": null,
+          "citation_context": null,
+          "verdict": null,
+          "assertions_checked": null,
+          "primary_family": null,
+          "secondary_family": null,
+          "evidence_quote": null,
+          "omitted_contradicting_evidence": null,
+          "source_attribution": null,
+          "explanation": null,
+          "quote_guard_triggered": false,
+          "llm_call_attempted": false,
+          "error_message": null,
+          "report_text_result": null
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "The findings of Smith et al. (2020) align with the proposed mechanism.  This interpretation is consistent with prior work."
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "citation": "Smith et al. (2020)",
+      "matched_reference": null,
+      "match_rule": "author_year_lead_author_and_year",
+      "status": "unmatched",
+      "case_key": "s1|Smith et al. (2020)|none|0",
+      "id": "s1|Smith et al. (2020)|none|0",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "claim": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "reason": "The citation was checked against the corresponding reference entry."
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "plain_author_year.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+      "status": "parsed"
+    },
+    {
+      "sentence_id": "s2",
+      "sentence_text": "This interpretation is consistent with prior work.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "plain_author_year.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/plain_author_year.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck",
+    "library_pipeline_used": true,
+    "total_sentences": 2,
+    "total_checks": 0
+  },
+  "library_pipeline": {
+    "lang": "en",
+    "report_language": "en",
+    "sentences": [
+      {
+        "sentence_id": "s1",
+        "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+        "verdict": null,
+        "aggregation_level": 2,
+        "has_incomplete_pairs": true,
+        "pairs": [
+          {
+            "sentence_id": "s1",
+            "sentence_text": "The findings of Smith et al. (2020) align with the proposed mechanism.",
+            "ref_number": null,
+            "doi": null,
+            "status": "no_citations_found",
+            "source_type": null,
+            "citation_context": null,
+            "verdict": null,
+            "assertions_checked": null,
+            "primary_family": null,
+            "secondary_family": null,
+            "evidence_quote": null,
+            "omitted_contradicting_evidence": null,
+            "source_attribution": null,
+            "explanation": null,
+            "quote_guard_triggered": false,
+            "llm_call_attempted": false,
+            "error_message": null,
+            "report_text_result": null
+          }
+        ]
+      },
+      {
+        "sentence_id": "s2",
+        "sentence_text": "This interpretation is consistent with prior work.",
+        "verdict": null,
+        "aggregation_level": 2,
+        "has_incomplete_pairs": true,
+        "pairs": [
+          {
+            "sentence_id": "s2",
+            "sentence_text": "This interpretation is consistent with prior work.",
+            "ref_number": null,
+            "doi": null,
+            "status": "no_citations_found",
+            "source_type": null,
+            "citation_context": null,
+            "verdict": null,
+            "assertions_checked": null,
+            "primary_family": null,
+            "secondary_family": null,
+            "evidence_quote": null,
+            "omitted_contradicting_evidence": null,
+            "source_attribution": null,
+            "explanation": null,
+            "quote_guard_triggered": false,
+            "llm_call_attempted": false,
+            "error_message": null,
+            "report_text_result": null
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "total_sentences": 2,
+      "total_checks": 0,
+      "sentence_verdict_counts": {
+        "no comparable evidence": 2
+      },
+      "pair_status_counts": {},
+      "library_pipeline_used": true
+    },
+    "bibliography_status": [
+      {
+        "reference_id": 1,
+        "status": "synthesized_title",
+        "usable_identifier": "10.7717/peerj-cs.3348/fig-1",
+        "findings": [
+          {
+            "check_id": 13,
+            "severity": "warning",
+            "message": "Reference [1] is listed in the bibliography but never cited in the text.",
+            "reference_id": 1,
+            "field": "citation_marker",
+            "declared": null,
+            "actual": null
+          },
+          {
+            "check_id": 14,
+            "severity": "warning",
+            "message": "Reference [1] uses a truncation marker ('...' or 'et al.') but no author is named before it.",
+            "reference_id": 1,
+            "field": "authors",
+            "declared": "The findings of Smith et al. (2020) align with the proposed mechanism.  This interpretation is consistent with prior work.",
+            "actual": null
+          }
+        ],
+        "used_in_sentences": [],
+        "blocks_phase_2": false
+      }
+    ],
+    "document_level_findings": [],
+    "not_evaluated_checks": [
+      {
+        "check_id": 14,
+        "component": "screening_criterion",
+        "reason": "Requires semantic judgment (comparing the declared inclusion/exclusion criteria against how they were actually applied) -- not implemented in this zero-LLM build. The rule-based half of check 14 (authors omitted without 'et al.') IS implemented."
+      }
+    ],
+    "citation_matches": [],
+    "citation_count": 0
+  }
+}

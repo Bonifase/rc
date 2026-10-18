@@ -1,0 +1,190 @@
+{
+  "source_file": "author_year_demo.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/author_year_demo.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "generated_at": "2026-10-18T10:15:18.841515+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+      "verdict": null,
+      "aggregation_level": 2,
+      "has_incomplete_pairs": true,
+      "pairs": [
+        {
+          "sentence_id": "s1",
+          "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+          "ref_number": 1,
+          "doi": "10.1000/example",
+          "status": "doi_not_found",
+          "source_type": null,
+          "citation_context": null,
+          "verdict": null,
+          "assertions_checked": null,
+          "primary_family": null,
+          "secondary_family": null,
+          "evidence_quote": null,
+          "omitted_contradicting_evidence": null,
+          "source_attribution": null,
+          "explanation": null,
+          "quote_guard_triggered": false,
+          "llm_call_attempted": false,
+          "error_message": null,
+          "report_text_result": null
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "doi": "10.1000/example"
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+      "claim": "Smith et al. (2020) showed this effect in teleost fish.",
+      "citation": "Smith et al. (2020)",
+      "status": "doi_not_found",
+      "matched_reference": 1,
+      "match_rule": "doi_not_found",
+      "kind": "content",
+      "verdict": "",
+      "primary_family": null,
+      "secondary_family": null,
+      "source_type": null,
+      "explanation": null,
+      "reason": null,
+      "source_excerpt": null,
+      "evidence_quote": null,
+      "reference_text": null,
+      "assertions_checked": null,
+      "case_key": "s1|Smith et al. (2020)|1|0",
+      "id": "s1|Smith et al. (2020)|1|0"
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+      "cited_numbers": "",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "author_year_demo.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/author_year_demo.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck",
+    "library_pipeline_used": true,
+    "total_sentences": 1,
+    "total_checks": 0
+  },
+  "library_pipeline": {
+    "lang": "en",
+    "report_language": "en",
+    "sentences": [
+      {
+        "sentence_id": "s1",
+        "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+        "verdict": null,
+        "aggregation_level": 2,
+        "has_incomplete_pairs": true,
+        "pairs": [
+          {
+            "sentence_id": "s1",
+            "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+            "ref_number": 1,
+            "doi": "10.1000/example",
+            "status": "doi_not_found",
+            "source_type": null,
+            "citation_context": null,
+            "verdict": null,
+            "assertions_checked": null,
+            "primary_family": null,
+            "secondary_family": null,
+            "evidence_quote": null,
+            "omitted_contradicting_evidence": null,
+            "source_attribution": null,
+            "explanation": null,
+            "quote_guard_triggered": false,
+            "llm_call_attempted": false,
+            "error_message": null,
+            "report_text_result": null
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "total_sentences": 1,
+      "total_checks": 0,
+      "sentence_verdict_counts": {
+        "no comparable evidence": 1
+      },
+      "pair_status_counts": {
+        "doi_not_found": 1
+      },
+      "library_pipeline_used": true
+    },
+    "bibliography_status": [
+      {
+        "reference_id": 1,
+        "status": "not_found",
+        "usable_identifier": null,
+        "findings": [
+          {
+            "check_id": 13,
+            "severity": "warning",
+            "message": "Reference [1] is listed in the bibliography but never cited in the text.",
+            "reference_id": 1,
+            "field": "citation_marker",
+            "declared": null,
+            "actual": null
+          }
+        ],
+        "used_in_sentences": [],
+        "blocks_phase_2": true
+      }
+    ],
+    "document_level_findings": [],
+    "not_evaluated_checks": [
+      {
+        "check_id": 14,
+        "component": "screening_criterion",
+        "reason": "Requires semantic judgment (comparing the declared inclusion/exclusion criteria against how they were actually applied) -- not implemented in this zero-LLM build. The rule-based half of check 14 (authors omitted without 'et al.') IS implemented."
+      }
+    ],
+    "citation_matches": [
+      {
+        "sentence_id": "s1",
+        "sentence_text": "Smith et al. (2020) showed this effect in teleost fish.",
+        "claim": "Smith et al. (2020) showed this effect in teleost fish.",
+        "citation": "Smith et al. (2020)",
+        "status": "doi_not_found",
+        "matched_reference": 1,
+        "match_rule": "doi_not_found",
+        "kind": "content",
+        "verdict": "",
+        "primary_family": null,
+        "secondary_family": null,
+        "source_type": null,
+        "explanation": null,
+        "reason": null,
+        "source_excerpt": null,
+        "evidence_quote": null,
+        "reference_text": null,
+        "assertions_checked": null,
+        "case_key": "s1|Smith et al. (2020)|1|0",
+        "id": "s1|Smith et al. (2020)|1|0"
+      }
+    ],
+    "citation_count": 1
+  }
+}

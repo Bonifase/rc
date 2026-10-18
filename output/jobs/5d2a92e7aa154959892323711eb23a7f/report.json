@@ -1,0 +1,83 @@
+{
+  "source_file": "sample.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/sample.docx",
+  "source_type": "docx",
+  "status": "ok",
+  "generated_at": "2026-10-18T13:05:13.084231+00:00",
+  "sentences": [
+    {
+      "sentence_id": "s1",
+      "id": "s1",
+      "text": "This claim is supported by prior work [1].",
+      "sentence_text": "This claim is supported by prior work [1]."
+    }
+  ],
+  "references": [
+    {
+      "number": 1,
+      "raw": "[1] Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "doi": "10.1000/example"
+    }
+  ],
+  "citation_matches": [
+    {
+      "sentence_id": "s1",
+      "citation": "[1]",
+      "matched_reference": 1,
+      "match_rule": "numbered_reference_number",
+      "status": "matched",
+      "case_key": "s1|[1]|1",
+      "id": "s1|[1]|1",
+      "sentence_text": "This claim is supported by prior work [1].",
+      "claim": "This claim is supported by prior work [1].",
+      "reference_text": "[1] Smith A. Example Paper. 2020. https://doi.org/10.1000/example",
+      "source_url": null,
+      "doi": "10.1000/example",
+      "reason": "The manuscript citation was matched to the corresponding reference entry."
+    }
+  ],
+  "citation_count": 1,
+  "dataset_rows": [
+    {
+      "sentence_id": "s1",
+      "sentence_text": "This claim is supported by prior work [1].",
+      "cited_numbers": "1",
+      "author_year_matches": 0,
+      "reference_count": 1,
+      "source_file": "sample.docx",
+      "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/sample.docx",
+      "status": "parsed"
+    }
+  ],
+  "summary": {
+    "prepared_for": "Document review",
+    "issued_by": "RefCheck"
+  },
+  "bibliography_status": [
+    {
+      "reference_id": 1,
+      "status": "not_found",
+      "usable_identifier": null,
+      "findings": [],
+      "used_in_sentences": [
+        "s1"
+      ],
+      "blocks_phase_2": true
+    }
+  ],
+  "document_level_findings": [],
+  "not_evaluated_checks": [
+    {
+      "check_id": 14,
+      "component": "screening_criterion",
+      "reason": "Requires semantic judgment (comparing the declared inclusion/exclusion criteria against how they were actually applied) -- not implemented in this zero-LLM build. The rule-based half of check 14 (authors omitted without 'et al.') IS implemented."
+    }
+  ],
+  "official_records": {
+    "1": {
+      "official_ref_text": null,
+      "verified_title_match": false,
+      "verified_first_author_match": false
+    }
+  }
+}

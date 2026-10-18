@@ -14,6 +14,7 @@ What the client sees (decided by Eduardo, 2026-10-12):
 Everything else is recorded internally only and never shown: references not
 found in Crossref, technical failures, uncited entries, heuristic signals.
 """
+import re
 from dataclasses import dataclass, field
 
 SHOWN_METADATA_TYPES = frozenset({"wrong_reference_details", "retracted_article",
@@ -25,6 +26,7 @@ DIRECT_FIELDS = {
     10: frozenset({"journal", "volume", "pages"}),
     16: frozenset({"year"}),
     14: frozenset({"authors"}),  # phase-C omission check: both counts present
+    17: frozenset({"doi"}),      # DOI written with whitespace inside it (2026-10-21)
 }
 RETRACTION_CHECK = 15
 IDENTITY_CHECK = 7      # declared first author absent from the record's authors
@@ -49,6 +51,11 @@ class ReferenceDecision:
     blocks_final: bool = False
 
 
+def _typographic(value):
+    """Hyphen, en dash, em dash and spacing are typography, not a different value."""
+    return re.sub(r"\s*[\u2010-\u2015\u2212-]\s*", "-", " ".join(str(value).split()))
+
+
 def _is_direct(f):
     if not isinstance(f, dict):
         return False
@@ -57,7 +64,7 @@ def _is_direct(f):
         return False
     d, a = f.get("declared"), f.get("actual")
     return (d is not None and str(d).strip() != "" and a is not None and str(a).strip() != ""
-            and str(d).strip() != str(a).strip())
+            and _typographic(d) != _typographic(a))
 
 
 def _norm_doi(doi):

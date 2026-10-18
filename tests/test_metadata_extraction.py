@@ -1,4 +1,5 @@
-from src.metadata.extraction import parse_reference_entry, expand_citation_markers, Author
+from src.metadata.extraction import (Author, expand_citation_markers,
+                                     parse_reference_entry)
 
 
 def test_full_apa_entry_parses_every_field():
@@ -78,6 +79,17 @@ def test_et_al_marker_also_flags_truncation():
     raw = "Doe, J., et al. (2019). Some title. Journal Name, 2, 5-9."
     r = parse_reference_entry(5, raw)
     assert r.authors_truncated is True
+
+
+def test_space_before_the_issue_does_not_swallow_volume_into_the_journal():
+    raw = (
+        "Ali, A., Shaalan, W. M., Al-Tobasei, R., & Salem, M. (2022). Coding and noncoding genes "
+        "involved in atrophy and compensatory muscle growth in Nile tilapia. Cells, 11 (16), 2504. "
+        "https://doi.org/10.3390/cells11162504"
+    )
+    r = parse_reference_entry(1, raw)
+    assert (r.journal, r.volume, r.issue, r.pages) == ("Cells", "11", "16", "2504")
+    assert r.title == "Coding and noncoding genes involved in atrophy and compensatory muscle growth in Nile tilapia"
 
 
 def test_expand_citation_markers_handles_ranges_and_multiple_groups():

@@ -1,3 +1,4 @@
+from src.judge_v30 import judge_v30
 from src.stage09_d01 import validate_stage09_pp01_fixture
 
 
@@ -26,3 +27,36 @@ def test_stage09_marks_mismatch_as_unsupported():
     assert result["status"] == "pass"
     assert result["verdict"] == "unsupported"
     assert result["primary_family"] == "off_target_relevance"
+
+
+def test_stage09_rejects_opposite_directional_overlap():
+    result = validate_stage09_pp01_fixture(
+        claim_text="Exercise reduced CRP and IL-6 after 12 weeks.",
+        evidence_text="After 12 weeks, the exercise programme increased plasma C-reactive protein and interleukin-6.",
+        source_type="abstract",
+        citation_context="sole",
+    )
+
+    assert result["status"] == "pass"
+    assert result["verdict"] == "unsupported"
+    assert result["primary_family"] == "directional_inversion"
+
+
+def test_stage09_is_not_the_scientific_judge_path():
+    fixture_result = validate_stage09_pp01_fixture(
+        claim_text="Exercise reduced CRP and IL-6 after 12 weeks.",
+        evidence_text="After 12 weeks, the exercise programme reduced plasma C-reactive protein and interleukin-6.",
+        source_type="abstract",
+        citation_context="sole",
+    )
+    real_judge = judge_v30(
+        "Exercise reduced CRP and IL-6 after 12 weeks.",
+        [{"location": "abstract", "text": "After 12 weeks, the exercise programme reduced plasma C-reactive protein and interleukin-6."}],
+        source_type="abstract",
+        citation_context="sole",
+    )
+
+    assert fixture_result["verdict"] == "supported"
+    assert real_judge["offline_mock"] is True
+    assert real_judge["prompt_version"]
+    assert real_judge["final_verdict"] in {"supported", "unsupported", "uncertain"}

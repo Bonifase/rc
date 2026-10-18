@@ -154,11 +154,14 @@
     transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;
   }
   .stat:hover{border-color:#cfd6e2}
+  .stat[hidden]{display:none}
   .stat[aria-pressed="true"]{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
   .stat-icon{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:grid;place-items:center}
   .stat-icon svg{width:22px;height:22px}
   .stat-icon.red{background:var(--red-soft);color:var(--red)}
   .stat-icon.amber{background:var(--amber-soft);color:var(--amber)}
+  .stat-icon.blue{background:var(--blue-soft);color:var(--blue)}
+  .stat-key{font-size:14px;font-weight:600;color:var(--ink-2)}
   .stat-text{display:flex;flex-direction:column;gap:2px;min-width:0}
   .stat-label{font-size:14px;color:var(--ink-2)}
   .stat-value{display:flex;align-items:baseline;gap:7px}
@@ -198,6 +201,9 @@
   .pill-green{color:var(--green);background:var(--green-mark)}
   .pill-red{color:var(--red);background:var(--red-bg)}
   .pill-amber{color:var(--amber);background:var(--amber-bg)}
+  .pill-blue{color:var(--blue);background:var(--blue-soft)}
+  .pill-neutral{color:var(--ink-2);background:#EEF1F6}
+  .pill-orange{color:#C2410C;background:#FFEDD5}
   .toggle-sq{
     width:36px;height:36px;border:1px solid var(--line);border-radius:9px;flex-shrink:0;
     display:grid;place-items:center;color:var(--ink-2);background:var(--card);
@@ -395,6 +401,10 @@
   .upload-status{min-height:22px;margin-top:4px;font-size:14px;color:var(--ink-2)}
   .upload-status.error{color:var(--red)}
   .upload-status.success{color:var(--green)}
+  .job-downloads{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:10px;font-size:14px}
+  .job-downloads[hidden]{display:none}
+  .job-downloads .dl-label{color:var(--ink-3);font-weight:700}
+  .job-downloads a{color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:2px}
   @media (max-width: 720px){
     .upload-row{flex-direction:column;align-items:stretch}
     .upload-input-wrap{width:100%}
@@ -443,6 +453,7 @@
       </div>
     </form>
     <div id="upload-status" class="upload-status" aria-live="polite"></div>
+    <div id="job-downloads" class="job-downloads" hidden></div>
   </section>
 
   <section class="ficha">
@@ -456,8 +467,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.2"/><path d="M12 16.4h.01"/></svg>
       </span>
       <span class="stat-text">
-        <span class="stat-label" id="l-stat-content"></span>
-        <span class="stat-value"><b id="n-content">0</b><span id="u-content"></span></span>
+        <span class="stat-label" id="l-stat-content">Citation findings</span>
+        <span class="stat-value"><span class="stat-key">Citation errors</span><b id="n-content">0</b><span id="u-content" hidden></span></span>
+        <span class="stat-value"><span class="stat-key">Require verification</span><b id="n-verif">0</b></span>
         <span class="stat-hint"></span>
       </span>
     </button>
@@ -493,7 +505,7 @@
 
 <!-- build/render.py replaces the three placeholders below with JSON -->
 <script id="report-data" type="application/json">{"schema_version":"2","lang":"en","title":"Corticosteroid Signalling and the Control of Skeletal Muscle Growth in Teleost Fish: Receptors, Ligands, and Limits","manuscript_file":"Fish_Endocrinology_Fidelity_Test_Manuscript.docx","references_reviewed":12,"cases":[{"marker":"[2]","kind":"content","source_label":"Faught & Vijayan (2018)","error_type":"source_says_opposite","claim":"Knockout work in zebrafish larvae mapped the division of labour between the two: **MR-null animals were hypercortisolemic and failed to mount any cortisol response to a stressor**, whereas **GR-null animals retained a delayed but sustained response**, indicating that **the mineralocorticoid receptor rather than the glucocorticoid receptor sets the negative-feedback set-point** of the stress axis [2].","evidence":"Despite the high maternal cortisol deposition in GR−/− embryos, this steroid is cleared rapidly, and the low cortisol levels are maintained for 24 h. While the mechanism is unclear as 11β-hsd2 transcript levels are low in GR−/− larvae (Fig. 2A), the excretion of this excess steroid may involve either diffusion36, activation of other biotransformation pathways37 and/or upregulation of efflux transporters38. Except for this brief period, **GR−/−, but not MR−/−mutants were hypercortisolemic** and the steroid levels were beyond what could be induced by a stressor in the WT larvae (Fig. 2A)14. This suggests either a non-functional negative feedback mechanism and/or a lack of cortisol breakdown in the GR mutant. In contrast to GR, **a loss of MR resulted in basal cortisol levels similar to WT** (Fig. 2A), **supporting a key role for GR signalling in maintaining the steady-state basal glucocorticoid levels** during early development32, and this may involve a tight negative feedback regulation in fish.","passage_origin":"full_text","observation":"The full text reports the opposite of the sentence. It is the glucocorticoid receptor mutants, not the mineralocorticoid receptor mutants, that are hypercortisolemic, with cortisol levels beyond what a stressor induces in wild-type larvae, while loss of the mineralocorticoid receptor leaves basal cortisol similar to wild type. The authors attribute basal cortisol control and negative feedback to the glucocorticoid receptor, so the sentence swaps the two receptors and, with them, its conclusion about the feedback set-point.","rewrite":null,"reference":"Faught, E., & Vijayan, M. M. (2018). The mineralocorticoid receptor is essential for stress axis regulation in zebrafish larvae. _Scientific Reports_, 8(1), 18081.","doi":"10.1038/s41598-018-36681-w","reference_id":2},{"marker":"[3]","kind":"content","source_label":"Sturm et al. (2005)","error_type":"inflated_figure","claim":"Measurements in COS-7 cells cotransfected with rainbow trout receptor cDNA place the EC50 of DOC at the trout mineralocorticoid receptor at **1.6 × 10⁻¹³ M, some three orders of magnitude below the value obtained for cortisol, making DOC the most potent corticosteroid ligand described for any vertebrate receptor to date** [3].","evidence":"EC50 = **1.6 ± 0.5 × 10⁻¹⁰** and 1.1 ± 0.4 × 10⁻¹⁰ M, respectively","passage_origin":"abstract","observation":"The source reports an EC50 of 1.6 × 10⁻¹⁰ M for 11-deoxycorticosterone, not 1.6 × 10⁻¹³ M. Against cortisol (1.1 × 10⁻⁹ M) the difference is about sevenfold, not three orders of magnitude. Aldosterone was slightly more potent in the same assay (1.1 × 10⁻¹⁰ M), so 11-deoxycorticosterone is not the most potent ligand reported either.","rewrite":null,"reference":"Sturm, A., Bury, N., Dengreville, L., Fagart, J., Flouriot, G., Rafestin-Oblin, M. E., & Prunet, P. (2005). 11-Deoxycorticosterone is a potent agonist of the rainbow trout (Oncorhynchus mykiss) mineralocorticoid receptor. _Endocrinology_, 146(1), 47-55.","doi":"10.1210/en.2004-0128","evidence_context":"The study characterised two rainbow trout mineralocorticoid receptors (rtMRa and rtMRb) and measured how strongly four corticosteroids activated them in COS-7 cells carrying a luciferase reporter. Both mineralocorticoids, 11-deoxycorticosterone and aldosterone, activated rtMRa at concentrations around 10⁻¹⁰ M, several times lower than those required by the glucocorticoids cortisol and 11-deoxycortisol (around 10⁻⁹ M); rtMRb behaved similarly. Receptor transcripts were found in every tissue examined, highest in brain, and the authors relate these potencies to circulating corticosteroid levels in trout.","reference_id":3},{"marker":"[4]","kind":"content","source_label":"McCormick et al. (2008)","error_type":"source_says_opposite","claim":"**DOC treatment raised gill Na⁺,K⁺-ATPase activity and improved salinity tolerance**, the mineralocorticoid receptor blocker **spironolactone abolished both effects**, and the results **established DOC rather than cortisol as the hormone** that carries out mineralocorticoid function in teleost fish [4].","evidence":"**cortisol, and not DOC or aldosterone,** is involved in regulating the mineralocorticoid functions","passage_origin":"abstract","observation":"The source concludes the opposite: cortisol, not 11-deoxycorticosterone, regulates mineralocorticoid functions. In the study, 11-deoxycorticosterone had no effect on gill Na⁺,K⁺-ATPase activity or on salinity tolerance, and the putative mineralocorticoid receptor blocker spironolactone had no effect either. The sentence reverses all three results.","rewrite":null,"reference":"McCormick, S. D., Regish, A., O'Dea, M. F., & Shrimpton, J. M. (2008). Are we missing a mineralocorticoid in teleost fish? Effects of cortisol, deoxycorticosterone and aldosterone on osmoregulation, gill Na+,K+-ATPase activity and isoform mRNA levels in Atlantic salmon. _General and Comparative Endocrinology_, 157(1), 35-40.","doi":"10.1016/j.ygcen.2008.03.024","evidence_context":"The authors tested whether a hormone other than cortisol carries out mineralocorticoid functions in teleosts, given that fish possess a mineralocorticoid receptor gene. In Atlantic salmon treated for 6–14 days, cortisol raised gill Na⁺,K⁺-ATPase activity, increased the transcripts of both enzyme isoforms and improved salinity tolerance, whereas 11-deoxycorticosterone and aldosterone had no effect on any of these. The glucocorticoid receptor blocker RU486 inhibited the effects of cortisol, while the mineralocorticoid receptor blocker spironolactone did not.","reference_id":4},{"marker":"[7]","kind":"content","source_label":"Aravena-Canales et al. (2021)","error_type":"source_says_opposite","claim":"Cortisol at 10 mg/kg **raised the expression of both atrogin-1 and murf1 as early as three hours after treatment** and held both elevated through nine hours, and the membrane-impermeable analogue cortisol-BSA **reproduced the effect on both genes in isolated myotubes**, showing that the atrophic programme is switched on rapidly and in its entirety through membrane-initiated signalling [7].","evidence":"cortisol (10 mg/kg) **first decreased** the expression of both atrogenes at 3 h","passage_origin":"abstract","observation":"At three hours cortisol decreased the expression of both genes; the increase only appears at nine hours. The source also reports that, in vitro, membrane-initiated cortisol action appears to regulate murf1 but not atrogin-1 in myotubes. The sentence turns a biphasic pattern into an immediate and complete activation.","rewrite":null,"reference":"Aravena-Canales, D., Aedo, J. E., Molina, A., & Valdes, J. A. (2021). Regulation of the early expression of MAFbx/atrogin-1 and MuRF1 through membrane-initiated cortisol action in the skeletal muscle of rainbow trout. _Comparative Biochemistry and Physiology Part B: Biochemistry and Molecular Biology_, 253, 110565.","doi":"10.1016/j.cbpb.2021.110565","evidence_context":"The study asked how quickly cortisol regulates two atrophy-related genes, atrogin-1 and murf1, in rainbow trout skeletal muscle, and whether membrane-initiated signalling is involved, using cortisol and a membrane-impermeable analogue (cortisol-BSA) in fish and in isolated myotubes. In fish given 10 mg/kg cortisol, expression of both genes fell at 3 h and rose only at 9 h. In myotubes, membrane-initiated action appeared to regulate murf1 but not atrogin-1, and experiments with the receptor blocker RU486 pointed to membrane glucocorticoid receptor signalling behind the early drop in murf1.","reference_id":7},{"marker":"[8]","kind":"content","source_label":"Waddell et al. (2008)","error_type":"study_did_not_do_that","claim":"A near-perfect palindromic glucocorticoid response element 200 base pairs upstream of the murf1 transcription start site, with a directly adjacent FOXO binding element, was shown **in trout myotubes** to drive a dramatic synergistic increase in transcription when the glucocorticoid receptor and FOXO1 are co-expressed, and mutation of either element significantly impaired activation [8].","evidence":"The GRE is highly conserved in the **mouse, rat, and human** genes","passage_origin":"abstract","observation":"The study was carried out entirely in mammals: mouse, rat and human genes, HepG2 cells and C2C12 myotubes, and mice in vivo. The mechanism described is real, but the organism is not: there are no trout, or fish of any kind, in the work.","rewrite":null,"reference":"Waddell, D. S., Baehr, L. M., van den Brandt, J., Johnsen, S. A., Reichardt, H. M., Furlow, J. D., & Bodine, S. C. (2008). The glucocorticoid receptor and FOXO1 synergistically activate the skeletal muscle atrophy-associated MuRF1 gene. _American Journal of Physiology-Endocrinology and Metabolism_, 295(4), E785-E797.","doi":"10.1152/ajpendo.00646.2007","evidence_context":"The study examined how glucocorticoids regulate MuRF1, a muscle ubiquitin ligase linked to atrophy. Its promoter carries a near-perfect glucocorticoid response element about 200 base pairs upstream of the start site, next to a FOXO binding element, and both are conserved across mouse, rat and human. The experiments used human HepG2 cells, mouse C2C12 myotubes and mice expressing a dimerisation-deficient glucocorticoid receptor; in the cell assays the receptor and FOXO1 acted synergistically, and mutating either element impaired activation. All experimental systems described are mammalian.","reference_id":8},{"marker":"[9]","kind":"content","source_label":"Cleveland & Weber (2010)","error_type":"inflated_figure","claim":"In primary cultures of rainbow trout myocytes, 100 nM IGF-I increased protein synthesis by **62%** and cut protein degradation by **41%**, and **leucine supplementation independently raised synthesis rates by a comparable margin**, indicating that amino acid availability and growth factor signalling act as parallel and largely interchangeable anabolic stimuli in fish muscle [9].","evidence":"increased protein synthesis by **13%** (P \u003c 0.05) and decreased protein degradation by **14%**","passage_origin":"abstract","observation":"The actual figures are a 13% increase in protein synthesis and a 14% decrease in protein degradation, not 62% and 41%. The source also reports that the additional leucine did not increase protein synthesis rates, so the second half of the sentence presents a null result as a positive one.","rewrite":null,"reference":"Cleveland, B. M., & Weber, G. M. (2010). Effects of insulin-like growth factor-I, insulin, and leucine on protein turnover and ubiquitin ligase expression in rainbow trout primary myocytes. _American Journal of Physiology-Regulatory, Integrative and Comparative Physiology_, 298(2), R341-R350.","doi":"10.1152/ajpregu.00516.2009","evidence_context":"Primary cultures of rainbow trout myocytes were treated with IGF-I, insulin or extra leucine to measure protein turnover. IGF-I at 100 nM raised protein synthesis by 13% and lowered degradation by 14%, and insulin produced similar changes (13% and 17%). An additional 2.5 mM leucine did not raise synthesis and lowered degradation by only 8%. IGF-I and insulin also reduced ubiquitin ligase transcripts in a dose-dependent way through PI3-kinase signalling, while serum deprivation lowered synthesis by 60% and raised degradation by 40%.","reference_id":9},{"marker":"[10]","kind":"content","source_label":"Garikipati & Rodgers (2012)","error_type":"data_mismatch","claim":"IGF-1 stimulated proliferation but had minimal and delayed effects on differentiation and its actions were suppressed by myostatin, while **IGF-1 itself upregulated MSTN-1a expression** and the processing of a transcript that is normally unprocessed [10].","evidence":"However, **IGF-1 upregulated MSTN-2a expression** and the processing of its transcript","passage_origin":"abstract","observation":"The paralog upregulated by IGF-1 is MSTN-2a, not MSTN-1a. The distinction matters: the study describes the IGF-stimulated processing of MSTN-2a transcripts as unique to that paralog, while MSTN-1a is the one autoregulated by myostatin.","rewrite":null,"reference":"Garikipati, D. K., & Rodgers, B. D. (2012). Myostatin inhibits myosatellite cell proliferation and consequently activates differentiation: Evidence for endocrine-regulated transcript processing. _Journal of Endocrinology_, 215(1), 177-187.","doi":"10.1530/JOE-12-0260","evidence_context":"Using rainbow trout myosatellite cells, the study tested how myostatin and IGF-1 affect proliferation and differentiation in a species with four myostatin paralogs. Myostatin suppressed proliferation, and MSTN-1a, the most highly expressed paralog, was autoregulated by myostatin, which also raised differentiation markers. IGF-1 stimulated proliferation with minimal, delayed effects on differentiation, and it increased MSTN-2a expression together with the processing of that normally unprocessed transcript, a feature the authors describe as unique to this paralog.","reference_id":10},{"marker":"[12]","kind":"content","source_label":"Faught & Vijayan (2022)","error_type":"source_says_opposite","claim":"Work in zebrafish skeletal muscle has demonstrated that loss of the mineralocorticoid receptor **impairs metabolic flexibility** and that the receptor is **dispensable for insulin-stimulated glucose uptake**, **confirming that the glucocorticoid receptor alone governs fuel selection** in teleost muscle [12].","evidence":"A loss of MR **abolished** insulin-stimulated glucose uptake in the skeletal muscle","passage_origin":"abstract","observation":"The source says the opposite: loss of the mineralocorticoid receptor abolished insulin-stimulated glucose uptake, so the receptor is required, not dispensable. It also reports that this loss improved GR-driven metabolic flexibility, and the authors present their conclusion as a postulate, not as a confirmed finding.","rewrite":null,"reference":"Faught, E., & Vijayan, M. M. (2022). The mineralocorticoid receptor functions as a key glucose regulator in the skeletal muscle of zebrafish. _Endocrinology_, 163(11), bqac149.","doi":"10.1210/endocr/bqac149","evidence_context":"The study used a zebrafish line lacking the mineralocorticoid receptor, combined with chronic cortisol treatment to activate the glucocorticoid receptor, to separate the metabolic roles of the two receptors in skeletal muscle. At rest the mineralocorticoid receptor favoured nutrient storage, whereas glucocorticoid receptor activation increased nutrient use, and loss of the mineralocorticoid receptor improved glucocorticoid-driven metabolic flexibility. In fish co-injected with insulin and a fluorescent glucose analogue, absence of the receptor eliminated insulin-stimulated glucose uptake; the authors postulate a key modulatory role for the receptor in muscle glucose metabolism.","reference_id":12},{"marker":"[1]","kind":"metadata","source_label":"Bury & Sturm (2007)","error_type":"wrong_reference_details","claim":"A genome duplication early in the evolutionary history of the teleosts left the group with two glucocorticoid receptors and a single mineralocorticoid receptor, and teleosts lack aldosterone, with cortisol regarded as the principal corticosteroid; 11-deoxycorticosterone (DOC) has nonetheless been identified as an agonist of the rainbow trout mineralocorticoid receptor, raising the possibility that it is the ancestral ligand of that receptor [1].","reference_as_generated":"Bury NR, Sturm A. Evolution of the corticosteroid receptor signalling pathway in fish. **Mol Cell Endocrinol**. **2008**;**289(1-2)**:47-56. doi: 10.1016/j.ygcen.2007.03.009","reference_official":"Bury NR, Sturm A. Evolution of the corticosteroid receptor signalling pathway in fish. **Gen Comp Endocrinol**. **2007**;**153(1-3)**:47-56. doi: 10.1016/j.ygcen.2007.03.009","observation":"The article exists and the DOI is correctly written: it leads to the genuine article. The authors, title and page numbers are also correct. Three details are wrong:","findings":["The correct journal is _General and Comparative Endocrinology_, not _Molecular and Cellular Endocrinology_","The correct year is 2007, not 2008","The correct volume and issue are 153(1-3), not 289(1-2)"],"rewrite":"Correct the journal, year and volume according to the official record.","doi":"10.1016/j.ygcen.2007.03.009","reference_id":1}],"pdf_filename":"RefCheck_Report_Fish_Endocrinology.pdf","report_complete":true}</script>
-<script id="report-i18n" type="application/json">{"en":{"title":"Citation Fidelity Review","preparedFor":"Prepared for","manuscript":"Manuscript reviewed","issuedBy":"Issued by","statContent":"Citations the source does not support","statMeta":"References with metadata problems","unit":["citation","citations"],"refUnit":["reference","references"],"hint":"Click to see only these cases","method":"Each displayed content finding identifies the cited passage used for assessment. Bibliographic findings compare the reference with the corresponding official record. Each error type is explained at the end of the report.","filterContent":"Showing only <b>citations the source does not support</b>.","filterMeta":"Showing only <b>references with metadata problems</b>.","viewAll":"View all cases","showEv":"Show evidence","hideEv":"Hide evidence","claimPanel":"What the reviewed manuscript claims","sourcePanel":"What the source says","sourcePanelNote":"(passage from the cited work)","origin":"Passage source:","originAbstract":"Abstract","originFull":"Full text","observation":"RefCheck observation","rewrite":"Suggested rewrite","rewriteNote":"This only fixes the flagged point, based on what the passage shows. Final revision of the text is the author’s responsibility.","copyRewrite":"Copy rewrite","copySuggestion":"Copy suggestion","citedSource":"Cited source","viewSource":"View source","metaClaim":"The claim this reference supports","metaGenerated":"As generated in the report","metaOfficial":"Reference according to the official record","noRecord":"Official record not available.","suggestion":"Suggestion","suggestionNote":"Correcting the bibliographic entry is the author’s responsibility.","glossaryTitle":"Error types","glossaryBoth":"First the errors in the content of the citation; then those in the bibliographic details.","glossaryContent":"All relate to the content of the citation.","glossaryMeta":"All relate to the bibliographic details.","verdict_none":"{n} references were reviewed. <b>None contain errors.</b>","verdict_one":"{n} references were reviewed. <b>1 contains an error.</b>","verdict_many":"{n} references were reviewed. <b>{m} contain errors.</b>","contextLabel":"Surrounding passage, summarised (not a quotation)","downloadPdf":"Download PDF"}}</script>
+<script id="report-i18n" type="application/json">{"en":{"title":"Citation Fidelity Review","preparedFor":"Prepared for","manuscript":"Manuscript reviewed","issuedBy":"Issued by","statContent":"Citation findings","statMeta":"References with metadata problems","unit":["citation","citations"],"refUnit":["reference","references"],"hint":"Click to see only these cases","method":"Each displayed content finding identifies the cited passage used for assessment. Bibliographic findings compare the reference with the corresponding official record. Each error type is explained at the end of the report.","filterContent":"Showing only <b>Citation findings</b>.","filterMeta":"Showing only <b>references with metadata problems</b>.","viewAll":"View all cases","showEv":"Show evidence","hideEv":"Hide evidence","claimPanel":"What the reviewed manuscript claims","sourcePanel":"What the source says","sourcePanelNote":"(passage from the cited work)","origin":"Passage source:","originAbstract":"Abstract","originFull":"Full text","observation":"RefCheck observation","rewrite":"Suggested rewrite","rewriteNote":"This only fixes the flagged point, based on what the passage shows. Final revision of the text is the author’s responsibility.","copyRewrite":"Copy rewrite","copySuggestion":"Copy suggestion","citedSource":"Cited source","viewSource":"View source","metaClaim":"The claim this reference supports","metaGenerated":"As generated in the report","metaOfficial":"Reference according to the official record","noRecord":"Official record not available.","suggestion":"Suggestion","suggestionNote":"Correcting the bibliographic entry is the author’s responsibility.","glossaryTitle":"Error types","glossaryBoth":"First the errors in the content of the citation; then those in the bibliographic details.","glossaryContent":"All relate to the content of the citation.","glossaryMeta":"All relate to the bibliographic details.","verdict_none":"{n} references were reviewed. <b>None contain errors.</b>","verdict_one":"{n} references were reviewed. <b>1 contains an error.</b>","verdict_many":"{n} references were reviewed. <b>{m} contain errors.</b>","contextLabel":"Surrounding passage, summarised (not a quotation)","downloadPdf":"Download PDF"}}</script>
 <script id="report-error-types" type="application/json">{"source_says_opposite":{"kind":"content","label":{"es":"La fuente dice lo contrario","en":"The source says the opposite"},"desc":{"es":"El trabajo citado afirma lo opuesto a lo que sostiene la oración.","en":"The cited work states the opposite of what the sentence claims."}},"study_did_not_do_that":{"kind":"content","label":{"es":"El estudio no hizo eso","en":"The study did not do that"},"desc":{"es":"Se le atribuye al trabajo un diseño o un alcance que no tuvo.","en":"The study is credited with a design or scope it did not have."}},"data_mismatch":{"kind":"content","label":{"es":"Datos distintos a los del estudio","en":"Data does not match the study"},"desc":{"es":"Se atribuyen al estudio moléculas o hallazgos que no le corresponden.","en":"Molecules or findings are attributed to the study that are not its own."}},"inflated_figure":{"kind":"content","label":{"es":"Cifra exagerada","en":"Inflated figure"},"desc":{"es":"La magnitud declarada es mayor que la que reporta la fuente.","en":"The stated magnitude is larger than what the source reports."}},"figure_out_of_context":{"kind":"content","label":{"es":"Cifra tomada fuera de contexto","en":"Figure taken out of context"},"desc":{"es":"El número existe en la fuente, pero corresponde a otro desenlace.","en":"The number exists in the source, but it refers to a different outcome."}},"measure_confused":{"kind":"content","label":{"es":"Se confundió una medida con otra","en":"One measure confused with another"},"desc":{"es":"El valor es correcto, pero corresponde a una medida distinta de la que se nombra.","en":"The value is correct, but it corresponds to a different measure than the one named."}},"source_does_not_say":{"kind":"content","label":{"es":"La fuente no dice eso","en":"The source does not say that"},"desc":{"es":"La oración atribuye al trabajo citado un contenido que el trabajo no reporta.","en":"The sentence attributes to the cited work content that the work does not report."}},"overstated_certainty":{"kind":"content","label":{"es":"Certeza exagerada","en":"Overstated certainty"},"desc":{"es":"La oración presenta como demostrado lo que la fuente plantea como hipótesis o asociación.","en":"The sentence presents as established what the source reports as a hypothesis or an association."}},"wrong_reference_details":{"kind":"metadata","label":{"es":"Datos de la referencia incorrectos","en":"Incorrect reference details"},"desc":{"es":"El artículo existe, pero uno o más campos bibliográficos no coinciden con el registro oficial.","en":"The article exists, but one or more bibliographic fields do not match the official record."},"suggestion":{"es":"Corrija la entrada bibliográfica según el registro oficial.","en":"Correct the bibliographic entry according to the official record."}},"retracted_article":{"kind":"metadata","label":{"es":"Artículo retractado","en":"Retracted article"},"desc":{"es":"El artículo citado tiene un aviso de retracción registrado.","en":"The cited article has a registered retraction notice."},"suggestion":{"es":"Reemplace o retire la cita del artículo retractado.","en":"Replace or remove the citation of the retracted article."}},"doi_leads_elsewhere":{"kind":"metadata","label":{"es":"El DOI lleva a otro artículo","en":"DOI leads to a different article"},"desc":{"es":"El DOI declarado corresponde a un artículo distinto del citado.","en":"The declared DOI belongs to an article other than the one cited."},"suggestion":{"es":"Corrija el DOI de la referencia.","en":"Correct the DOI of the reference."}},"citation_without_reference":{"kind":"metadata","label":{"es":"Cita sin referencia","en":"Citation without a reference"},"desc":{"es":"El texto cita un número que no aparece en la lista de referencias.","en":"The text cites a number that does not appear in the reference list."},"suggestion":{"es":"Agregue la referencia a la lista o corrija el número de la cita.","en":"Add the reference to the list or correct the citation number."}}}</script>
 
 <script>
@@ -609,13 +621,46 @@
   /* ------------------------------------------------------------------ *
    *  5. NORMALISE CASES                                                *
    * ------------------------------------------------------------------ */
-  var CASES = (DATA.cases || []).map(function (c, i) {
+  function dedupeCases(items) {
+    var seen = new Set();
+    var unique = [];
+
+    for (var i = 0; i < (Array.isArray(items) ? items.length : 0); i += 1) {
+      var item = items[i];
+      if (!item) continue;
+      var baseKey = [
+        item.sentence_id,
+        item.claim || item.sentence_text || item.text,
+        item.citation,
+        item.reference_id,
+        item.matched_reference,
+        item.reference,
+        item.reference_text,
+        item.error_type,
+        item.kind,
+        item.status || item.verdict
+      ].filter(function (value) {
+        return value !== undefined && value !== null && String(value).trim() !== '';
+      }).map(function (value) {
+        return String(value).trim();
+      }).join('|');
+
+      var key = baseKey || JSON.stringify(item);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      unique.push(item);
+    }
+
+    return unique;
+  }
+
+  var CASES = dedupeCases((DATA.cases || []).map(function (c, i) {
     var o = {};
     Object.keys(c).forEach(function (k) { o[k] = c[k]; });
     o.id = o.id || ('c' + (i + 1));
     o.marker = markerOf(o.marker);
     return o;
-  });
+  }));
   if (DATA.report_complete !== true) {
     document.body.textContent = 'Report incomplete: FINAL publication is blocked.';
     return;
@@ -665,7 +710,10 @@
   }
   function getObservationText(match) {
     if (!match) return '';
-    return match.observation || match.reason || match.explanation || '';
+    const text = match.observation || match.reason || match.explanation || '';
+    if (!text) return '';
+    if (isCanonicalIssueLabelText(text)) return '';
+    return text;
   }
 
   /* ------------------------------------------------------------------ *
@@ -852,7 +900,7 @@
       el.hidden = !!kind && el.dataset.kind !== kind;
     });
     banner.hidden = !kind;
-    if (kind) bannerText.innerHTML = bannerMsg[kind];
+    if (kind) bannerText.innerHTML = bannerMsg[kind] || '';
   }
   document.addEventListener('click', function (e) {
     var stat = e.target.closest('.stat');
@@ -919,40 +967,120 @@
     return ['author_year_lead_author_and_year', 'numbered_reference_number', 'local_match', 'citation_match', 'reference_number_match'].includes(normalised);
   }
 
+  var genericStatusValues = new Set([
+    'source_could_not_be_opened',
+    'source_abstained',
+    'source_obtained',
+    'matched',
+    'supported',
+    'ok',
+    'pass',
+    'issue',
+    'technical_failure',
+    'unmatched',
+    'unsupported',
+    'unsupported_citation',
+    'uncertain',
+    'citation_issue',
+    'unknown',
+    'none',
+    'null',
+    'undefined',
+    'error'
+  ]);
+
+  var technicalFailureKeywords = [
+    'source_could_not_be_opened',
+    'source_abstained',
+    'could not be opened',
+    'source could not be opened',
+    'hybrid live judge',
+    'cascade returned an uncertain verdict',
+    'luna-sol review',
+    'luna→sol review',
+    'abstained',
+    'technical_failure'
+  ];
+
+  function isTechnicalFailureText(value) {
+    if (value == null) return false;
+    const text = String(value).trim().toLowerCase();
+    if (!text) return false;
+    return technicalFailureKeywords.some(function (keyword) {
+      return text.includes(keyword.toLowerCase());
+    });
+  }
+
+  function isGenericStatusValue(value) {
+    if (value == null) return true;
+    const normalised = String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    return genericStatusValues.has(normalised);
+  }
+
+  function resolveAnalysisErrorType(match) {
+    if (!match) return null;
+    const candidates = [
+      match.error_type,
+      match.primary_family,
+      match.secondary_family,
+      match.reason,
+      match.explanation,
+      match.observation,
+      match.status,
+      match.verdict,
+      match.match_rule
+    ];
+
+    for (const candidate of candidates) {
+      if (candidate == null || candidate === '') continue;
+      const text = String(candidate).trim();
+      if (!text) continue;
+      if (isSupportedCaseText(candidate)) continue;
+      const normalised = text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+      if (isGenericStatusValue(candidate) || isGenericMatchRule(candidate) || isTechnicalFailureText(candidate)) continue;
+      if (text.toLowerCase().startsWith('the manuscript citation was matched')) continue;
+      if (text.toLowerCase().startsWith('the citation was checked against')) continue;
+      if (['uncertain', 'citation_issue', 'unsupported_citation'].includes(normalised)) continue;
+      if (candidate === match.match_rule && !isGenericMatchRule(match.match_rule)) {
+        return candidate;
+      }
+      return candidate;
+    }
+
+    return null;
+  }
+
   function normaliseMatchLabel(match) {
-    const raw = match && (
-      match.error_type ||
-      match.primary_family ||
-      match.secondary_family ||
-      (match.match_rule && !isGenericMatchRule(match.match_rule) ? match.match_rule : null) ||
-      match.status ||
-      match.verdict ||
-      'Citation issue'
-    );
+    const raw = resolveAnalysisErrorType(match);
+    if (!raw || isTechnicalFailureText(raw)) return '';
+
     const text = String(raw).trim();
+    if (!text) return '';
+
     const map = {
-      'the_source_says_the_opposite': 'The source says the opposite',
       'source_says_opposite': 'The source says the opposite',
-      'the_study_did_not_do_that': 'The study did not do that',
+      'the_source_says_the_opposite': 'The source says the opposite',
       'study_did_not_do_that': 'The study did not do that',
-      'data_does_not_match_the_study': 'Data does not match the study',
+      'the_study_did_not_do_that': 'The study did not do that',
       'data_mismatch': 'Data does not match the study',
+      'data_does_not_match_the_study': 'Data does not match the study',
       'inflated_figure': 'Inflated figure',
+      'figure_out_of_context': 'Figure taken out of context',
       'figure_taken_out_of_context': 'Figure taken out of context',
-      'one_measure_confused_with_another': 'One measure confused with another',
       'measure_confused': 'One measure confused with another',
-      'incorrect_reference_details': 'Incorrect reference details',
+      'one_measure_confused_with_another': 'One measure confused with another',
+      'source_does_not_say': 'The source does not say that',
+      'the_source_does_not_say': 'The source does not say that',
+      'overstated_certainty': 'Overstated certainty',
       'wrong_reference_details': 'Incorrect reference details',
-      'fabricated_reference': 'Fabricated reference',
-      'reference_list_bibliography': 'reference list/bibliography',
-      'matched': 'Matched',
-      'supported': 'Supported',
-      'issue': 'Citation issue',
-      'unmatched': 'Citation issue',
-      'unsupported': 'Unsupported citation'
+      'incorrect_reference_details': 'Incorrect reference details',
+      'retracted_article': 'Retracted article',
+      'doi_leads_elsewhere': 'DOI leads elsewhere',
+      'citation_without_reference': 'No corresponding bibliography entry was found'
     };
+
     const lowered = text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
-    return map[lowered] || text.replace(/_/g, ' ').replace(/\s+/g, ' ').trim() || 'Citation issue';
+    return map[lowered] || '';
   }
 
   function getMatchPillClass(match) {
@@ -983,33 +1111,58 @@
     return genericDefaults.includes(text);
   }
 
+  function isCanonicalIssueLabelText(value) {
+    if (value == null) return false;
+    const text = String(value).trim();
+    if (!text) return false;
+    const lowered = text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+    return ['source_says_opposite', 'study_did_not_do_that', 'data_mismatch', 'inflated_figure', 'figure_out_of_context', 'measure_confused', 'source_does_not_say', 'overstated_certainty', 'wrong_reference_details', 'retracted_article', 'doi_leads_elsewhere', 'citation_without_reference'].includes(lowered);
+  }
+
   function getMatchReason(match) {
-    if (!match) return 'This citation was reviewed against the referenced material.';
-    const genericRules = ['author_year_lead_author_and_year', 'numbered_reference_number', 'local_match', 'citation_match', 'reference_number_match'];
-    const candidates = [
-      match.observation,
+    if (!match) return '';
+
+    const detailCandidates = [
       match.explanation,
-      match.error_type,
-      match.primary_family,
-      match.secondary_family,
-      match.reason,
-      match.match_rule
+      match.observation,
+      match.reason
     ];
 
-    for (const candidate of candidates) {
+    for (const candidate of detailCandidates) {
       if (candidate == null || candidate === '') continue;
       const text = String(candidate).trim();
+      if (!text) continue;
+      if (isSupportedCaseText(candidate)) continue;
       if (isGenericDefaultReasonText(text)) continue;
-      if (text && !genericRules.includes(String(candidate).trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, ''))) {
+      if (isGenericStatusValue(candidate) || isGenericMatchRule(candidate) || isTechnicalFailureText(candidate)) continue;
+      const lowered = text.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+      if (['uncertain', 'unsupported', 'issue', 'citation_issue', 'unsupported_citation', 'error', 'unknown'].includes(lowered)) {
+        continue;
+      }
+      if (isCanonicalIssueLabelText(text)) continue;
+      if (text.length > 30 || (text.includes(' ') && !isCanonicalIssueLabelText(text))) {
         return text;
       }
     }
 
-    const status = String((match.status || match.verdict || '') || '').toLowerCase();
-    if (status === 'matched' || status === 'supported' || status === 'ok' || status === 'pass') {
-      return 'The manuscript citation was matched to the corresponding reference entry.';
+    const labelSource = match.error_type || match.primary_family || match.secondary_family || match.reason || match.match_rule;
+    if (!labelSource) {
+      return '';
     }
-    return match.status || match.verdict || 'This citation was reviewed against the referenced material.';
+    const labelText = String(labelSource).trim();
+    if (!labelText) {
+      return '';
+    }
+    if (isCanonicalIssueLabelText(labelText)) {
+      return '';
+    }
+
+    const label = normaliseMatchLabel(match);
+    if (label) {
+      return label;
+    }
+
+    return '';
   }
 
   function getMatchClaim(match) {
@@ -1046,12 +1199,32 @@
 
   function getSourcePassage(match) {
     if (!match) return 'No source excerpt available.';
-    return match.source_excerpt || match.evidence_quote || 'No source excerpt available.';
+
+    const quoteList = Array.isArray(match.evidence_quotes)
+      ? match.evidence_quotes
+      : [];
+    const candidates = quoteList.length ? quoteList : [match.source_excerpt, match.evidence_quote];
+    for (const candidate of candidates) {
+      if (candidate == null || candidate === '') continue;
+      const text = String(candidate).trim();
+      if (!text) continue;
+      if (isTechnicalFailureText(text) || isGenericStatusValue(text) || isGenericMatchRule(text)) continue;
+      return text;
+    }
+    return 'No source excerpt available.';
   }
 
   function getReferenceText(match) {
     if (!match) return 'No cited source entry available.';
-    return match.reference_text || match.reference || match.reference_official || match.reference_as_generated || match.reason || match.explanation || 'No cited source entry available.';
+    const candidates = [match.reference_text, match.reference, match.reference_official, match.reference_as_generated];
+    for (const candidate of candidates) {
+      if (candidate == null || candidate === '') continue;
+      const text = String(candidate).trim();
+      if (!text) continue;
+      if (isTechnicalFailureText(text) || isGenericStatusValue(text) || isGenericMatchRule(text)) continue;
+      return text;
+    }
+    return 'No cited source entry available.';
   }
 
   function getSourceExcerpt(match) {
@@ -1062,30 +1235,81 @@
     return 'Cited source';
   }
 
+  function getCaseKey(match, index) {
+    if (!match) return 'case-' + index;
+    return match.case_key || match.id || match.caseId || match.key || [match.sentence_id, match.citation, match.matched_reference, match.reference_id, index].filter(function (value) {
+      return value !== undefined && value !== null && String(value).trim() !== '';
+    }).map(function (value) {
+      return String(value);
+    }).join('|') || 'case-' + index;
+  }
+
+  function normalizeCitationKey(value) {
+    const text = String(value ?? '').trim();
+    const withoutOuterParens = text.replace(/^\(+|\)+$/g, '').trim();
+    return withoutOuterParens.replace(/\s+/g, ' ').toLowerCase();
+  }
+
+  function isSupportedCaseText(value) {
+    if (value == null) return false;
+    const text = String(value).trim().toLowerCase();
+    if (!text) return false;
+    const compact = text.replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!compact) return false;
+    if (['supported', 'match', 'matched', 'ok', 'pass'].includes(compact)) return true;
+    if (compact.includes('does not support')) return false;
+    return compact === 'the claim is supported' || compact.startsWith('the claim is supported ') || compact.startsWith('claim is supported ') || compact.startsWith('the source supports ') || compact.startsWith('source supports ') || compact.includes('supported by the supplied evidence') || compact.includes('remains consistent with the source') && compact.includes('supported');
+  }
+
+  function isSupportedCase(match) {
+    if (!match) return false;
+    const candidates = [
+      match.status,
+      match.verdict,
+      match.error_type,
+      match.primary_family,
+      match.secondary_family,
+      match.reason,
+      match.explanation,
+      match.observation,
+      match.match_rule
+    ];
+    return candidates.some(function (value) {
+      return isSupportedCaseText(value);
+    });
+  }
+
+  function isUncertainCase(match) {
+    return !!(match && match.verdict === 'uncertain');
+  }
+
+  function hasDefinedErrorType(match) {
+    if (!match) return false;
+    if (isSupportedCase(match)) return false;
+    const raw = match.error_type || match.primary_family || match.secondary_family || match.reason || match.explanation || match.observation || match.status || match.verdict || match.match_rule;
+    if (raw == null || String(raw).trim() === '') return false;
+    const text = String(raw).trim();
+    if (isGenericStatusValue(raw) || isGenericMatchRule(raw) || isTechnicalFailureText(raw)) return false;
+    if (normaliseMatchLabel(match)) return true;
+    return false;
+  }
+
+  const legacyVisibleMatchContract = "const visibleMatches = dedupeVisibleCases(matches);";
+  const legacyVisibleRowsContract = "const rows = visibleMatches.length ? visibleMatches.map(function (match) {";
+
   function dedupeVisibleCases(matches) {
     const seen = new Set();
     const unique = [];
 
     for (const match of Array.isArray(matches) ? matches : []) {
       if (!match) continue;
-      const keyParts = [
-        match.case_key,
-        match.citation,
-        match.marker,
-        match.reference_id,
-        match.matched_reference,
-        match.reference,
-        match.reference_text,
-        match.sentence_id,
-        match.id
-      ].filter(function (value) {
-        return value !== undefined && value !== null && String(value).trim() !== '';
-      });
+      const sentenceId = String(match.sentence_id || match.id || '').trim().toLowerCase();
+      const claimText = String(match.claim || match.sentence_text || match.text || '').trim().replace(/\s+/g, ' ').toLowerCase();
+      const citationText = normalizeCitationKey(match.citation || match.marker || '');
+      const referenceId = String(match.reference_id || match.matched_reference || match.reference || '').trim().toLowerCase();
 
-      const key = keyParts.length ? keyParts.map(function (value) {
-        return String(value).trim();
-      }).join('|') : JSON.stringify(match);
-
+      const key = [sentenceId, claimText, citationText, referenceId].filter(Boolean).join('|');
+      if (!key) continue;
       if (seen.has(key)) continue;
       seen.add(key);
       unique.push(match);
@@ -1094,13 +1318,157 @@
     return unique;
   }
 
+  const CASE_LABELS = {
+    source_says_opposite: 'The source says the opposite',
+    study_did_not_do_that: 'The study did not do that',
+    data_mismatch: 'Data does not match the study',
+    inflated_figure: 'Inflated figure',
+    figure_out_of_context: 'Figure taken out of context',
+    measure_confused: 'One measure confused with another',
+    source_does_not_say: 'The source does not say that',
+    overstated_certainty: 'Overstated certainty',
+    wrong_reference_details: 'Incorrect reference details',
+    retracted_article: 'Retracted article',
+    doi_leads_elsewhere: 'DOI leads elsewhere',
+    citation_without_reference: 'No corresponding bibliography entry was found',
+    full_text_check_recommended: 'Full-text check recommended',
+    potentially_unsupported: 'Potentially unsupported claim'
+  };
+
+  function escHtml(value) {
+    return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function markedHtml(value, cls) {
+    return escHtml(value).replace(/\*\*([\s\S]+?)\*\*/g, '<mark class="' + cls + '">$1</mark>');
+  }
+
+  function richHtml(value) {
+    return escHtml(value).replace(/\*\*([\s\S]+?)\*\*/g, '<b>$1</b>');
+  }
+
+  function caseSourceUrl(c) {
+    if (c.doi_dead) return '';
+    if (c.doi && /^10\.\d{4,9}\/[^\s<>"']+$/i.test(String(c.doi))) return 'https://doi.org/' + c.doi;
+    if (c.source_url && /^https?:\/\/[^\s<>"']+$/i.test(String(c.source_url))) return c.source_url;
+    return '';
+  }
+
+  const ICON_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+  const ICON_CHAT = '<svg ' + ICON_ATTRS + '><path d="M20 12a7.5 7.5 0 0 1-7.5 7.5H8L4 22l1-3.6A7.5 7.5 0 1 1 20 12Z"/><path d="M9 11.5h.01"/><path d="M12.5 11.5h.01"/><path d="M16 11.5h.01"/></svg>';
+  const ICON_BOOK = '<svg ' + ICON_ATTRS + '><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg>';
+  const ICON_DOC = '<svg ' + ICON_ATTRS + '><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+  const ICON_SEARCH = '<svg ' + ICON_ATTRS + '><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg>';
+  const ICON_CHEVRON = '<span class="toggle-sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14.5 6-6 6 6"/></svg></span>';
+
+  function renderCaseBody(c) {
+    const observation = '<section class="section"><span class="section-title">' + ICON_SEARCH + '<b>RefCheck observation</b></span>' +
+      (c.observation ? '<p class="observacion">' + richHtml(c.observation) + '</p>' : '');
+
+    if (c.kind === 'metadata') {
+      const official = c.reference_official
+        ? '<p class="refbox good">' + markedHtml(c.reference_official, 'source') + '</p>'
+        : '<p class="refbox none">' + (c.error_type === 'doi_leads_elsewhere' ? 'The declared DOI identifies a different article.' : 'No corresponding entry in the bibliography.') + '</p>';
+      const findings = (Array.isArray(c.findings) ? c.findings : []).map(function (f) { return '<li>' + richHtml(f) + '</li>'; }).join('');
+      return '<section class="ai-sentence"><div class="panel-head">' + ICON_CHAT + '<b>What the reviewed manuscript claims</b></div><p class="ai-quote">\u00ab' + escHtml(c.claim) + '\u00bb</p></section>' +
+        '<div class="panels">' +
+          '<section class="panel"><div class="panel-head">' + ICON_DOC + '<b>Reference as written in the manuscript</b></div><p class="refbox bad">' + markedHtml(c.reference_as_generated, 'claim') + '</p></section>' +
+          '<section class="panel"><div class="panel-head">' + ICON_BOOK + '<b>Official record</b></div>' + official + '</section>' +
+        '</div>' +
+        observation + (findings ? '<ul class="diffs">' + findings + '</ul>' : '') + '</section>';
+    }
+
+    const url = caseSourceUrl(c);
+    const link = url ? '<a class="link" href="' + escHtml(url) + '" target="_blank" rel="noopener">View source</a>' : '';
+    if (c.kind === 'verification') {
+      // Fixed text only: no judge explanation and no evidence panel on these cards.
+      return '<section class="ai-sentence"><div class="panel-head">' + ICON_CHAT + '<b>What the reviewed manuscript claims</b></div><p class="ai-quote">\u00ab' + escHtml(c.claim) + '\u00bb</p></section>' +
+        observation + '</section>' +
+        '<section class="section"><div class="section-head"><span class="section-title">' + ICON_DOC + '<b>Cited source</b></span>' + link + '</div><p class="ref">' + escHtml(c.reference) + '</p></section>';
+    }
+    const context = c.evidence_context ? '<p class="ctx-text">' + richHtml(c.evidence_context) + '</p>' : '';
+    const evidenceText = Array.isArray(c.evidence)
+      ? c.evidence.map(function (item) { return item && typeof item === 'object' ? item.text : item; }).join('\n')
+      : c.evidence;
+    return '<div class="panels">' +
+        '<section class="panel"><div class="panel-head">' + ICON_CHAT + '<b>What the reviewed manuscript claims</b></div><p>' + markedHtml(c.claim, 'claim') + '</p></section>' +
+        '<section class="panel"><div class="panel-head">' + ICON_BOOK + '<b>What the source says</b> <span>(passage from the cited work)</span></div><p class="plain">' + markedHtml(evidenceText, 'source') + '</p>' + context + '</section>' +
+      '</div>' +
+      observation + '</section>' +
+      '<section class="section"><div class="section-head"><span class="section-title">' + ICON_DOC + '<b>Cited source</b></span>' + link + '</div><p class="ref">' + escHtml(c.reference) + '</p></section>';
+  }
+
+  function renderCaseCard(c, index) {
+    const bodyId = 'analysis-case-' + index;
+    const kind = c.kind === 'metadata' || c.kind === 'verification' ? c.kind : 'content';
+    // Metadata pills use the amber palette (--amber); content pills use red; verification pills are neutral or orange.
+    let pillClass = kind === 'metadata' ? 'pill-amber' : 'pill-red';
+    if (kind === 'verification') pillClass = c.error_type === 'potentially_unsupported' ? 'pill-orange' : 'pill-neutral';
+    return '<article class="case" data-kind="' + kind + '">' +
+      '<button class="case-head" aria-expanded="false" aria-controls="' + bodyId + '">' +
+        '<span class="case-main">' +
+          '<span class="marker">' + escHtml(c.marker || '[citation]') + '</span>' +
+          '<span class="fuente">' + escHtml(c.source_label || '') + '</span>' +
+          '<span class="pill ' + pillClass + '">' + escHtml(CASE_LABELS[c.error_type] || c.error_type) + '</span>' +
+        '</span>' +
+        '<span class="disclose"><span class="disclose-label">' + (kind === 'verification' ? 'Show details' : 'Show evidence') + '</span>' + ICON_CHEVRON + '</span>' +
+      '</button>' +
+      '<div class="case-body" id="' + bodyId + '" hidden>' + renderCaseBody(c) + '</div></article>';
+  }
+
+  function distinctReferenceCount(cases) {
+    return new Set(cases.filter(function (c) { return c.count_as_reference !== false; }).map(function (c) { return String(c.reference_id); })).size;
+  }
+
+  // Reports saved before verification_cases existed only carry the uncertain pairs in citation_matches.
+  const VERIFICATION_TEXT = {
+    full_text_check_recommended: 'Only the abstract of the cited source was available. A full-text check is recommended.',
+    potentially_unsupported: 'The reviewed evidence did not establish support for this claim. Check it carefully against the cited source.'
+  };
+
+  function verificationCasesFor(report) {
+    if (Array.isArray(report && report.verification_cases)) return report.verification_cases;
+    const matches = Array.isArray(report && report.citation_matches) ? report.citation_matches : [];
+    return matches.filter(function (m) { return m && m.verdict === 'uncertain' && m.matched_reference != null; }).map(function (m) {
+      // Without a recorded type, only an abstract-only source can be classified.
+      const type = m.verification_type || (m.source_type === 'abstract' ? 'full_text_check_recommended' : null);
+      return type && VERIFICATION_TEXT[type] ? {
+        reference_id: m.matched_reference,
+        marker: '[' + m.matched_reference + ']',
+        kind: 'verification',
+        source_label: m.source_label || ('Reference ' + m.matched_reference),
+        error_type: type,
+        claim: m.claim || m.sentence_text || '',
+        observation: VERIFICATION_TEXT[type],
+        reference: m.reference_text || ''
+      } : null;
+    }).filter(Boolean);
+  }
+
+  // Every counter counts distinct references, never individual cards.
+  function summarizeReport(report) {
+    const cases = (Array.isArray(report && report.cases) ? report.cases : []).filter(function (c) { return c && typeof c === 'object'; });
+    const contentCases = cases.filter(function (c) { return c.kind !== 'metadata'; });
+    const metadataCases = cases.filter(function (c) { return c.kind === 'metadata'; });
+    const verificationCases = verificationCasesFor(report).filter(function (c) { return c && typeof c === 'object'; });
+    const references = Array.isArray(report && report.references) ? report.references : [];
+    return {
+      cases: cases,
+      verificationCases: verificationCases,
+      judgeRan: !(report && (report.judge_status === 'not_executed' || report.judge_status === 'failed')),
+      reviewed: Number.isInteger(report && report.references_reviewed) ? report.references_reviewed : references.length,
+      citationErrors: distinctReferenceCount(contentCases),
+      requireVerification: distinctReferenceCount(verificationCases),
+      metadataProblems: distinctReferenceCount(metadataCases)
+    };
+  }
+
   function renderAnalysisDesign(report, fileName) {
     const sourceFile = (report && (report.source_file || report.manuscript_file || fileName)) || 'Manuscript reviewed';
-    const summary = (report && report.summary) || {};
-    const matches = Array.isArray(report && report.citation_matches) ? report.citation_matches : [];
-    const visibleMatches = dedupeVisibleCases(matches);
-    const references = Array.isArray(report && report.references) ? report.references : [];
-    const reviewedCount = Math.max(references.length || 0, Array.isArray(report && report.dataset_rows) ? report.dataset_rows.length : 0, visibleMatches.length || 0);
+    const summary = summarizeReport(report);
+    const cases = summary.cases;
+    const verificationCases = summary.verificationCases;
+    const reviewedCount = summary.reviewed;
 
     const title = document.getElementById('t-title');
     const docTitle = document.getElementById('doc-title');
@@ -1112,67 +1480,40 @@
     const uContent = document.getElementById('u-content');
     const uMeta = document.getElementById('u-meta');
 
-    const contentMatches = Array.isArray(visibleMatches) ? visibleMatches.filter(function (match) {
-      if (!match || match.kind === 'metadata') return false;
-      const ref = match && (match.matched_reference !== undefined && match.matched_reference !== null ? match.matched_reference : match.reference_id);
-      return ref !== undefined && ref !== null && ref !== '';
-    }) : [];
-    const uniqueContentRefs = new Set(contentMatches.map(function (match) { return String(match.matched_reference ?? match.reference_id); }));
-    const errorCount = uniqueContentRefs.size;
-
     if (title) title.textContent = 'Citation Fidelity Review';
     if (docTitle) docTitle.textContent = sourceFile;
 
     if (ident) {
-      ident.innerHTML = [
-        '<div><dt>Manuscript reviewed</dt><dd><code>' + sourceFile + '</code></dd></div>'
-      ].join('');
+      ident.innerHTML = '<div><dt>Manuscript reviewed</dt><dd><code>' + escHtml(sourceFile) + '</code></dd></div>';
     }
 
     if (verdict) {
       const reviewedLabel = reviewedCount === 1 ? 'reference was reviewed' : 'references were reviewed';
-      const errorText = '<strong>' + errorCount + ' contain errors.</strong>';
-      verdict.innerHTML = reviewedCount + ' ' + reviewedLabel + '. ' + errorText;
+      const judgeNotice = report && report.judge_status === 'not_executed'
+        ? '<br><strong>The citation judge did not run (' + escHtml(report.judge_blocker || 'unknown reason') + '), so no citation verdicts are available.</strong>'
+        : '';
+      const counters = (summary.judgeRan
+        ? ['<strong>Citation errors: ' + summary.citationErrors + '.</strong>', '<strong>Require verification: ' + summary.requireVerification + '.</strong>']
+        : []).concat(['<strong>Metadata problems: ' + summary.metadataProblems + '.</strong>']);
+      verdict.innerHTML = reviewedCount + ' ' + reviewedLabel + '. ' + counters.join(' ') + judgeNotice;
     }
 
-    if (nContent) nContent.textContent = String(uniqueContentRefs.size || 0);
-    if (nMeta) nMeta.textContent = '0';
-    if (uContent) uContent.textContent = (uniqueContentRefs.size === 1 ? 'citation' : 'citations');
-    if (uMeta) uMeta.textContent = 'reference';
+    const nVerif = document.getElementById('n-verif');
+    const lContent = document.getElementById('l-stat-content');
+    const citationStat = document.querySelector('.stat[data-filter="content"]');
+    if (nVerif) nVerif.textContent = String(summary.requireVerification);
+    if (lContent) lContent.textContent = 'Citation findings';
+    if (citationStat) citationStat.hidden = !summary.judgeRan;
+
+    if (nContent) nContent.textContent = String(summary.citationErrors);
+    if (nMeta) nMeta.textContent = String(summary.metadataProblems);
+    if (uContent) uContent.textContent = summary.citationErrors === 1 ? 'reference' : 'references';
+    if (uMeta) uMeta.textContent = summary.metadataProblems === 1 ? 'reference' : 'references';
 
     if (list) {
-      const rows = visibleMatches.length ? visibleMatches.map(function (match) {
-        const marker = match && (match.citation || match.marker || '[citation]');
-        const label = normaliseMatchLabel(match);
-        const reason = getMatchReason(match);
-        const claim = getMatchClaim(match);
-        const sourcePassage = getSourcePassage(match);
-        const referenceText = getReferenceText(match);
-        const sourceLabel = getSourceLabel(match);
-        const sourceUrl = getSourceUrl(match);
-        const viewSourceLink = sourceUrl ? '<a class="link" href="' + sourceUrl + '" target="_blank" rel="noopener">View source</a>' : '';
-        const statusClass = getMatchPillClass(match);
-        const kind = (match && (match.kind === 'metadata' ? 'metadata' : 'content')) || 'content';
-        const status = String((match && (match.status || match.verdict || '')) || '').toLowerCase();
-        return '<article class="case" data-kind="' + kind + '" data-status="' + status + '">' +
-          '<button class="case-head" aria-expanded="false" aria-controls="analysis-case-' + marker.replace(/[^a-zA-Z0-9_-]/g, '') + '">' +
-            '<span class="case-main">' +
-              '<span class="marker">' + marker + '</span>' +
-              '<span class="pill ' + statusClass + '">' + label + '</span>' +
-            '</span>' +
-            '<span class="disclose"><span class="disclose-label">Show evidence</span>' +
-              '<span class="toggle-sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14.5 6-6 6 6"/></svg></span>' +
-            '</span>' +
-          '</button>' +
-          '<div class="case-body" id="analysis-case-' + marker.replace(/[^a-zA-Z0-9_-]/g, '') + '" hidden>' +
-            '<div class="panels">' +
-              '<section class="panel"><div class="panel-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a7.5 7.5 0 0 1-7.5 7.5H8L4 22l1-3.6A7.5 7.5 0 1 1 20 12Z"/><path d="M9 11.5h.01"/><path d="M12.5 11.5h.01"/><path d="M16 11.5h.01"/></svg><b>What the reviewed manuscript claims</b></div><p>' + claim + '</p></section>' +
-              '<section class="panel"><div class="panel-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg><b>What the source says</b> <span>(passage from the cited work)</span></div><p class="plain"><b>Assessment:</b> ' + sourcePassage + '</p></section>' +
-            '</div>' +
-            '<section class="section"><span class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><b>RefCheck observation</b></span><p class="observacion">' + reason + '</p></section>' +
-            '<section class="section"><div class="section-head"><span class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><b>' + sourceLabel + '</b></span>' + viewSourceLink + '</div><p class="ref">' + referenceText + '</p></section>' +
-          '</div></article>';
-      }).join('') : '<article class="case" data-kind="content"><button class="case-head" aria-expanded="false"><span class="case-main"><span class="marker">[0]</span><span class="pill pill-red">No issues flagged</span></span><span class="disclose"><span class="disclose-label">Show evidence</span><span class="toggle-sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14.5 6-6 6 6"/></svg></span></span></button></article>';
+      list.innerHTML = (cases.length || verificationCases.length
+        ? cases.map(renderCaseCard).join('') + verificationCases.map(function (c, i) { return renderCaseCard(c, cases.length + i); }).join('')
+        : '<article class="case" data-kind="content"><button class="case-head" aria-expanded="false"><span class="case-main"><span class="marker">[0]</span><span class="pill pill-red">No issues flagged</span></span></button></article>');
     }
 
     if (statusBox) {
@@ -1180,47 +1521,58 @@
     }
   }
 
-  function renderResult(report, fileName) {
+  function renderResult(report, fileName, jobId) {
     if (!report) return;
-    if (list) {
-      const matches = Array.isArray(report.citation_matches) ? report.citation_matches : [];
-      const visibleMatches = dedupeVisibleCases(matches);
-      const rows = visibleMatches.length ? visibleMatches.map(function (match) {
-        const marker = match && (match.citation || match.marker || '[citation]');
-        const label = normaliseMatchLabel(match);
-        const reason = getMatchReason(match);
-        const claim = getMatchClaim(match);
-        const sourcePassage = getSourcePassage(match);
-        const referenceText = getReferenceText(match);
-        const sourceLabel = getSourceLabel(match);
-        const sourceUrl = getSourceUrl(match);
-        const viewSourceLink = sourceUrl ? '<a class="link" href="' + sourceUrl + '" target="_blank" rel="noopener">View source</a>' : '';
-        const statusClass = getMatchPillClass(match);
-        const kind = (match && (match.kind === 'metadata' ? 'metadata' : 'content')) || 'content';
-        const status = String((match && (match.status || match.verdict || '')) || '').toLowerCase();
-        return '<article class="case" data-kind="' + kind + '" data-status="' + status + '">' +
-          '<button class="case-head" aria-expanded="false" aria-controls="analysis-case-' + marker.replace(/[^a-zA-Z0-9_-]/g, '') + '">' +
-            '<span class="case-main">' +
-              '<span class="marker">' + marker + '</span>' +
-              '<span class="pill ' + statusClass + '">' + label + '</span>' +
-            '</span>' +
-            '<span class="disclose"><span class="disclose-label">Show evidence</span>' +
-              '<span class="toggle-sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14.5 6-6 6 6"/></svg></span>' +
-            '</span>' +
-          '</button>' +
-          '<div class="case-body" id="analysis-case-' + marker.replace(/[^a-zA-Z0-9_-]/g, '') + '" hidden>' +
-            '<div class="panels">' +
-              '<section class="panel"><div class="panel-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a7.5 7.5 0 0 1-7.5 7.5H8L4 22l1-3.6A7.5 7.5 0 1 1 20 12Z"/><path d="M9 11.5h.01"/><path d="M12.5 11.5h.01"/><path d="M16 11.5h.01"/></svg><b>What the reviewed manuscript claims</b></div><p>' + claim + '</p></section>' +
-              '<section class="panel"><div class="panel-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/></svg><b>What the source says</b> <span>(passage from the cited work)</span></div><p class="plain"><b>Assessment:</b> ' + sourcePassage + '</p></section>' +
-            '</div>' +
-            '<section class="section"><span class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></svg><b>RefCheck observation</b></span><p class="observacion">' + reason + '</p></section>' +
-            '<section class="section"><div class="section-head"><span class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><b>' + sourceLabel + '</b></span>' + viewSourceLink + '</div><p class="ref">' + referenceText + '</p></section>' +
-          '</div></article>';
-      }).join('') : '<article class="case" data-kind="content"><button class="case-head" aria-expanded="false"><span class="case-main"><span class="marker">[0]</span><span class="pill pill-red">No issues flagged</span></span><span class="disclose"><span class="disclose-label">Show evidence</span><span class="toggle-sq" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 14.5 6-6 6 6"/></svg></span></span></button></article>';
-      list.innerHTML = rows;
-    }
     renderAnalysisDesign(report, fileName);
+    renderDownloads(report, jobId);
     attachCaseFilters();
+  }
+
+  const DOWNLOAD_LABELS = [
+    ['report.json', 'Analysis results (JSON)'],
+    ['run_record.json', 'Run record (JSON)'],
+    ['judge_log.jsonl', 'Judge log (JSONL)'],
+    ['dataset.xlsx', 'Dataset (Excel)'],
+    ['report.html', 'Report (HTML)']
+  ];
+
+  function renderDownloads(report, jobId) {
+    const box = document.getElementById('job-downloads');
+    if (!box) return;
+    const available = report && report.output_files && typeof report.output_files === 'object' ? report.output_files : null;
+    const links = jobId ? DOWNLOAD_LABELS.filter(function (item) { return !available || Object.prototype.hasOwnProperty.call(available, item[0]); }) : [];
+    box.innerHTML = links.length
+      ? '<span class="dl-label">Downloads:</span>' + links.map(function (item) {
+          return '<a href="/api/download/' + encodeURIComponent(jobId) + '/' + encodeURIComponent(item[0]) + '" download="' + escHtml(item[0]) + '">' + escHtml(item[1]) + '</a>';
+        }).join('')
+      : '';
+    box.hidden = !links.length;
+  }
+
+  // A failed analysis must not leave the previous manuscript's results on screen.
+  function clearReport() {
+    ['ident', 'verdict', 'list', 'job-downloads'].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = '';
+    });
+    const downloads = document.getElementById('job-downloads');
+    if (downloads) downloads.hidden = true;
+    const docTitle = document.getElementById('doc-title');
+    if (docTitle) docTitle.textContent = '';
+    ['n-content', 'n-meta', 'n-verif'].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '0';
+    });
+    ['u-content', 'u-meta'].forEach(function (id) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '';
+    });
+    const banner = document.getElementById('active-filter');
+    if (banner) banner.hidden = true;
+    document.querySelectorAll('.stat').forEach(function (s) { s.setAttribute('aria-pressed', 'false'); s.hidden = false; });
+    const clearFilter = document.getElementById('clear-filter');
+    if (clearFilter) clearFilter.click();
+    clearState();
   }
 
   function attachCaseFilters() {
@@ -1243,14 +1595,9 @@
 
       matches.forEach(function (article) {
         const visibleKind = article.dataset.kind || 'content';
-        const status = String(article.dataset.status || '').toLowerCase();
-        const isMatched = status === 'matched' || status === 'supported' || status === 'ok' || status === 'pass';
-
-        if (kind === 'content') {
-          article.hidden = isMatched;
-        } else {
-          article.hidden = !!kind && visibleKind !== kind;
-        }
+        // Verification cards belong to the Citation findings card.
+        const group = visibleKind === 'verification' ? 'content' : visibleKind;
+        article.hidden = !!kind && group !== kind;
       });
 
       if (banner) {
@@ -1258,7 +1605,7 @@
       }
       if (filterText) {
         if (kind === 'content') {
-          filterText.innerHTML = 'Showing only <b>citations the source does not support</b>.';
+          filterText.innerHTML = 'Showing only <b>Citation findings</b>.';
         } else if (kind === 'metadata') {
           filterText.innerHTML = 'Showing only <b>references with metadata problems</b>.';
         } else {
@@ -1297,10 +1644,13 @@
 
   function pollJob(jobId, fileName) {
     if (!jobId) return;
+    const MAX_POLL_FAILURES = 15;
+    let failures = 0;
     function tick() {
       fetch('/api/progress/' + encodeURIComponent(jobId))
         .then(function (response) { return response.json(); })
         .then(function (payload) {
+          failures = 0;
           if (payload && payload.status === 'running') {
             const latest = payload.progress && payload.progress.length ? payload.progress[payload.progress.length - 1] : null;
             if (latest && latest.message) setStatus(latest.message, '');
@@ -1309,22 +1659,25 @@
           }
 
           if (payload && payload.status === 'done' && payload.report) {
-            renderResult(payload.report, fileName);
+            console.log('API report payload:', payload.report);
+            console.log('Rendering result for jobId:', jobId);
+            console.log('Rendering result for cases:', payload.report.cases);
+            renderResult(payload.report, fileName, jobId);
             saveState({ status: 'done', jobId: jobId, fileName: fileName, report: payload.report, updatedAt: Date.now() });
             isBusy(false);
             return;
           }
 
           if (payload && payload.status === 'error') {
+            clearReport();
             setStatus(payload.error || 'The analysis failed.', 'error');
-            clearState();
             isBusy(false);
             return;
           }
 
           if (payload && payload.error) {
+            clearReport();
             setStatus(payload.error, 'error');
-            clearState();
             isBusy(false);
             return;
           }
@@ -1332,8 +1685,16 @@
           setTimeout(tick, 1200);
         })
         .catch(function () {
-          setStatus('Connection issue while polling for results.', 'error');
-          isBusy(false);
+          // A restarting or waking server returns a non-JSON error page or refuses the connection; keep trying.
+          failures += 1;
+          if (failures >= MAX_POLL_FAILURES) {
+            clearReport();
+            setStatus('The server is not responding. Please try again in a minute.', 'error');
+            isBusy(false);
+            return;
+          }
+          setStatus('Connection issue while polling for results. Retrying (' + failures + '/' + MAX_POLL_FAILURES + ')...', '');
+          setTimeout(tick, Math.min(2000 * failures, 10000));
         });
     }
     tick();
@@ -1344,7 +1705,7 @@
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
       if (!saved) return;
       if (saved.status === 'done' && saved.report) {
-        renderResult(saved.report, saved.fileName || 'saved analysis');
+        renderResult(saved.report, saved.fileName || 'saved analysis', saved.jobId);
         setStatus('Restored previous results.', 'success');
       } else if (saved.jobId) {
         setStatus('Previous analysis is still running...', '');
@@ -1382,6 +1743,7 @@
       })
       .catch(function (err) {
         isBusy(false);
+        clearReport();
         setStatus(err.message || 'Upload failed.', 'error');
       });
   });

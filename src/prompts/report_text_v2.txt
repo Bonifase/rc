@@ -16,6 +16,12 @@ You receive one JSON object with these fields.
 - judge_explanations: the judge's reasoning. Use it to locate the error. Do not copy it.
 - error_types: the allowed error types, each with key, label and description.
 
+Valid error keys for this stage are exactly these eight: source_says_opposite,
+study_did_not_do_that, data_mismatch, inflated_figure, figure_out_of_context,
+measure_confused, overstated_certainty, source_does_not_say.
+Never output a technical-failure label such as source_could_not_be_opened,
+source_abstained, technical_failure, hybrid live judge, or cascade returned an uncertain verdict.
+
 OUTPUT
 
 Return one JSON object and nothing else, with exactly these five fields:

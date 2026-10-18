@@ -1,0 +1,25 @@
+{
+  "status": "ok",
+  "file_status": "ok",
+  "source_file": "author_year_demo.docx",
+  "source_path": "/Users/bonifase/Downloads/RefCheck_Developer_Kickoff_START_PACK_v2_20260917/05_MVP1_repo_DEV_START_SAFE_20260917/output/uploads/author_year_demo.docx",
+  "generated_at": "2026-10-19T16:32:55.401718+00:00",
+  "simulation": true,
+  "simulation_mode": "offline_mock",
+  "judge_executed": false,
+  "judge_status": "not_executed",
+  "judge_blocker": "missing_credentials",
+  "judge_prompt_version": "not_applicable",
+  "judge_prompt_hash": "not_applicable",
+  "provider_attempts": 0,
+  "metadata_status": "not_evaluated",
+  "final_verdict_status": "not_applicable",
+  "final_verdict": null,
+  "scientific_verdict": false,
+  "judgment_provenance": "local_parse_only",
+  "output_files": {
+    "report_json": "report.json",
+    "excel_dataset": "dataset.xlsx",
+    "run_record": "run_record.json"
+  }
+}
