@@ -245,10 +245,13 @@ def _start_analysis_job(
             sentences, reference_list, reference_entries, body_text, contact_email, progress=tracker
         )
         report = generate_report(pair_results)
+        report["lang"] = "en"
+        report["report_language"] = "en"
         report["parse_warnings"] = parse_warnings
         report["bibliography_status"] = metadata_report["bibliography_status"]
         report["document_level_findings"] = metadata_report["document_level_findings"]
         report["not_evaluated_checks"] = metadata_report["not_evaluated_checks"]
+        report["official_records"] = metadata_report.get("official_records", {})
         if "error" in metadata_report:
             report["metadata_error"] = metadata_report["error"]
         with _JOBS_LOCK:
@@ -463,9 +466,12 @@ def analyze():
         sentences, reference_list, reference_entries, "", contact_email
     )
     report = generate_report(pair_results)
+    report["lang"] = "en"
+    report["report_language"] = "en"
     report["bibliography_status"] = metadata_report["bibliography_status"]
     report["document_level_findings"] = metadata_report["document_level_findings"]
     report["not_evaluated_checks"] = metadata_report["not_evaluated_checks"]
+    report["official_records"] = metadata_report.get("official_records", {})
     if "error" in metadata_report:
         report["metadata_error"] = metadata_report["error"]
     return jsonify(report)

@@ -29,7 +29,7 @@ def _load_fixture(path: str | Path | None = None) -> dict[str, Any]:
     if not fixture_path.exists():
         return {
             "id": "PP01-T17",
-            "selected_version": "judge_v3.7",
+            "selected_version": "judge_v2.2.2",
             "mode": "definitive",
         }
     with fixture_path.open("r", encoding="utf-8") as handle:
@@ -41,7 +41,7 @@ def validate_stage17_pp01_fixture(
     fixture_path: str | Path | None = None,
 ) -> dict[str, Any]:
     fixture = _load_fixture(fixture_path)
-    resolved_version = version if version is not None else fixture.get("selected_version", "judge_v3.7")
+    resolved_version = version if version is not None else fixture.get("selected_version", "judge_v2.2.2")
     config = get_adapter_config()
     swap = apply_prompt_swap("judge", resolved_version)
     definitive = config.get("definitive_components", {})
@@ -51,12 +51,12 @@ def validate_stage17_pp01_fixture(
     rules["R-02"] = swap["selected_version"] in config["supported_versions"]
     rules["R-03"] = swap["mode"] == "offline"
     rules["R-04"] = bool(swap["prompt_hash"])
-    rules["R-05"] = "judge_v3.7" in config["supported_versions"]
-    rules["R-06"] = config["swap_policy"].get("definitive") == "judge_v3.7"
-    rules["R-07"] = definitive.get("judge_adapter") == "judge_3_v7"
+    rules["R-05"] = "judge_v2.2.2" in config["supported_versions"]
+    rules["R-06"] = config["swap_policy"].get("definitive") == "judge_v2.2.2"
+    rules["R-07"] = definitive.get("judge_adapter") == "judge_hybrid_v2_2_2"
     rules["R-08"] = bool(definitive.get("winner_prompt_hash"))
     rules["R-09"] = config.get("extended_retrieval_enabled") is False
-    rules["R-10"] = swap["selected_version"] in {"judge_v2.1", "judge_v2.2.2", "judge_v3.7"}
+    rules["R-10"] = swap["selected_version"] in {"judge_v2.1", "judge_v2.2.2"}
 
     failed_rules = [rule_id for rule_id, passed in rules.items() if not passed]
     passed_rules = [rule_id for rule_id, passed in rules.items() if passed]

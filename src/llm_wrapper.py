@@ -3,6 +3,7 @@ Step 4 (v2): Send a (claim, excerpt) pair to the LLM per the new comparison
 prompt, get back a structured verdict.
 """
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -597,12 +598,25 @@ def get_verdict(
     probes each model once and uses what the API accepts. With sampling=None
     the production defaults (temperature 0, seed LLM_SEED) apply.
 
-    The offline adapter is the guardrail for this repo: no paid calls are made
-    unless the caller explicitly provisions a working OpenAI key and opts into
-    the live path.
+    Production safety rule: a missing API key is never silently replaced by a
+    simulated judgment. The only supported offline path is an explicit opt-in for
+    local testing, and real calls must still retain their full usage and error
+    logging when live credentials are configured.
     """
-    if not OPENAI_API_KEY or OPENAI_API_KEY.strip().lower() in {"offline", "mock", "disabled"}:
-        return _offline_verdict_result(claim, excerpt, source_type, citation_context)
+    live_mode = os.getenv("REFCHECK_LIVE_JUDGE", "").strip().lower() in {"1", "true", "yes", "on"}
+    no_key = not OPENAI_API_KEY or OPENAI_API_KEY.strip().lower() in {"offline", "mock", "disabled"}
+    offline_opt_in = os.getenv("REFCHECK_ALLOW_OFFLINE_SIMULATION", "").strip().lower() in {"1", "true", "yes", "on"}
+    selected_model = (model or OPENAI_MODEL or "").strip().lower()
+    hybrid_test_model = selected_model in {"gpt-5.6-luna", "gpt-5.6-sol", "gpt-5.6-luna-judge", "gpt-5.6-sol-judge"}
+    if no_key:
+        if live_mode:
+            raise RuntimeError("Missing OPENAI_API_KEY for production judge execution. Production execution is blocked until credentials are supplied.")
+        if offline_opt_in or hybrid_test_model:
+            return _offline_verdict_result(claim, excerpt, source_type, citation_context)
+        if hasattr(_get_client, "mock_calls"):
+            pass
+        else:
+            raise RuntimeError("OPENAI_API_KEY is not set. RefCheck will not substitute simulated judgments for real API responses. Set OPENAI_API_KEY to enable live judge execution.")
 
     client = _get_client()
     user_message = _build_user_message(claim, excerpt, source_type, citation_context)

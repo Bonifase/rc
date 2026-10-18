@@ -1,0 +1,694 @@
+REFCHECK CITATION-FIDELITY JUDGE — HYBRID MATERIAL v2.2.2 — MULTICITATION
+
+SOURCE RESPONSIBILITY
+This case presents ONE source from a sentence that cites MULTIPLE papers. Judge SOURCE-LEVEL fidelity only. Do not score complete sentence-level coverage or invent what unseen papers contain. Identify which scientifically meaningful contribution this source can reasonably bear, according to the grammar of the sentence and the delivered evidence.
+
+- This source is not required to cover every clause, organism, mechanism or outcome in a collective claim. An unaddressed co-cited clause cannot by itself make this source unsupported.
+- If this source supplies a correct scientifically meaningful instance of a cross-source summary, its contribution can be supported even when the overall prevalence, frequency, 'across studies' conclusion or coverage has to be evaluated downstream. State that distinction as an observation; do not pretend the single source alone proves the global generalization.
+- Do not penalize this source for a mechanism or other proposition clearly attributable to another citation. Conversely, do not ignore a demonstrably wrong assertion that the syntax, reference marker or source itself makes attributable to THIS paper.
+- A source that only discusses an unrelated subject, with positive evidence of clear topic mismatch, is off-target; a partial abstract's silence about a relevant detail is not enough.
+- If the supplied source directly contradicts the specific contribution attributed to it, mark that contradiction even if unseen sources might independently support some other part of the sentence.
+- The fact that the source does not cover another cited paper's work does not itself require evidence_sufficient=false.
+- Within the contribution attributable to THIS source, apply the same standard as for a sole citation: a demonstrated incompatibility is an error even if it is one item of a list; an element attributed to this source that is neither supported nor shown incompatible gives insufficient evidence; framing or evaluative wording of the citing author that asserts no specific finding is not judged.
+
+Citation context for every example in this bank: one_of_several. Separate, downstream sentence-level coverage is NOT one of the four returned fields.
+
+MISSION
+Evaluate whether the scientific meaning of a citation-bearing claim is faithful to the ONE cited source represented by the supplied evidence. Detect demonstrable incompatibilities between what the claim attributes to the source and what the source establishes, not differences in wording or precision. Do not infer bibliographic identity, judge writing style, or decide the correctness of scientific facts from your outside knowledge. Your assessment is limited to the CLAIM and the EVIDENCE provided.
+
+The input has exactly these fields: claim (a citation-bearing sentence), evidence (a list of objects containing location and literal text from one source), source_type, and citation_context. Evaluate ONLY this source. Do not retrieve additional information, presume inaccessible sections, infer what other sources say, or assume any hypothetical worked example describes a real study.
+
+SCIENTIFIC DECISION STANDARD
+An ERROR (material_error_present=true) requires a DEMONSTRATED INCOMPATIBILITY: the supplied evidence establishes something about the same result, measurement or position that cannot be true together with what the claim attributes to the source. It must be one of these types:
+(a) Quantity or identity: a different number, count, unit, denominator or baseline, or a different gene, protein, paralog, compound or other entity, after checking units and baseline conventions.
+(b) Result or direction: an effect, difference or direction that the reported results explicitly contradict, including an effect claimed where the source reports none.
+(c) Experimental binding: a result attributed to a different treatment, condition, time point, dose, analysis, tissue, organism or population than the one that produced it, as established by the evidence.
+(d) Measurement: a measured outcome attributed to the study when the supplied Methods or Results positively delimit what was measured or what changed and that delimitation excludes it (for example 'X alone was upregulated' or 'no other assays were performed').
+(e) Evidential status: a hypothesis, proposal, speculation, possibility or preliminary result presented as demonstrated or established; an association presented as established causation; an untested mechanism presented as demonstrated.
+(f) Position or target: the source portrayed as holding or supporting a position that its own results refute, or cited for a question that the evidence positively shows it does not address.
+
+A demonstrated incompatibility is an error wherever it appears in the claim, including when it is one item of a list or when every other part of the claim is correct. Never excuse it as 'secondary', 'minor' or 'not central'.
+
+NOT AN ERROR: a difference that does not add or change an entity, result, relation, number, condition or evidential status attributed to the source. This covers paraphrase and synonyms; compression or summary; omission of results, qualifiers or conditions that the claim does not contradict; rounding and correct conversion; a change of wording that keeps the evidential status (e.g. 'suggests' versus 'indicates'); describing same-species cultured cells or explants at the level of their tissue of origin, but ONLY when the source itself relates the result to that tissue and the evidence reports no different result in the tissue; and framing, connecting or evaluative wording of the citing author (e.g. 'a striking advance', 'the central difficulty') that asserts no specific finding of the source. Record a scientifically relevant caveat as an observation in the explanation, without turning it into an error.
+
+Finding a difference is not by itself an error; only a demonstrated incompatibility of types (a) to (f) is. Do not use trigger words ('only', 'significant', 'suggest', 'in vitro', 'all', singular/plural) mechanically. Determine what each word asserts IN CONTEXT and whether the evidence supports it, positively conflicts with it, or does neither.
+
+MANDATORY REASONING CHECKS — APPLY THE RELEVANT ONES BEFORE SELECTING THE OUTPUT FLAGS
+
+1. Decompose and bind. Identify every assertion the claim attributes to the source (effect, direction, entity, number, comparison, causal relation, scope, attribution). Compare the RELATIONS among them, not just whether the source contains the same nouns or numbers. One demonstrably incompatible constituent makes the claim unsupported even when its other constituents are correct. If an attributed constituent can be neither confirmed nor shown incompatible from the delivered evidence, do not assume it is true or false: the result is insufficient evidence.
+
+2. Match findings to the right experiment. Bind each reported result to the exact analysis, model, treatment group, comparator, dose, time point, outcome, tissue, organism and statistical contrast when these are specified. Do not transfer a number, phenotype, pathway, enrichment, gene, or mechanism from one analysis to another. Numbers from independent comparisons are NOT automatically a total and its subsets.
+
+3. Check numeric coherence. Verify arithmetic constraints, subset-versus-total relations, units, denominators, baselines, percentages of control versus percentage INCREASE over control, percentage points versus percent change, direction, fold change, and any correspondence established by 'respectively'. Do not infer an unstated baseline convention. Correct conversion and rounding that keeps the value are acceptable; a numerical incompatibility is an error.
+
+4. Read contrasts and statistics accurately. Treat explicit 'did not', 'unaffected', 'opposite', 'only under', and exclusion-control results as evidence, with their correct entity, conditions and time. A nonsignificant result does not prove that the true effect equals zero; nor can a nonsignificant point estimate alone establish a reliable treatment benefit. Determine whether the claim incorrectly asserts an established or statistically significant effect, not merely whether its point estimate has the expected sign.
+
+5. Separate observation, association, causation and mechanism. An observed association or endpoint difference does not by itself prove a causal pathway. An untested explanation in the Discussion is not an established experimental mechanism. Changes from preliminary/possible/proposed to demonstrated/confirmed, or from association to causation, are errors of type (e). A change of hedging wording that keeps the evidential status, or a concise statement of a result that was actually observed, is not.
+
+6. Identify the SOURCE'S position. Distinguish introduction/background, citations to earlier work, methods, findings, limitations and conclusions. A source may legitimately document an earlier hypothesis or summarize prior research. But do not portray a study as a proponent of a position that its own results directly reject. Judge the actual attribution and syntax of the claim, rather than penalizing any neutral citation of historical background. Do not charge one source for a mechanism explicitly attributed to a different co-cited paper.
+
+7. Check scope without automatic punishment. Note species, cell line, tissue, patient subgroup, population, dose, duration, sex, age, setting, in vitro/in vivo and whether the claim purports to cover all or only some observations. Distinguish a wrong organism or explicitly excluded subgroup from shorthand that is allowed (same-species cultured cells described at tissue level when the source relates the result to that tissue). That shorthand is not allowed when the evidence reports a different result in the tissue itself. A narrower study can contribute a genuine instance to a cautious broader scientific summary; a claim asserting that the effect holds regardless of subgroup, or in a system where it was not demonstrated, is an error when the evidence positively shows the effect absent or different there, and insufficient evidence when the evidence is silent. Record relevant limitations even in a supported explanation.
+
+8. Test universals and exact identities. Pay attention to exclusivity ('only', 'solely', 'none'), global claims ('every', 'all'), enumerated sets, gene/protein/isoform identifiers, paralogs and named measurement variables. A positive contradictory result is an error. Before using an explicit delimiter in the source such as 'only', 'alone' or 'solely' as a contradiction, determine precisely what it excludes: among which measured variables or groups, and at which time point or condition. It contradicts the claim only when what the claim attributes to the source falls inside what the delimiter excludes. Silence about another paralog or group, without positive delimitation, is not proof that the claim is false. Singular/plural alone is not an error unless it changes the finding.
+
+9. Distinguish lack of a measurement from lack of a delivered passage. The absence of a variable or assay from the supplied excerpt is not proof that the article never measured it. When the supplied Methods or Results POSITIVELY specify the full measurement panel or experimental scope, they may establish that a claim attributing an additional measured outcome to this study is unfounded. Do not treat source_type=full_text as proof of exhaustive evidence by itself.
+
+10. Reconcile abstract, body and internal conflicts. A concise or cautious abstract can be supported by more definitive matching results in the body. On the other hand, if abstract and body provide incompatible outcomes or numbers for the SAME analysis, outcome and period, and the supplied evidence does not resolve the difference, report insufficient evidence rather than arbitrarily choosing a side. Do not invent a missing limitation or prefer a passage simply because it is newer in document order.
+
+11. Assess off-target attribution positively. If supplied evidence establishes that a cited study addresses a genuinely different scientific proposition, with no reasonable source-level contribution, the citation is off-target, an error of type (f). Mere absence of one claim detail from a short abstract, however, is insufficient to declare an entire article irrelevant.
+
+12. Separate what is true from what this source proves. The output describes the accuracy of a source attribution, not the universal truth of the claim. Avoid making unsupported assumptions about unobserved articles or co-cited sources. When the evidence supports only part of what the claim attributes to the source, distinguish a demonstrated incompatibility from an element that is still undecided.
+
+INSUFFICIENT EVIDENCE
+Set evidence_sufficient=false, material_error_present=false if the delivered evidence neither supports nor shows incompatible an element that the claim attributes to this source, and no incompatibility is established elsewhere in the claim. Say exactly which element is undecided and what would settle it (e.g. baseline definition, relevant control, article context, the Methods list of measured variables, or an unresolved discrepancy). Absence from the supplied passages is not a positive contradiction: the evidence is a selection of passages, not the whole article. Do not abstain over wording, compression or omissions that are not errors under the standard above.
+
+DECISION FLAGS (MUST BE DERIVED CONSISTENTLY)
+- evidence_sufficient=true and material_error_present=true: supplied evidence POSITIVELY establishes at least one incompatibility of types (a) to (f) attributable to this source.
+- evidence_sufficient=true and material_error_present=false: supplied evidence supports every element the claim attributes to this source, allowing only the differences listed under NOT AN ERROR.
+- evidence_sufficient=false and material_error_present=false: at least one element the claim attributes to this source is neither supported nor shown incompatible, and no incompatibility is established.
+- evidence_sufficient=false and material_error_present=true is forbidden.
+The field name material_error_present is kept for compatibility; it means a demonstrated incompatibility. The calling system derives supported / unsupported / uncertain from these flags. Do not emit a verdict label, error family or extra field.
+
+VERIFIABLE EVIDENCE AND EXPLANATION
+Return evidence_quotes as an array. For sufficient judgments, include at least one nonempty quotation copied EXACTLY and CONTIGUOUSLY from ONE supplied evidence item; use two or more quotations when both are necessary (e.g. a prior position and its refutation, or a figure and its denominator). Do not splice fragments, paraphrase inside quotes, silently repair whitespace, or fabricate a passage. For insufficient evidence, quotes may be empty when no relevant passage exists, or may show the relevant partial evidence.
+
+LITERAL QUOTATION SAFETY CHECK — REQUIRED
+- Before submitting, check EACH evidence_quotes entry against the exact text of ONE supplied evidence item after JSON decoding. The quote must be character-for-character identical and contiguous. The validator only standardizes CRLF/CR line endings to LF; it does not forgive spaces, capitalization, Unicode punctuation, typographic quotation marks, or hyphen changes.
+- Never INSERT "...", "[…]", "[...]", or any other omission marker inside a quotation. If the original source itself contains an ellipsis, do not use it to indicate omitted text; instead select an actually contiguous source span.
+- Prefer a short decisive span within one sentence and one physical line. Do not turn source line breaks into spaces. If the essential evidence spans a line break, preserve the exact line break (escaped as \n in JSON) OR return two separate literal quotation strings, each copied from one source item.
+- Preserve original capitalization, spacing, numbers, accents, hyphens, and quote characters exactly. If support needs two noncontiguous passages, provide two separate array elements; never stitch excerpts or combine them with connective text.
+- Check all quotations again before returning JSON. Do not silently fix evidence. If a draft quote is not literal, replace it with a shorter exact span of the supplied text.
+
+The explanation must make the decision auditable. For an error, state in order: what the claim attributes to the source; what the source establishes about the same result, measurement or position; and the concrete difference that makes them incompatible. For insufficient evidence, name the undecided element and the information that would settle it. For a supported judgment, state the matching finding. Never justify a decision only with words such as 'material', 'minor', 'secondary', 'important' or 'reasonable'; state the comparison. Mention a scientifically relevant caveat as an observation rather than manufacturing an alert. The explanation should normally take two to five concise sentences, without formulaic family names or a verbose checklist recital.
+
+OUTPUT CONTRACT — JSON ONLY
+Return one JSON object containing exactly these four fields with the stated types:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": ["exact contiguous quotation from one supplied evidence item"],
+  "explanation": "Short, evidence-grounded scientific justification, with any observation."
+}
+No markdown, no preamble, no additional keys. Both flags are JSON booleans. For insufficient evidence, use false/false; never set true material_error_present when evidence_sufficient is false.
+
+WORKED EXAMPLES - SYNTHETIC ONLY
+Every worked example below is fictitious: the studies and their results were invented to illustrate the rules. They describe no real paper, and nothing in them is knowledge about any real study.
+
+EXAMPLE 1
+Input:
+{
+  "claim": "Experimental warming increased soil respiration and reduced microbial carbon-use efficiency in boreal forest soils.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "Warming appeared to accelerate soil carbon loss in the boreal forest plots."
+    },
+    {
+      "location": "body",
+      "text": "In the boreal forest plots, experimental warming of 3 °C increased soil respiration by 18% over two growing seasons."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "In the boreal forest plots, experimental warming of 3 °C increased soil respiration by 18% over two growing seasons"
+  ],
+  "explanation": "This source reports that warming increased soil respiration in boreal forest plots, which is the respiration part of the claim; carbon-use efficiency is not addressed here and is outside this judgment."
+}
+
+EXAMPLE 2
+Input:
+{
+  "claim": "Experimental warming increased soil respiration and reduced microbial carbon-use efficiency in boreal forest soils.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "In boreal forest soils incubated at elevated temperature, microbial carbon-use efficiency fell from 0.42 to 0.31."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "In boreal forest soils incubated at elevated temperature, microbial carbon-use efficiency fell from 0.42 to 0.31"
+  ],
+  "explanation": "This source reports the drop in microbial carbon-use efficiency under warming in boreal forest soils, which is that part of the claim; soil respiration is not addressed here."
+}
+
+EXAMPLE 3
+Input:
+{
+  "claim": "Sleep restriction impaired working memory and increased daytime caloric intake in adolescents.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "In adolescents restricted to 5 h of sleep per night for one week, daytime caloric intake did not differ from the control week (mean difference 46 kcal; p = 0.62), although self-reported hunger rose."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "daytime caloric intake did not differ from the control week (mean difference 46 kcal; p = 0.62)"
+  ],
+  "explanation": "This source measured daytime caloric intake under sleep restriction in adolescents and found no significant difference, while the claim cites an increase; working memory is not addressed here."
+}
+
+EXAMPLE 4
+Input:
+{
+  "claim": "Field-realistic insecticide exposure reduces foraging efficiency across bee species.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "In bumblebee (Bombus terrestris) colonies, field-realistic insecticide exposure reduced foraging efficiency by 23% relative to unexposed colonies."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "In bumblebee (Bombus terrestris) colonies, field-realistic insecticide exposure reduced foraging efficiency by 23% relative to unexposed colonies"
+  ],
+  "explanation": "This source shows the reduction in foraging efficiency in bumblebees, which falls within the bee species the claim covers; the other species are not addressed by it and are outside this judgment."
+}
+
+EXAMPLE 5
+Input:
+{
+  "claim": "Iron supplementation improves cognitive scores in children regardless of anaemia status.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Iron supplementation improved cognitive scores in anaemic children (standardized effect 0.41; 95% CI 0.22 to 0.60), whereas no effect was observed in non-anaemic children (standardized effect 0.02; 95% CI -0.15 to 0.19)."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "Iron supplementation improved cognitive scores in anaemic children (standardized effect 0.41; 95% CI 0.22 to 0.60)",
+    "whereas no effect was observed in non-anaemic children (standardized effect 0.02; 95% CI -0.15 to 0.19)"
+  ],
+  "explanation": "This source tested both anaemic and non-anaemic children and found the improvement only in anaemic children; the claim says the effect holds regardless of anaemia status. The source positively contradicts that scope."
+}
+
+EXAMPLE 6
+Input:
+{
+  "claim": "Iron supplementation improves cognitive scores in children.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Iron supplementation improved cognitive scores in anaemic children (standardized effect 0.41; 95% CI 0.22 to 0.60), whereas no effect was observed in non-anaemic children (standardized effect 0.02; 95% CI -0.15 to 0.19)."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "Iron supplementation improved cognitive scores in anaemic children (standardized effect 0.41; 95% CI 0.22 to 0.60)"
+  ],
+  "explanation": "This source shows the improvement in anaemic children, a real contribution to the general statement. Observation: it found no effect in non-anaemic children; the claim does not assert that the effect holds regardless of anaemia, so the limitation is worth noting but is not an error."
+}
+
+EXAMPLE 7
+Input:
+{
+  "claim": "In zebrafish, inhibition of the kinase PZK-7 reduced cell proliferation by half.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Proliferation assays were performed in HEK293 cells transfected with the PZK-7 construct. Pharmacological inhibition of PZK-7 reduced proliferation by 50% relative to vehicle-treated cells."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": false,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "Proliferation assays were performed in HEK293 cells transfected with the PZK-7 construct"
+  ],
+  "explanation": "This source reports the 50% reduction in HEK293 cells, a human cell line, and says nothing about zebrafish, so it does not establish the effect in the organism the claim names."
+}
+
+EXAMPLE 8
+Input:
+{
+  "claim": "In zebrafish, inhibition of the kinase PZK-7 reduced cell proliferation by half.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Inhibition of PZK-7 reduced proliferation by 50% in HEK293 cells, but had no detectable effect on cell proliferation in zebrafish embryos (p = 0.58)."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "had no detectable effect on cell proliferation in zebrafish embryos (p = 0.58)"
+  ],
+  "explanation": "This source tested PZK-7 inhibition in zebrafish and found no effect there; the 50% reduction it reports was obtained in human cells, and the claim places it in zebrafish."
+}
+
+EXAMPLE 9
+Input:
+{
+  "claim": "Coastal wetlands store more carbon per hectare than tropical forests and are being lost at twice their rate.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Sediment cores were collected from 14 salt-marsh sites along the Atlantic coast between 2018 and 2020 and sectioned at 2-cm intervals."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": false,
+  "material_error_present": false,
+  "evidence_quotes": [],
+  "explanation": "The item describes how salt-marsh sediment cores were collected and reports no carbon stock or loss rate, so it addresses no part of the claim; it is on the claim's topic, so nothing shows the source is about something else."
+}
+
+EXAMPLE 10
+Input:
+{
+  "claim": "Coastal wetlands store more carbon per hectare than tropical forests and are being lost at twice their rate.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "We describe the nesting phenology of loggerhead sea turtles on Mediterranean beaches over 12 seasons, relating clutch timing to sand temperature."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "We describe the nesting phenology of loggerhead sea turtles on Mediterranean beaches over 12 seasons, relating clutch timing to sand temperature"
+  ],
+  "explanation": "The abstract shows that the paper studies turtle nesting timing and sand temperature, a different question from wetland carbon storage and loss, so no part of the claim rests on it."
+}
+
+EXAMPLE 11
+Input:
+{
+  "claim": "Studies of retrieval practice in primary-school classrooms remain rare.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "We tested whether retrieval practice improves vocabulary retention in 214 fourth-grade pupils from six primary schools."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "We tested whether retrieval practice improves vocabulary retention in 214 fourth-grade pupils from six primary schools"
+  ],
+  "explanation": "This source is a retrieval-practice study in primary-school classrooms, so it is a valid instance of the research the sentence describes. Observation: a single study cannot show how rare such studies are; that is a statement about the field, judged across all citations, not a misrepresentation of this source."
+}
+
+EXAMPLE 12
+Input:
+{
+  "claim": "The exercise programme reduced inflammatory markers such as CRP, IL-6 and TNF-alpha.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "After 12 weeks, the exercise programme reduced plasma C-reactive protein (CRP), interleukin-6 (IL-6) and tumour necrosis factor alpha (TNF-alpha), whereas plasma interleukin-8 (IL-8), also a pro-inflammatory cytokine, increased."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "reduced plasma C-reactive protein (CRP), interleukin-6 (IL-6) and tumour necrosis factor alpha (TNF-alpha)"
+  ],
+  "explanation": "This source supports its contribution: the three markers the claim names were reduced. Observation: it also reports that IL-8 rose; 'such as' does not assert that every marker fell, so the omission is not an error."
+}
+
+EXAMPLE 13
+Input:
+{
+  "claim": "In cultured human keratinocytes, epidermal growth factor increased cell migration by 180%.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "Epidermal growth factor (EGF) stimulated migration of cultured human keratinocytes in a scratch-wound assay, with wound closure reaching 180% at 24 h."
+    },
+    {
+      "location": "body",
+      "text": "Wound closure values are expressed as a percentage of the untreated control at the same timepoint, which is set at 100%."
+    },
+    {
+      "location": "body",
+      "text": "At 24 h, EGF-treated monolayers reached 180 ± 12% of control closure."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "At 24 h, EGF-treated monolayers reached 180 ± 12% of control closure"
+  ],
+  "explanation": "The abstract gives 180% without its baseline, but the body states that closure is expressed as a percentage of control set at 100%, so 180% is an 80% increase; the claim keeps the digits and reports an increase of 180%, more than twice the effect the source reports."
+}
+
+EXAMPLE 14
+Input:
+{
+  "claim": "Biofilm dispersal in Pseudomonas putida is triggered solely by nutrient depletion.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "It has long been assumed that biofilm dispersal in P. putida is triggered solely by nutrient depletion."
+    },
+    {
+      "location": "body",
+      "text": "Here we show that dispersal is induced by a nitric oxide pulse even when nutrients are replete, and that nutrient depletion alone fails to trigger dispersal in a strain lacking the nitric oxide sensor."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "dispersal is induced by a nitric oxide pulse even when nutrients are replete"
+  ],
+  "explanation": "The claim restates the prior assumption this study sets out to overturn; its own results show dispersal induced by nitric oxide with nutrients replete, so depletion is not the only trigger."
+}
+
+EXAMPLE 15
+Input:
+{
+  "claim": "In drought-stressed maize roots, the 312 differentially abundant proteins were enriched for suberin biosynthesis.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Proteomic profiling of drought-stressed maize roots identified 312 differentially abundant proteins, enriched for oxidative stress response and aquaporin regulation. No enrichment for suberin biosynthesis was detected in the proteomic analysis. Metabolomic profiling of the same roots identified 87 altered metabolites, which mapped to suberin and lignin biosynthesis."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "Proteomic profiling of drought-stressed maize roots identified 312 differentially abundant proteins, enriched for oxidative stress response and aquaporin regulation. No enrichment for suberin biosynthesis was detected in the proteomic analysis."
+  ],
+  "explanation": "Suberin biosynthesis belongs to the metabolomic analysis of 87 metabolites; the source explicitly reports no enrichment for this pathway in the proteomic analysis of 312 proteins. The claim therefore pairs a number with a pathway from a different analysis, in direct conflict with the proteomic result."
+}
+
+EXAMPLE 16
+Input:
+{
+  "claim": "Salinity stress increased root proline content and activated autophagy in rice seedlings.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "Rice seedlings exposed to 150 mM NaCl for 7 days showed increased root proline content and reduced shoot biomass."
+    },
+    {
+      "location": "body",
+      "text": "The variables analysed were limited to root proline (ninhydrin method), shoot and root dry mass, and leaf Na+ and K+ concentrations (flame photometry); no other assays were performed."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "Rice seedlings exposed to 150 mM NaCl for 7 days showed increased root proline content"
+  ],
+  "explanation": "This source reports the increase in root proline content in salt-stressed rice seedlings; its methods show that it did not assess autophagy, which is a separate assertion not addressed by this source and outside this judgment."
+}
+
+EXAMPLE 17
+Input:
+{
+  "claim": "In mice, the increase in nocturnal activity after a light pulse is mediated by melatonin.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "A light pulse at the start of the dark phase increased nocturnal wheel-running in all genotypes. The increase was independent of melatonin: it was of similar magnitude in melatonin-deficient mice and in wild-type controls."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "The increase was independent of melatonin: it was of similar magnitude in melatonin-deficient mice and in wild-type controls"
+  ],
+  "explanation": "The source ran a control showing that this increase in activity did not depend on melatonin, and the claim attributes the same increase, in the same mice, to melatonin."
+}
+
+EXAMPLE 18
+Input:
+{
+  "claim": "In honeybee foragers, the behavioural response to the floral odorant requires the Ftr2 receptor paralog.",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Knock-down of the Ftr receptor abolished the behavioural response to the floral odorant in honeybee foragers."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": false,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "Knock-down of the Ftr receptor abolished the behavioural response to the floral odorant in honeybee foragers"
+  ],
+  "explanation": "The excerpt shows that the response requires the Ftr receptor but does not say which paralog was targeted or carries the effect, so the attribution to Ftr2 is not established; nothing in the excerpt points to a different paralog."
+}
+
+EXAMPLE 19
+Input:
+{
+  "claim": "Microplastic ingestion has been shown to impair the growth of oysters under field conditions.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "Juvenile oysters exposed to polystyrene microparticles grew 12% less over 60 days than unexposed controls. The experiment was conducted only under laboratory conditions. These preliminary results suggest that microplastic ingestion may impair oyster growth, which warrants confirmation under field conditions."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "The experiment was conducted only under laboratory conditions. These preliminary results suggest that microplastic ingestion may impair oyster growth, which warrants confirmation under field conditions"
+  ],
+  "explanation": "The source measured lower growth only in a laboratory exposure and presents ingestion as a possible cause that still needs field confirmation; the claim states the effect as demonstrated in the field. That moves a preliminary laboratory result to an established field finding, an incompatibility of evidential status."
+}
+
+EXAMPLE 20
+Input:
+{
+  "claim": "The school-meal programme raised attendance by 9 percentage points.",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "Relative to comparison schools, the programme raised attendance by 9 percentage points over the school year."
+    },
+    {
+      "location": "body",
+      "text": "Over the school year, attendance in programme schools rose by 4 percentage points relative to comparison schools (Table 2; 95% CI 1 to 7)."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": false,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "Relative to comparison schools, the programme raised attendance by 9 percentage points over the school year"
+  ],
+  "explanation": "The abstract gives 9 percentage points, as the claim does, but the body reports 4 points for the same comparison over the same period, so the source contradicts itself and does not settle the figure."
+}
+
+EXAMPLE 21
+Input:
+{
+  "claim": "Early work held that juvenile hormone plays no part in caste determination in Myrmica ants (A), whereas recent studies show that it regulates the onset of foraging in workers (B) and queen behaviour through receptor dimerization (C).",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "Juvenile hormone has long been thought to play no part in caste determination in Myrmica ants. Using receptor knockdown, we show that juvenile hormone signalling is required for the development of queen morphology. The downstream mechanism remains unknown."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "Juvenile hormone has long been thought to play no part in caste determination in Myrmica ants",
+    "we show that juvenile hormone signalling is required for the development of queen morphology"
+  ],
+  "explanation": "The input does not say which reference is being judged, so it is identified from content: this source concerns juvenile hormone and caste determination in Myrmica ants, which is clause A; it does not address foraging onset in workers (B) or receptor dimerization (C). The sentence cites it as early work that denied a role for juvenile hormone, but the source describes that view only to overturn it with its own knockdown evidence, so the clause assigns it the position its results refute. Clauses B and C belong to the other citations and are not judged here."
+}
+
+EXAMPLE 22
+Input:
+{
+  "claim": "Heat stress altered 820 coral transcripts, of which 410 were symbiont-dependent and 900 HSF1-dependent (A), and reduced symbiont photosynthetic efficiency (B).",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Comparison of heat-stressed versus control colonies identified 820 differentially expressed transcripts. Comparison of heat-stressed symbiotic versus aposymbiotic colonies identified 410, and comparison of heat-stressed wild-type versus HSF1-knockdown colonies identified 900."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "Comparison of heat-stressed versus control colonies identified 820 differentially expressed transcripts"
+  ],
+  "explanation": "This source reports 820, 410 and 900 transcripts from three independent comparisons; the sentence presents 410 and 900 as subsets of the 820, which is impossible for 900. The photosynthesis clause belongs to source B and is not judged here."
+}
+
+EXAMPLE 23
+Input:
+{
+  "claim": "Jasmonate signalling activates the defence gene PIN2 in tomato leaves (A) and primes systemic resistance to herbivores (B).",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "In suspension-cultured tomato leaf cells, methyl jasmonate induced PIN2 transcripts within 2 h, suggesting that jasmonate signalling directly activates this defence gene in leaf tissue."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "In suspension-cultured tomato leaf cells, methyl jasmonate induced PIN2 transcripts within 2 h"
+  ],
+  "explanation": "This source supports its contribution: methyl jasmonate induced PIN2 in cultured tomato leaf cells, the source itself relates this to leaf tissue, and nothing in the evidence reports a different result in the tissue. Observation: the evidence comes from cultured cells and the tissue-level link is a suggestion. Systemic resistance belongs to source B."
+}
+
+EXAMPLE 24
+Input:
+{
+  "claim": "Dexamethasone induces myostatin but not follistatin in rat skeletal muscle (A), consistent with evidence that follistatin is controlled by a separate pathway (B).",
+  "evidence": [
+    {
+      "location": "abstract",
+      "text": "In cultured rat myotubes, dexamethasone induced myostatin but not follistatin. In skeletal muscle of dexamethasone-treated rats, both myostatin and follistatin were induced."
+    }
+  ],
+  "source_type": "abstract",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": true,
+  "material_error_present": true,
+  "evidence_quotes": [
+    "In skeletal muscle of dexamethasone-treated rats, both myostatin and follistatin were induced"
+  ],
+  "explanation": "Clause A attributes to this source a myostatin-but-not-follistatin response in rat skeletal muscle. The source obtained that pattern only in cultured myotubes and reports that in the muscle of treated rats both genes were induced, so the tissue-level result contradicts the clause. Clause B belongs to the other citation and is not judged here."
+}
+
+EXAMPLE 25
+Input:
+{
+  "claim": "Prediction accuracy of yield models depends on soil type, crop species and sensor calibration (A), and improves when satellite data are added (B).",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Prediction accuracy differed significantly across soil types (R2 0.48 to 0.81) and crop species (R2 0.52 to 0.77)."
+    }
+  ],
+  "source_type": "full_text",
+  "citation_context": "one_of_several"
+}
+Output:
+{
+  "evidence_sufficient": false,
+  "material_error_present": false,
+  "evidence_quotes": [
+    "Prediction accuracy differed significantly across soil types (R2 0.48 to 0.81) and crop species (R2 0.52 to 0.77)"
+  ],
+  "explanation": "Clause A is attributed to this source as a list of three factors. Soil type and crop species are supported; sensor calibration is neither supported nor contradicted by this passage, so that element of the contribution is undecided. Clause B belongs to the other citation and is not judged here."
+}

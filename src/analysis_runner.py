@@ -12,16 +12,17 @@ in two places with a risk of drifting apart.
 from concurrent.futures import ThreadPoolExecutor
 from typing import Optional
 
-from src.pipeline import process_sentences, PairResult
-from src.progress import ProgressTracker
-from src.metadata.extraction import build_declared_references
 from src.metadata.document import MetadataDoc
+from src.metadata.extraction import build_declared_references
 from src.metadata.report import build_report as build_metadata_report
+from src.pipeline import PairResult, process_sentences
+from src.progress import ProgressTracker
 
 EMPTY_METADATA_REPORT = {
     "bibliography_status": [],
     "document_level_findings": [],
     "not_evaluated_checks": [],
+    "official_records": {},
 }
 
 

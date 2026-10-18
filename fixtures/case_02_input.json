@@ -1,0 +1,63 @@
+{
+  "report_language": "en",
+  "citation_context": "sole",
+  "marker": "[2]",
+  "claim": "Knockout work in zebrafish larvae mapped the division of labour between the two: MR-null animals were hypercortisolemic and failed to mount any cortisol response to a stressor, whereas GR-null animals retained a delayed but sustained response, indicating that the mineralocorticoid receptor rather than the glucocorticoid receptor sets the negative-feedback set-point of the stress axis [2].",
+  "source_type": "full_text",
+  "evidence": [
+    {
+      "location": "body",
+      "text": "Despite the high maternal cortisol deposition in GR−/− embryos, this steroid is cleared rapidly, and the low cortisol levels are maintained for 24 h. While the mechanism is unclear as 11β-hsd2 transcript levels are low in GR−/− larvae (Fig. 2A), the excretion of this excess steroid may involve either diffusion36, activation of other biotransformation pathways37 and/or upregulation of efflux transporters38. Except for this brief period, GR−/−, but not MR−/−mutants were hypercortisolemic and the steroid levels were beyond what could be induced by a stressor in the WT larvae (Fig. 2A)14. This suggests either a non-functional negative feedback mechanism and/or a lack of cortisol breakdown in the GR mutant. In contrast to GR, a loss of MR resulted in basal cortisol levels similar to WT (Fig. 2A), supporting a key role for GR signalling in maintaining the steady-state basal glucocorticoid levels during early development32, and this may involve a tight negative feedback regulation in fish."
+    }
+  ],
+  "judge_quotes": [
+    "GR−/−, but not MR−/−mutants were hypercortisolemic",
+    "a loss of MR resulted in basal cortisol levels similar to WT",
+    "supporting a key role for GR signalling in maintaining the steady-state basal glucocorticoid levels"
+  ],
+  "judge_explanations": [
+    "MOCK: judge explanation text"
+  ],
+  "error_types": [
+    {
+      "key": "source_says_opposite",
+      "label": "The source says the opposite",
+      "description": "The cited work states the opposite of what the sentence claims."
+    },
+    {
+      "key": "study_did_not_do_that",
+      "label": "The study did not do that",
+      "description": "The study is credited with a design or scope it did not have."
+    },
+    {
+      "key": "data_mismatch",
+      "label": "Data does not match the study",
+      "description": "Molecules or findings are attributed to the study that are not its own."
+    },
+    {
+      "key": "inflated_figure",
+      "label": "Inflated figure",
+      "description": "The stated magnitude is larger than what the source reports."
+    },
+    {
+      "key": "figure_out_of_context",
+      "label": "Figure taken out of context",
+      "description": "The number exists in the source, but it refers to a different outcome."
+    },
+    {
+      "key": "measure_confused",
+      "label": "One measure confused with another",
+      "description": "The value is correct, but it corresponds to a different measure than the one named."
+    },
+    {
+      "key": "source_does_not_say",
+      "label": "The source does not say that",
+      "description": "The sentence attributes to the cited work content that the work does not report."
+    },
+    {
+      "key": "overstated_certainty",
+      "label": "Overstated certainty",
+      "description": "The sentence presents as established what the source reports as a hypothesis or an association."
+    }
+  ]
+}

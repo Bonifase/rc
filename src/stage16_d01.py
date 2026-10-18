@@ -71,7 +71,7 @@ def validate_stage16_pp01_fixture(
     rules["R-05"] = pair_verdict["coverage"] == "v3.6"
     rules["R-06"] = pair_verdict["verdict"] in {"supported", "unsupported", "uncertain"}
     rules["R-07"] = judge["offline_mock"] is True
-    rules["R-08"] = judge["prompt_version"] in {"judge_v2.1", "judge_v2.2.2", "judge_v3.7"}
+    rules["R-08"] = judge["prompt_version"] in {"judge_v2.1", "judge_v2.2.2"}
     rules["R-09"] = judge["final_verdict"] in {"supported", "unsupported", "uncertain"}
     rules["R-10"] = bool(judge.get("call_log"))
 

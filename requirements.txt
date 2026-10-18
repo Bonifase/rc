@@ -12,6 +12,7 @@ pytest>=8.0.0
 pytest-mock>=3.12.0
 responses>=0.25.0
 jsonschema>=4.20.0
+beautifulsoup4>=4.12.0
 
 # gold standard evaluation tooling (see GOLD STANDARD INSTRUCTIONS/)
 pandas>=2.0.0

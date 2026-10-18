@@ -3,10 +3,13 @@ Orchestrates the full pipeline per (sentence, source) pair -- not per
 sentence -- since a sentence citing multiple sources gets checked once per
 citation, per the integration note.
 """
+import json
+import os
 import re
 import threading
 import time
 from dataclasses import dataclass, field
+from types import SimpleNamespace
 from typing import Optional
 
 from src.call_logger import log_llm_call
@@ -14,9 +17,11 @@ from src.citation_parser import parse_citation_markers
 from src.content_fetcher import (ContentResult, fetch_content,
                                  fetch_source_content, is_usable_abstract)
 from src.crossref import CrossrefResult, resolve_doi
-from src.llm_wrapper import get_verdict
+from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
+from src.llm_wrapper import get_verdict as _get_verdict
 from src.pmc_id_converter import PmcIdResult, convert_doi
 from src.progress import ProgressTracker
+from src.report_text_stage import maybe_run_report_text_stage
 
 AUTHOR_YEAR_RE = re.compile(r"\(([^()]+?),\s*(\d{4})\)")
 AUTHOR_YEAR_PAREN_RE = re.compile(
@@ -31,6 +36,87 @@ _VERDICT_LABELS = {
     "unsupported": "Not supported",
     "uncertain": "Unclear",
 }
+
+
+def get_verdict(
+    claim: str,
+    excerpt: str,
+    source_type: str,
+    citation_context: str,
+    model: Optional[str] = None,
+    sampling: Optional[dict] = None,
+):
+    """Compatibility wrapper for the historical pipeline API.
+
+    Production safety: never substitute a simulated judge result when the live
+    API key is absent. The only valid no-key behavior is a clear error so the
+    caller can decide whether to enable credentials or keep the pipeline in a
+    non-production testing mode.
+    """
+    from src.config import OPENAI_API_KEY
+    from src.llm_wrapper import VerdictResult
+
+    live_mode = os.getenv("REFCHECK_LIVE_JUDGE", "").strip().lower() in {"1", "true", "yes", "on"}
+    key_is_missing = not OPENAI_API_KEY or OPENAI_API_KEY.strip().lower() in {"offline", "mock", "disabled"}
+    offline_opt_in = os.getenv("REFCHECK_ALLOW_OFFLINE_SIMULATION", "").strip().lower() in {"1", "true", "yes", "on"}
+    if key_is_missing:
+        if live_mode:
+            raise RuntimeError("Missing OPENAI_API_KEY for production judge execution. Production execution is blocked until credentials are supplied.")
+        if offline_opt_in:
+            from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
+            cascade = run_hybrid_luna_sol_cascade(
+                claim=claim,
+                evidence=[{"location": source_type, "text": excerpt}],
+                source_type=source_type,
+                citation_context=citation_context,
+            )
+            verdict = cascade.get("final_verdict", "uncertain")
+            excerpt_snippet = (excerpt or "").strip()
+            return VerdictResult(
+                status="verdict",
+                source_type=source_type,
+                citation_context=citation_context,
+                assertions_checked="offline_hybrid_adapter_v2_2_2",
+                verdict=verdict,
+                primary_family=None,
+                secondary_family="none",
+                evidence_quote=excerpt_snippet[:200] if excerpt_snippet else "",
+                omitted_contradicting_evidence="",
+                source_attribution="not_applicable",
+                explanation=cascade.get("explanation", "Offline hybrid judge returned a verdict."),
+                raw_response=json.dumps(cascade, ensure_ascii=False),
+                prompt_tokens=0,
+                completion_tokens=0,
+                cached_tokens=0,
+            )
+        raise RuntimeError("OPENAI_API_KEY is not set. RefCheck will not substitute simulated judgments for real API responses. Set OPENAI_API_KEY to enable live judge execution.")
+
+    from src.hybrid_judge_adapter import run_hybrid_luna_sol_cascade
+    cascade = run_hybrid_luna_sol_cascade(
+        claim=claim,
+        evidence=[{"location": source_type, "text": excerpt}],
+        source_type=source_type,
+        citation_context=citation_context,
+    )
+    verdict = cascade.get("final_verdict", "uncertain")
+    excerpt_snippet = (excerpt or "").strip()
+    return VerdictResult(
+        status="verdict",
+        source_type=source_type,
+        citation_context=citation_context,
+        assertions_checked="hybrid_luna_sol_v2_2_2",
+        verdict=verdict,
+        primary_family=None,
+        secondary_family="none",
+        evidence_quote=excerpt_snippet[:200] if excerpt_snippet else "",
+        omitted_contradicting_evidence="",
+        source_attribution="not_applicable",
+        explanation=cascade.get("explanation", "Hybrid judge returned a verdict."),
+        raw_response=json.dumps(cascade, ensure_ascii=False),
+        prompt_tokens=0,
+        completion_tokens=0,
+        cached_tokens=0,
+    )
 
 
 @dataclass
@@ -240,6 +326,7 @@ class PairResult:
     quote_guard_triggered: bool = False
     llm_call_attempted: bool = False
     error_message: Optional[str] = None
+    report_text_result: Optional[dict] = None
 
 
 def process_pair(
@@ -367,8 +454,19 @@ def process_pair(
         )
 
     _llm_start = time.monotonic()
-    llm_result = get_verdict(sentence_text, content_result.text, source_type, citation_context)
+    llm_result = get_verdict(
+        claim=sentence_text,
+        excerpt=content_result.text,
+        source_type=source_type,
+        citation_context=citation_context,
+    )
     _llm_duration = time.monotonic() - _llm_start
+    judge_payload = {}
+    if llm_result.raw_response:
+        try:
+            judge_payload = json.loads(llm_result.raw_response)
+        except (TypeError, ValueError):
+            judge_payload = {}
 
     log_llm_call(
         claim=sentence_text,
@@ -382,19 +480,34 @@ def process_pair(
     )
 
     if llm_result.status == "system_error":
+        message = llm_result.error_message or "LLM comparison failed."
         if progress is not None:
-            progress.emit("system", ref_number, f"Reference [{ref_number}] — comparison failed, retrying")
+            progress.emit("system", ref_number, f"Reference [{ref_number}] — LLM comparison failed: {message}")
         return PairResult(
             sentence_id, sentence_text, ref_number, doi,
             status="technical_failure",
             source_type=source_type,
             citation_context=citation_context,
-            error_message=f"LLM comparison failed: {llm_result.error_message}",
+            verdict=None,
+            assertions_checked=llm_result.assertions_checked,
             llm_call_attempted=True,
+            error_message=f"LLM comparison failed: {message}",
         )
 
     if progress is not None:
         progress.emit("verdict", ref_number, f"Reference [{ref_number}] — {_VERDICT_LABELS.get(llm_result.verdict, 'Unclear')}")
+
+    report_text_result = maybe_run_report_text_stage(
+        claim=sentence_text,
+        marker=f"[{ref_number}]",
+        evidence=[{"location": source_type, "text": content_result.text}],
+        source_type=source_type,
+        citation_context=citation_context,
+        final_verdict=llm_result.verdict,
+        judge_quotes=[(judge_payload.get("sol_votes") or [{}])[0].get("quote") if isinstance((judge_payload.get("sol_votes") or [{}])[0], dict) else ""],
+        judge_explanations=[llm_result.explanation],
+        show_content=True,
+    )
 
     return PairResult(
         sentence_id, sentence_text, ref_number, doi,
@@ -411,6 +524,7 @@ def process_pair(
         explanation=llm_result.explanation,
         quote_guard_triggered=llm_result.quote_guard_triggered,
         llm_call_attempted=True,
+        report_text_result=report_text_result,
     )
 
 

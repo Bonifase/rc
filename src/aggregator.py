@@ -13,7 +13,7 @@ Per the integration note:
   being ignored.
 - Two counts that are NOT interchangeable: sentences vs. checks (pairs).
 """
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from typing import Optional
 
 from src.pipeline import PairResult
@@ -134,6 +134,8 @@ def build_document_summary(pair_results: list[PairResult], sentence_records: lis
 def generate_report(pair_results: list[PairResult]) -> dict:
     sentence_records = build_sentence_records(pair_results)
     return {
+        "lang": "en",
+        "report_language": "en",
         "sentences": [
             {
                 "sentence_id": r.sentence_id,
